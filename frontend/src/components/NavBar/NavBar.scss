@@ -1,0 +1,36 @@
+@use '../../variables.module';
+
+.nav-bar-container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    position: relative;
+    padding: 50px 25px 0 25px;
+
+    .menu-toggler {
+        position: absolute;
+
+        .menu-icon {
+            width: 30px;
+            height: 30px;
+        }
+    }
+
+    .site-name {
+        margin: 0 auto;
+        text-align: center;
+        font-weight: 500;
+        font-size: 28px;
+        font-family: variables.$primary-font;
+    }
+
+    .profile-btn {
+        position: absolute;
+        right: 25px;
+        .profile-btn-icon {
+            width: 30px;
+            height: 30px;
+        }
+    }
+}

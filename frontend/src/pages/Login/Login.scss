@@ -1,0 +1,12 @@
+@use '../../variables.module';
+
+.login-page {
+    margin-top: 90px;
+    padding: 0 25px;
+
+    .greeting {
+        font-family: variables.$primary-font;
+        font-size: 24px;
+        font-weight: 700;
+    }
+}

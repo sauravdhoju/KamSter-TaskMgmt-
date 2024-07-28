@@ -1,0 +1,16 @@
+$pure-black: #000000;
+$pure-black-80: #000000cc;
+$pure-black-60: #00000099;
+$pure-black-50: #00000080;
+$pure-black-20: #00000033;
+$off-black-1: #252525;
+$pure-white: #ffffff;
+
+/* FONTS */
+$primary-font: 'Jost', sans-serif;
+
+// export variables to tsx file
+:export {
+    // fonts
+    primaryFont: $primary-font;
+}
