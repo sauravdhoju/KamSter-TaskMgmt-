@@ -1,12 +1,13 @@
 import express from 'express';
 
+import {
+    testController,
+    arkoTestController,
+} from '../controllers/testController';
+
 const testRouter = (router: express.Router) => {
-    router.get('/', (req, res) => {
-        const response = {
-            name: 'nimesh shakya',
-        };
-        res.status(200).json(response);
-    });
+    router.get('/', testController);
+    router.get('/whatistoday', arkoTestController);
 };
 
 export default testRouter;
