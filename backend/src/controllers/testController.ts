@@ -6,7 +6,7 @@ export const testController = async (
 ) => {
     try {
         const response = {
-            name: 'jeena nakarmi',
+            message: 'jeena nakarmi',
         };
         return res.status(200).json(response);
     } catch (error) {
