@@ -6,7 +6,7 @@ export const testController = async (
 ) => {
     try {
         const response = {
-            message: 'jeena nakarmi',
+            name: 'jeena nakarmi',
         };
         return res.status(200).json(response);
     } catch (error) {
@@ -21,7 +21,7 @@ export const arkoTestController = async (
 ) => {
     try {
         const response = {
-            message: 'Today is Monday!',
+            name: 'Today is Monday!',
         };
         return res.status(200).json(response);
     } catch (error) {
