@@ -10,7 +10,7 @@ import Login from './pages/Login/Login';
 import './App.scss';
 
 const App = () => {
-    return (
+    return ( 
         <Box className='app'>
             <NavBar />
             <Routes>
@@ -22,3 +22,5 @@ const App = () => {
 };
 
 export default App;
+
+

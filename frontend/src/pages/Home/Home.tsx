@@ -4,16 +4,16 @@ import { Box, Button, Heading } from '@chakra-ui/react';
 import './Home.scss';
 import { useEffect, useState } from 'react';
 
-const baseUrl = 'http://localhost:8080';
+const baseUrl = 'http://localhost:5000';
 
 const Home = () => {
     const [message, setMessage] = useState('');
 
     useEffect(() => {
         axios
-            .get(`${baseUrl}/whatistoday`, { withCredentials: true })
+            .get(`${baseUrl}/`, { withCredentials: true })
             .then((res) => {
-                setMessage(res.data.message);
+                setMessage(res.data.name);
                 console.log(res);
             })
             .catch((err) => console.log(err));
