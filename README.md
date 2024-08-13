@@ -19,3 +19,27 @@ Kamster is a multi-feature task management app to help you keep track of your da
 ## Installation Guide
 
 First clone the repository.
+
+```cmd
+cd <folder_name>
+```
+
+Install all dependencies for backend and frontend using the batch file `installation.bat`
+
+```cmd
+.\installation.bat
+```
+
+Run the backend server locally:
+
+```cmd
+npm start
+```
+
+Run the frontend server locally:
+
+```cmd
+npm run dev
+```
+
+> Note: You must be inside frontend or backend folder to respectively run the server.
