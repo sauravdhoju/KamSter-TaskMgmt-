@@ -20,11 +20,13 @@ Kamster is a multi-feature task management app to help you keep track of your da
 
 First clone the repository.
 
+Then, change into the cloned directory:
+
 ```cmd
 cd <folder_name>
 ```
 
-Install all dependencies for backend and frontend using the batch file `installation.bat`
+Install all dependencies for backend and frontend using the batch file `installation.bat`:
 
 ```cmd
 .\installation.bat
