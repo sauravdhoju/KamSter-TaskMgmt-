@@ -11,9 +11,9 @@ const Home = () => {
 
     useEffect(() => {
         axios
-            .get(`${baseUrl}/`, { withCredentials: true })
+            .get(`${baseUrl}/whatistoday`, { withCredentials: true })
             .then((res) => {
-                setMessage(res.data.name);
+                setMessage(res.data.message);
                 console.log(res);
             })
             .catch((err) => console.log(err));

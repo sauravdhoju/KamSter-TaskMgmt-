@@ -15,3 +15,7 @@ Kamster is a multi-feature task management app to help you keep track of your da
 
 -   NodeJS with Express
 -   MongoDB
+
+## Installation Guide
+
+First clone the repository.
