@@ -1,0 +1,27 @@
+@import '../../_variables.module.scss';
+
+.sidebar {
+    width: 250px;
+    height: 1050px;
+    position: absolute;
+    top: -404px;
+    left: 1450px;
+    gap: 0;
+    opacity: 1;
+    background-color: $off-black-1;
+    color: $pure-white;
+
+    display: flex;
+    justify-content: left;
+    align-items: center;
+
+    // Styling for the sidebar icon
+    .sidebar-icon {
+        color: $pure-white; // Set the color of the icon
+        margin-left: 15px; // Add some spacing to the left of the icon if needed
+        // Additional styling if necessary
+    }
+
+    // Uncomment if needed for debugging
+    // border: 1px solid red;
+}
