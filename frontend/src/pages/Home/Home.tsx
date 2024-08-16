@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Box, Button, Heading } from '@chakra-ui/react';
+import { Box, Heading } from '@chakra-ui/react';
 
 import './Home.scss';
 import { useEffect, useState } from 'react';
@@ -21,7 +21,7 @@ const Home = () => {
 
     return (
         <Box>
-            <Button variant={'link'}>click me</Button>
+            {/* <Button variant={'link'}>click me</Button> */}
             <Heading>{message === '' ? 'Empty message!' : message}</Heading>
         </Box>
     );
