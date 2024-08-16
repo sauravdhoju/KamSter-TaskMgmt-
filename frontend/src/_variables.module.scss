@@ -6,6 +6,11 @@ $pure-black-20: #00000033;
 $off-black-1: #252525;
 $pure-white: #ffffff;
 
+/* PADDING */
+$padding-small: 10px;
+$padding-medium: 20px;
+$padding-large: 30px;
+
 /* FONTS */
 $primary-font: 'Jost', sans-serif;
 
@@ -13,4 +18,12 @@ $primary-font: 'Jost', sans-serif;
 :export {
     // fonts
     primaryFont: $primary-font;
+
+    offBlack1: $off-black-1;
+    pureWhite: $pure-white;
+
+    paddingSmall: $padding-small;
+    paddingMedium: $padding-medium;
+    paddingLarge: $padding-large;
 }
+
