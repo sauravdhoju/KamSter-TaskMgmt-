@@ -2,9 +2,10 @@
 
 .sidebar {
   width: 225px;
-  height: 100vh;
+  height: auto;
   background-color: $off-black-1;
   color: $pure-white;
+  margin-top: 120px;
   padding: $padding-large $padding-medium;
   display: flex;
   flex-direction: column;
@@ -12,30 +13,39 @@
   align-items: center;
   position: relative;
   transition: width 0.3s ease;
+  border-radius : 22px;
 
   &.collapsed {
-    width: 80px; // Adjusted width for collapsed state
+    width: 70px; // Adjusted width for collapsed state
     padding: $padding-large 0;
   }
 
   .toggle-btn {
     position: absolute;
     top: 20px;
-    right: -25px;
+    right: -10px;
     background-color: $pure-white;
-    border-radius: 50%;
-    width: 30px;
+    border-radius: 50px 0px 0px 50px;
+    width: 33px;
     height: 30px;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
     transition: transform 0.3s ease;
+    position: absolute;
+  
+    // the back icon design
+    i {
+      font-size: 24px;
+      color: $off-black-1;
+    }
   
     &:hover {
       transform: scale(1.1);
     }
   }
+  
   
   .profile-btn {
     width: 100px;
@@ -131,15 +141,19 @@
   
     .menu-heading {
       font-family: $primary-font;
-      font-size: 16px;
-      margin-bottom: 10px;
-      border-bottom: 1px solid $pure-white;
+      font-size: 18px;
+      margin-bottom: 5px;
+      border-bottom : 1px solid $pure-white;
+      width : 50%;
+      margin-left: 20px; 
       padding-bottom: 5px;
+      text-align: center;
+      padding-bottom : 10px;
     }
   
     p {
       font-family: $primary-font;
-      font-size: 14px;
+      font-size: 16px;
       margin-top: $padding-small;
     }
   

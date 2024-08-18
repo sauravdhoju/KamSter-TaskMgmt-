@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import './Sidebar.scss';
 import { Link } from 'react-router-dom'; 
 import { Box } from '@chakra-ui/react';
-import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai'; 
 import 'boxicons/css/boxicons.min.css';
 
 const Sidebar: React.FC = () => {
@@ -19,7 +18,7 @@ const Sidebar: React.FC = () => {
     <div className={`sidebar ${isOpen ? 'open' : 'collapsed'}`}>
       {/* Toggle Button */}
       <div className="toggle-btn" onClick={toggleSidebar}>
-        {isOpen ? <AiOutlineLeft /> : <AiOutlineRight />}
+        <i className={`bx ${isOpen ? 'bx-chevron-right' : 'bx-chevron-left'}`}></i>
       </div>
 
       {/* Profile Section */}

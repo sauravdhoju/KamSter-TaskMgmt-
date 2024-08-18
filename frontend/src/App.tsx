@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 
-import { Box, Heading, Flex } from '@chakra-ui/react';
+import { Box, Flex } from '@chakra-ui/react';
 import 'boxicons/css/boxicons.min.css';
 
 import NavBar from './components/NavBar/NavBar';
