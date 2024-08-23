@@ -3,10 +3,17 @@
 .login-page {
     margin-top: 90px;
     padding: 0 25px;
+    position: relative;
 
     .greeting {
         font-family: variables.$primary-font;
         font-size: 24px;
         font-weight: 700;
+    }
+
+    .back-home-link {
+        position: absolute;
+        bottom: 0;
+        right: 0;
     }
 }

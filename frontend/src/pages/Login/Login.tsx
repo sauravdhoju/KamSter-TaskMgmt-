@@ -1,4 +1,5 @@
-import { Box, Heading } from '@chakra-ui/react';
+import { Link as ReactRouterLink } from 'react-router-dom';
+import { Box, Heading, Link as ChakraLink } from '@chakra-ui/react';
 
 import './Login.scss';
 
@@ -17,6 +18,13 @@ const Login = () => {
     return (
         <Box className='login-page'>
             <Heading className='greeting'>{getGreeting()}</Heading>
+            <ChakraLink
+                as={ReactRouterLink}
+                to={'/'}
+                className='back-home-link'
+            >
+                Back to Home
+            </ChakraLink>
         </Box>
     );
 };
