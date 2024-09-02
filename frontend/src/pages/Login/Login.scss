@@ -1,19 +1,48 @@
 @use '../../variables.module';
 
 .login-page {
-    margin-top: 90px;
     padding: 0 25px;
     position: relative;
+    min-height: 100vh;
 
-    .greeting {
-        font-family: variables.$primary-font;
-        font-size: 24px;
-        font-weight: 700;
-    }
+    .login-stuff-container {
+        margin-top: 52px;
+        display: flex;
+        flex-direction: column;
 
-    .back-home-link {
-        position: absolute;
-        bottom: 0;
-        right: 0;
+        .greeting {
+            font-family: variables.$primary-font;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .login-info-text {
+            font-family: variables.$primary-font;
+            font-size: 12px;
+        }
+
+        .login-form {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .forgot-password-link {
+            text-align: right;
+            font-family: variables.$primary-font;
+            display: inline-block;
+            align-self: flex-end;
+            font-size: 14px;
+            font-weight: 600;
+            color: variables.$pure-black-60;
+            margin-top: 10px;
+        }
+
+        .back-home-link {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+        }
     }
 }
