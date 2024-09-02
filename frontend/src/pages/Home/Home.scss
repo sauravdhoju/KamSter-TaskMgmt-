@@ -1,5 +1,3 @@
-// Home.scss
-
 .upper-part {
     background-color: black;
     color: white;  
@@ -65,4 +63,86 @@
 
 .task-summary a:hover { // remove
     text-decoration: underline; // Underline on hover
+}
+
+
+
+
+.button-section {
+    margin: 30px 40px; // Space around the section
+    display: flex;
+    justify-content: left; // Center the buttons horizontally
+    gap: 20px; // Space between buttons
+}
+
+.my-list-button,
+.new-list-button {
+    background-color: #007BFF; // Primary button color
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 16px;
+    width: 76px;
+    cursor: pointer;
+    
+}
+
+.my-list-button:hover,
+.new-list-button:hover {
+    background-color: #0056b3; // Darker shade on hover
+    text-decoration: underline;
+}
+
+.divider {
+    border: 0;
+    height: 1px;
+    background: #ccc;
+    margin: 5px 10px; // Space above and below the line
+}
+
+.star-sign,
+.plus-sign{
+    font-size: 20px;
+}
+
+
+.hire-me-text {
+    text-align: left; // Center the text
+    margin: 20px 30px; // Space around the text
+    font-size: 18px; // Font size
+    color: #000000; // Text color
+    cursor: pointer; // Pointer cursor on hover
+    font-weight: bold; // Make the text bold
+}
+
+.circle-sign {
+    font-size: 18px;
+    margin-right: 10px; 
+    color: #000000;
+}
+
+.star-sign {
+    font-size: 20px; // Size of the star
+    margin-left: 2px; // Space between text and star
+    color: #000000; // Star color
+}
+
+
+.plus-button {
+    position: fixed; 
+    top: 150px; 
+    left: 250px; 
+    font-size: 24px; 
+    //background-color: #fff; /* Black background */
+    //color: #000000; /* White plus sign */
+    //border: none; 
+    //border-radius: 50%; /* Make the button circular */
+    //padding: 15px; 
+    cursor: pointer; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 15px 20px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
 }
