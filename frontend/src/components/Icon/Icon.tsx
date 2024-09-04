@@ -11,6 +11,8 @@ const Icon: React.FC<IconProps> = ({
     styles = { fontSize: '24px' },
     className,
 }: IconProps) => {
+    console.log(name);
+
     return <i className={`bx ${name} ${className}`} style={styles} />;
 };
 

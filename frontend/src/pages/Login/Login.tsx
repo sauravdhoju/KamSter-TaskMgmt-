@@ -20,7 +20,7 @@ const Login = () => {
             <Box className='login-stuff-container'>
                 <Icon name='bx-search' className='hello' />
                 <Heading className='greeting'>Welcome Back</Heading>
-                <text className='login-info-text'>Login to your account</text>
+                <Text className='login-info-text'>Login to your account</Text>
                 <form className='login-form'>
                     <CustomTextInput
                         label='Email'
