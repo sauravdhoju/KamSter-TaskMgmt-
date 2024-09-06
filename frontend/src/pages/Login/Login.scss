@@ -87,11 +87,9 @@
         }
 
         .back-home-link {
-            position: fixed;
-            margin-top: 20px;
-            display: flex;
-            bottom: 25px;
-            right: 25px;
+            display: inline-flex;
+            align-self: flex-end;
+            margin: 25px 0 25px 0;
             font-size: 15px;
             font-weight: 700;
             font-family: variables.$primary-font;
