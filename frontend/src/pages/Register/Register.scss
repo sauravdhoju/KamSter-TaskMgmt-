@@ -1,11 +1,11 @@
 @use '../../variables.module';
 
-.register-page {
+.login-page {
     padding: 0 25px;
     position: relative;
     min-height: 100vh;
 
-    .register-stuff-container {
+    .login-stuff-container {
         margin-top: 52px;
         display: flex;
         flex-direction: column;
@@ -16,12 +16,12 @@
             font-weight: 700;
         }
 
-        .register-info-text {
+        .login-info-text {
             font-family: variables.$primary-font;
             font-size: 12px;
         }
 
-        .register-form {
+        .login-form {
             margin: 5px 0 38px 0;
             display: flex;
             flex-direction: column;
@@ -80,7 +80,7 @@
             }
         }
 
-        .register-page-link {
+        .login-page-link {
             font-family: variables.$primary-font;
             font-weight: 400;
             font-size: 18px;
