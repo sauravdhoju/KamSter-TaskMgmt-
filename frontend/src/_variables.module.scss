@@ -14,4 +14,12 @@ $primary-font: 'Jost', sans-serif;
 :export {
     // fonts
     primaryFont: $primary-font;
+    pureBlack: $pure-black;
+    pureBlack80: $pure-black-80;
+    pureBlack60: $pure-black-60;
+    pureBlack50: $pure-black-50;
+    pureBlack20: $pure-black-20;
+    offBlack1: $off-black-1;
+    pureWhite: $pure-white;
+    bgColor: $bg-color;
 }
