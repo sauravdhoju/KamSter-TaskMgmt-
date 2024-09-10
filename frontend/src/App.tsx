@@ -7,6 +7,7 @@ import Login from './pages/Login/Login';
 import MyAccount from './pages/MyAccount/MyAccount';
 
 import './App.scss';
+import KanbanBoard from './pages/KanbanBoard/KanbanBoard';
 
 const App = () => {
     return (
@@ -15,6 +16,7 @@ const App = () => {
                 <Route path='/' element={<Home />} />
                 <Route path='/login' element={<Login />} />
                 <Route path='/my-account' element={<MyAccount />} />
+                <Route path='kanban' element={<KanbanBoard />} />
             </Routes>
         </Box>
     );
