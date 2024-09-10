@@ -8,6 +8,7 @@ import Register from './pages/Register/Register';
 import MyAccount from './pages/MyAccount/MyAccount';
 
 import './App.scss';
+import KanbanBoard from './pages/KanbanBoard/KanbanBoard';
 
 const App = () => {
     return (
@@ -17,6 +18,7 @@ const App = () => {
                 <Route path='/login' element={<Login />} />
                 <Route path='/register' element={<Register />} />
                 <Route path='/my-account' element={<MyAccount />} />
+                <Route path='kanban' element={<KanbanBoard />} />
             </Routes>
         </Box>
     );

@@ -1,0 +1,94 @@
+@use '../../variables.module';
+
+.kanban-board {
+    .kanban-board-heading {
+        font-family: variables.$primary-font;
+        font-size: 20px;
+        text-align: center;
+    }
+
+    .kanban-board-list {
+        padding-left: 10px;
+        font-size: 16px;
+        padding-top: 10px;
+        font-family: variables.$primary-font;
+        display: flex;
+        gap: 25px;
+        border-bottom: 2px solid #000; /* Main bottom border */
+        padding-bottom: 6px; /* Padding for bottom space */
+    }
+
+    .tab-item {
+        display: flex;
+        cursor: pointer;
+        align-items: center;
+        position: relative; /* To control the active tab's border */
+        padding-bottom: 2px; /* Padding to match list's padding */
+        transition: all 0.2s ease-in-out; /* Smooth transition for active tab effect */
+
+        &.star-tab {
+            .icon {
+                margin-left: 5px; /* Move the star icon 1px to the right */
+            }
+        }
+        .kanban-my-list {
+            color: rgba(0, 0, 0, 0.7); /* Default tab text color */
+        }
+
+        /* Active tab style */
+        &.active {
+            margin-bottom: -2px; /* Slightly raise the active tab */
+            
+            .kanban-my-list {
+                color: rgba(0, 0, 0, 0.9); /* Darker color for active tab */
+                // font-weight: bold; /* Optional bold text for active tab */
+            }
+
+            /* Add a bottom border to the active tab */
+            &::after {
+                content: '';
+                position: absolute;
+                bottom: -6px; /* Align this with the main border */
+                left: 0;
+                width: 100%;
+                height: 4px; /* Thickness for the active tab's border */
+                background-color: #000;
+                border-radius: 6px;
+                transition: width 2s ease-in-out;
+            }
+        }
+        &:hover::after {
+            background-color: #333; /* Change the color on hover */
+        }
+    }
+
+    .kanban-board-workarea {
+        .my-list {
+            background-color: #dbdbdb;
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; /* space between text and icon */
+            padding: 5px 25px;
+            border-bottom: 1px solid #ccc; 
+        
+            .icon-container {
+                display: flex;
+                gap: 10px;
+                align-items: center; /* Ensure vertical alignment of icons */
+            }
+    
+            .kanboard-list-heading {
+                font-family: variables.$primary-font;
+                font-size: 18px;
+                margin: 0; /* Remove default margins if necessary */
+            }
+        }
+    }
+
+
+    .icon {
+        // font-size: 20px;
+        margin-right: 5px; /* Add space between icon and text */
+    }
+
+}
