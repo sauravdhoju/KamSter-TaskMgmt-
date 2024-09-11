@@ -1,15 +1,35 @@
-import React from 'react';
-import { Link as ReactRouterLink } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom'; 
 import { Box, Flex, Text, Button, Input, FormControl, FormLabel, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Image } from '@chakra-ui/react';
-import profilePhoto from '../../pages/MyAccount/profile.jpg'; // Make sure the path is correct
+import profilePhoto from '../../pages/MyAccount/profile.jpg';
 import Icon from '../../components/Icon/Icon';
 import './MyAccount.scss';
 
-
 const MyAccount = () => {
+    const navigate = useNavigate();  // useNavigate hook to programmatically navigate
+    const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track if the user is logged in
+
     // Modal controls for Edit Profile and Change Password
     const { isOpen: isEditProfileOpen, onOpen: onOpenEditProfile, onClose: onCloseEditProfile } = useDisclosure();
     const { isOpen: isChangePasswordOpen, onOpen: onOpenChangePassword, onClose: onCloseChangePassword } = useDisclosure();
+
+    useEffect(() => {
+        // This is a placeholder for your actual login check logic
+        const checkLoginStatus = () => {
+            const loggedIn = true; // login check for now it is true lol
+            setIsLoggedIn(loggedIn);
+
+            if (!loggedIn) {
+                navigate('/login'); // Redirect to login if not logged in
+            }
+        };
+
+        checkLoginStatus();
+    }, [navigate]);
+
+    if (!isLoggedIn) {
+        return null; // Optionally, you could show a loader or redirect, but navigate already handles the redirection.
+    }
 
     return (
         <Box className='my-account-page'>
