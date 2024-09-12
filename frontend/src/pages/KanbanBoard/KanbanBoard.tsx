@@ -81,7 +81,7 @@ const KanbanBoard = () => {
                         </Box>
                         <Box className='text-area'>
                         <Icon name='bx-circle' className='small-icon' />
-                            <Text className='list-name'>Science Test</Text>
+                            <Text className='list-name'>Numerical Methods</Text>
                             <Icon name='bx-star' className='favorite-icon' />
                         </Box>
                     </Box>
@@ -98,7 +98,7 @@ const KanbanBoard = () => {
                         </Box>
                         <Box className='text-area'>
                         <Icon name='bx-circle' className='small-icon' />
-                            <Text className='list-name'>Trip to Paris</Text>
+                            <Text className='list-name'>Trip to Langtang-Gosaikunda</Text>
                             <Icon name='bx-star' className='favorite-icon' />
                         </Box>
                     </Box>
