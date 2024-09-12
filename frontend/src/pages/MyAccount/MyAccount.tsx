@@ -85,9 +85,15 @@ const MyAccount = () => {
                         <Text className='setting-change-password'>Change Password</Text>
                         <Icon name='bx-chevron-right'/>
                     </Flex>
+                    <Flex className='setting-row'>
+                        <Text className='setting-change-password'>Delete Account</Text>
+                        <Icon name='bxs-trash' />
+                    </Flex>
                 </Flex>
             </Box>
 
+            {/* <Box className='account-deletion'>
+            </Box> */}
             <Box className='logout-container'>
                 <Button className='logout-heading'>Logout</Button>
             </Box>
