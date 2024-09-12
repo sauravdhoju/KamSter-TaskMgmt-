@@ -13,9 +13,11 @@ import Icon from '../../components/Icon/Icon';
 import CustomTextInput from '../../components/CustomTextInput/CustomTextInput';
 import NavBar from '../../components/NavBar/NavBar';
 import FormBorder from '../../components/FormBorder/FormBorder';
-import './Login.scss';
 
-const Login = () => {
+import './Register.scss';
+
+const Register = () => {
+    const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -23,12 +25,25 @@ const Login = () => {
         e.preventDefault();
     };
     return (
-        <Box className='login-page'>
+        <Box className='register-page'>
             <NavBar />
-            <Box className='login-stuff-container'>
-                <Heading className='greeting'>Welcome Back</Heading>
-                <Text className='login-info-text'>Login to your account</Text>
-                <form className='login-form' onSubmit={handleSubmit}>
+            <Box className='register-stuff-container'>
+                <Heading className='greeting'>Create Account</Heading>
+                <Text className='register-info-text'>
+                    Create your new account!
+                </Text>
+                <form className='register-form' onSubmit={handleSubmit}>
+                    <CustomTextInput
+                        label='Username'
+                        type='text'
+                        value={username}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                            setUsername(e.target.value);
+                        }}
+                        placeholder='Username'
+                        className='custom-input custom-input-username'
+                        required
+                    />
                     <CustomTextInput
                         label='Email'
                         type='email'
@@ -69,7 +84,7 @@ const Login = () => {
                         fontSize={'22px'}
                         fontWeight={600}
                     >
-                        Sign In
+                        Sign Up
                     </Button>
                 </form>
                 <FormBorder />
@@ -82,14 +97,14 @@ const Login = () => {
                 </Button>
                 <ChakraLink
                     as={ReactRouterLink}
-                    to={'/register'}
-                    className='register-page-link'
+                    to={'/login'}
+                    className='login-page-link'
                     textAlign={'center'}
                     marginTop={'28px'}
                 >
-                    Don't have an account?{' '}
+                    Have an account?{' '}
                     <Text as={'span'} fontWeight={700}>
-                        Sign Up!
+                        Sign In!
                     </Text>
                 </ChakraLink>
                 <ChakraLink
@@ -105,4 +120,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default Register;
