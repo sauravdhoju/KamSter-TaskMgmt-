@@ -25,7 +25,7 @@ const Home = () => {
     const [isSideBarOpen, setIsSidebarOpen] = useState(false);
 
     return (
-        <Box>
+        <Box className='home-page'>
             <NavBar
                 isSideBarOpen={isSideBarOpen}
                 setIsSideBarOpen={setIsSidebarOpen}

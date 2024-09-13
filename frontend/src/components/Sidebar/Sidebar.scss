@@ -1,167 +1,189 @@
-@import '../../_variables.module.scss';
-
+@use '../../variables.module';
 .sidebar {
-  width: 225px;
-  height: auto;
-  background-color: $off-black-1;
-  color: $pure-white;
-  margin-top: 120px;
-  padding: $padding-large $padding-medium;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;  // content stays aligned to the top
-  align-items: center;
-  position: relative;
-  transition: width 0.3s ease;
-  border-radius : 22px;
-
-  &.collapsed {
-    width: 70px; // Adjusted width for collapsed state
-    padding: $padding-large 0;
-  }
-
-  .toggle-btn {
-    position: absolute;
-    top: 20px;
-    right: -10px;
-    background-color: $pure-white;
-    border-radius: 50px 0px 0px 50px;
-    width: 33px;
-    height: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-    position: absolute;
-  
-    // the back icon design
-    i {
-      font-size: 24px;
-      color: $off-black-1;
-    }
-  
-    &:hover {
-      transform: scale(1.1);
-    }
-  }
-  
-  
-  .profile-btn {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    overflow: hidden;
-    margin-bottom: $padding-small;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: width 0.3s ease, height 0.3s ease;
-  
-    .sidebar-icon {
-      font-size: 50px; 
-      color: $pure-white; 
-      transition: font-size 0.3s ease;
-    }
-  
-    // Adjust size for profile icon when collapsed
-    .sidebar.collapsed & {
-      width: 50px;
-      height: 50px;
-  
-      .sidebar-icon {
-        font-size: 30px; // Smaller icon size when collapsed
-      }
-    }
-  }
-  
-  .user-email {
-    font-family: $primary-font;
-    font-size: 15px;
-    margin-top: $padding-small;
-    text-align: center;
-  
-    // Hide email when collapsed
-    .sidebar.collapsed & {
-      display: none;
-    }
-  }
-  
-  .icons-container {
+    width: 80%;
+    height: 100vh;
+    background-color: variables.$off-black-1;
+    color: variables.$pure-white;
+    padding: 30px;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    width: 100%;
-    margin-top: $padding-large;
-  
-    // Adjust alignment for collapsed state
-    .sidebar.collapsed & {
-      align-items: center; // Center icons
+    justify-content: flex-start; // content stays aligned to the top
+    align-items: center;
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-radius: 0px 22px 22px 0px;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+
+    &.collapsed {
+        transform: translateX(0);
     }
-  
-    a {
-      display: flex;
-      align-items: center;
-      text-decoration: none;
-      color: $pure-white;
-      font-family: $primary-font;
-      font-size: 16px;
-      margin: 10px 0;
-      padding-left: $padding-medium;
-      
-      .sidebar.collapsed & {
-        justify-content: center; // Center link content
-        padding-left: 0; // Remove padding in collapsed state
-      }
-  
-      .sidebar-icon {
-        font-size: 24px;
-        margin-right: 15px;
-        color: $pure-white;
-  
-        .sidebar.collapsed & {
-          margin-right: 0; // Remove margin for icons when collapsed
+
+    .toggle-btn {
+        position: absolute;
+        top: 55px;
+        right: 0;
+        background-color: variables.$bg-color;
+        border-radius: 50px 0px 0px 50px;
+        width: 33px;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+        position: absolute;
+
+        // the back icon design
+        .sidebar-close-icon {
+            font-size: 32px !important;
+            font-weight: 800;
+            color: variables.$off-black-1;
         }
-      }
-  
-      span {
-        display: inline-block;
-  
-        .sidebar.collapsed & {
-          display: none; // Hide text when collapsed
+        &:hover {
+            transform: scale(1.1);
         }
-      }
     }
-  }
-  
-  .menu-list {
-    margin-top: $padding-large;
-    width: 100%;
-    padding-left: $padding-medium;
-  
-    .menu-heading {
-      font-family: $primary-font;
-      font-size: 18px;
-      margin-bottom: 5px;
-      border-bottom : 1px solid $pure-white;
-      width : 50%;
-      margin-left: 20px; 
-      padding-bottom: 5px;
-      text-align: center;
-      padding-bottom : 10px;
+
+    .profile-container {
+        align-self: flex-start;
+        .profile-btn {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: width 0.3s ease, height 0.3s ease;
+            background-color: variables.$greyish;
+
+            .sidebar-icon {
+                font-size: 50px;
+                color: variables.$pure-white;
+                transition: font-size 0.3s ease;
+            }
+
+            // Adjust size for profile icon when collapsed
+            .sidebar.collapsed & {
+                width: 50px;
+                height: 50px;
+
+                .sidebar-icon {
+                    font-size: 30px; // Smaller icon size when collapsed
+                }
+            }
+        }
+        .user-email {
+            font-family: variables.$primary-font;
+            font-size: 15px;
+            text-align: center;
+
+            // Hide email when collapsed
+            .sidebar.collapsed & {
+                display: none;
+            }
+        }
     }
-  
-    p {
-      font-family: $primary-font;
-      font-size: 16px;
-      margin-top: $padding-small;
+
+    .icons-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+        width: 100%;
+        margin-top: variables.$padding-large;
+
+        // Adjust alignment for collapsed state
+        .sidebar.collapsed & {
+            align-items: center; // Center icons
+        }
+
+        a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: variables.$pure-white;
+            font-family: variables.$primary-font;
+            font-size: 16px;
+
+            .sidebar.collapsed & {
+                justify-content: center; // Center link content
+                padding-left: 0; // Remove padding in collapsed state
+            }
+
+            .sidebar-icon {
+                font-size: 24px;
+                margin-right: 15px;
+                color: variables.$pure-white;
+
+                .sidebar.collapsed & {
+                    margin-right: 0; // Remove margin for icons when collapsed
+                }
+            }
+
+            span {
+                display: inline-block;
+
+                .sidebar.collapsed & {
+                    display: none; // Hide text when collapsed
+                }
+            }
+        }
     }
-  
-    // Hide menu list when collapsed
-    .sidebar.collapsed & {
-      display: none;
+
+    .menu-list {
+        margin-top: variables.$padding-large;
+        width: 100%;
+
+        .menu-heading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+
+            .menu-heading-text {
+                font-family: variables.$primary-font;
+                font-size: 24px;
+                font-weight: 500;
+            }
+
+            .border {
+                width: 50px;
+                height: 2px;
+                background-color: variables.$pure-white;
+                margin-top: 6px;
+            }
+        }
+
+        p {
+            font-family: variables.$primary-font;
+            font-size: 16px;
+            margin-top: variables.$padding-small;
+        }
+
+        // Hide menu list when collapsed
+        .sidebar.collapsed & {
+            display: none;
+        }
     }
-  }
-  
 }
 
+@media screen and (min-width: 512px) {
+    .sidebar {
+        width: 60%;
+    }
+}
+
+@media screen and (min-width: 700px) {
+    .sidebar {
+        width: 40%;
+    }
+}
+
+@media screen and (min-width: 700px) {
+    .sidebar {
+        width: 40%;
+    }
+}

@@ -1,8 +1,9 @@
 import React from 'react';
 import './Sidebar.scss';
 import { Link } from 'react-router-dom';
-import { Box } from '@chakra-ui/react';
-import 'boxicons/css/boxicons.min.css';
+import { Box, Flex, Heading } from '@chakra-ui/react';
+import 'Boxicons/css/Boxicons.min.css';
+import Icon from '../Icon/Icon';
 
 type SidebarTypes = {
     isSideBarOpen: boolean;
@@ -14,55 +15,58 @@ const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }: SidebarTypes) => {
         setIsSideBarOpen(!isSideBarOpen);
     };
 
-    const userEmail = 'jina@gmail.com';
+    const userEmail = 'jinaa@gmail.com';
     const isUserLoggedIn = true;
 
     return (
-        <div className={`sidebar ${isSideBarOpen ? 'open' : 'collapsed'}`}>
+        <Box className={`sidebar ${isSideBarOpen ? 'open' : 'collapsed'}`}>
             {/* Toggle Button */}
-            <div className='toggle-btn' onClick={toggleSidebar}>
-                <i
-                    className={`bx ${
-                        isSideBarOpen ? 'bx-chevron-right' : 'bx-chevron-left'
-                    }`}
-                ></i>
-            </div>
+            <Box className='toggle-btn' onClick={toggleSidebar}>
+                <Icon name={'bx-chevron-left'} className='sidebar-close-icon' />
+            </Box>
 
             {/* Profile Section */}
-            <Box className='profile-btn'>
-                {isUserLoggedIn ? (
-                    <i className='bx bxs-user sidebar-icon'></i>
-                ) : (
-                    <i className='bx bx-user sidebar-icon'></i>
-                )}
-            </Box>
-            {isSideBarOpen && <p className='user-email'>{userEmail}</p>}
+            <Flex flexDir={'column'} gap={'10px'} className='profile-container'>
+                <Box className='profile-btn'>
+                    {isUserLoggedIn ? (
+                        <i className='bx bxs-user sidebar-icon'></i>
+                    ) : (
+                        <i className='bx bx-user sidebar-icon'></i>
+                    )}
+                </Box>
+                <p className='user-email'>{userEmail}</p>
+            </Flex>
 
             {/* Icons*/}
-            <div className='icons-container'>
+            <Box className='icons-container'>
                 <Link to='/home'>
-                    <i className='bx bx-home sidebar-icon'></i>
-                    {isSideBarOpen && <span>Home</span>}
+                    <Icon name='bx-home' className='sidebar-icon' />
+                    <span>Home</span>
                 </Link>
                 <Link to='/calendar'>
-                    <i className='bx bx-calendar sidebar-icon'></i>
-                    {isSideBarOpen && <span>Calendar</span>}
+                    <Icon name='bx-calendar' className='sidebar-icon' />
+
+                    <span>Calendar</span>
                 </Link>
                 <Link to='/kanban'>
-                    <i className='bx bx-grid sidebar-icon'></i>
-                    {isSideBarOpen && <span>Kanban</span>}
+                    <Icon name='bx-grid' className='sidebar-icon' />
+                    <span>Kanban</span>
                 </Link>
-            </div>
+            </Box>
 
             {/* Menu List */}
-            {isSideBarOpen && (
-                <div className='menu-list'>
-                    <h3 className='menu-heading'>My List</h3>
-                    <p>My Task</p>
-                    <p>College Stuffs</p>
-                </div>
-            )}
-        </div>
+            <Box className='menu-list'>
+                <Box className='menu-heading'>
+                    <Box className='border'></Box>
+                    <Heading className='menu-heading-text' as={'h2'}>
+                        My List
+                    </Heading>
+                    <Box className='border'></Box>
+                </Box>
+                <p>My Task</p>
+                <p>College Stuffs</p>
+            </Box>
+        </Box>
     );
 };
 
