@@ -15,7 +15,7 @@ type CustomTextInputProps = {
     className?: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     value: string;
-    type: 'email' | 'text' | 'password';
+    type: 'email' | 'text' | 'password' | 'name';
     required?: boolean;
     placeholder?: string;
 };
@@ -36,6 +36,8 @@ const CustomTextInput = ({
             return <Icon name='bxs-lock-open-alt' />;
         } else if (type === 'text') {
             return <Icon name='bxs-user' />;
+        } else if (type === 'name') {
+            return <Icon name='bxs-user-rectangle' />;
         } else {
             return null;
         }

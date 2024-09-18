@@ -28,8 +28,6 @@ const UserProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
         client
             .get('user')
             .then((res) => {
-                console.log(res.data);
-
                 setUser(res.data.user);
                 navigate('/');
             })
