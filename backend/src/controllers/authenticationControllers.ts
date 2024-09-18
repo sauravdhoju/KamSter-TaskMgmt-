@@ -52,8 +52,9 @@ export const login = async (req: express.Request, res: express.Response) => {
             domain: 'localhost', // client domain
             path: '/',
             httpOnly: true,
-            expiresIn: new Date(Date.now() + token_expire),
+            maxAge: parseInt(token_expire),
         };
+        console.log(token_expire);
 
         // save the session token to the user entry
         user.authentication.sessionToken = jwt_token;
