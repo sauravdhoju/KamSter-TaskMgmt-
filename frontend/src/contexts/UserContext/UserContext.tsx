@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { useBackendAPIContext } from '../BackendAPIContext/BackendAPIContext';
 
@@ -20,6 +21,7 @@ type UserContextType = {
 const UserContext = React.createContext<UserContextType | null>(null);
 
 const UserProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
+    const navigate = useNavigate();
     const [user, setUser] = useState<UserContextType['user']>(null);
     const { client } = useBackendAPIContext();
     const fetchUser = async () => {
@@ -27,8 +29,14 @@ const UserProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
             .get('user')
             .then((res) => {
                 console.log(res.data);
+
+                setUser(res.data.user);
+                navigate('/');
             })
-            .catch((err) => console.log(err));
+            .catch((err) => {
+                console.warn(err);
+                navigate('/login');
+            });
     };
 
     return (
