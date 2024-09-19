@@ -9,6 +9,9 @@ import {
     Image,
 } from '@chakra-ui/react';
 
+import { useBackendAPIContext } from '../../contexts/BackendAPIContext/BackendAPIContext';
+import { useUserContext } from '../../contexts/UserContext/UserContext';
+
 import Icon from '../../components/Icon/Icon';
 import CustomTextInput from '../../components/CustomTextInput/CustomTextInput';
 import NavBar from '../../components/NavBar/NavBar';
@@ -16,11 +19,35 @@ import FormBorder from '../../components/FormBorder/FormBorder';
 import './Login.scss';
 
 const Login = () => {
+    const { client } = useBackendAPIContext();
+    const { fetchUser } = useUserContext();
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleLogin = async () => {
+        setIsLoading(true);
+        const userDetails = {
+            email,
+            password,
+        };
+        client
+            .post('/auth/login', userDetails)
+            .then((res) => {
+                console.log(res.data);
+                fetchUser();
+                setIsLoading(false);
+            })
+            .catch((err) => {
+                console.error(err);
+                setIsLoading(false);
+            });
+    };
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        handleLogin();
     };
     return (
         <Box className='login-page'>
@@ -68,6 +95,7 @@ const Login = () => {
                         height={'50px'}
                         fontSize={'22px'}
                         fontWeight={600}
+                        isLoading={isLoading}
                     >
                         Sign In
                     </Button>

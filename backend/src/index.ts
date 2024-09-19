@@ -19,7 +19,13 @@ const app = express();
 //         optionsSuccessStatus: 200,
 //     })
 // );
-app.use(cors());
+app.use(
+    cors({
+        credentials: true,
+        origin: 'http://localhost:5173',
+        optionsSuccessStatus: 200,
+    })
+);
 
 app.use(compression());
 app.use(cookieParser());
