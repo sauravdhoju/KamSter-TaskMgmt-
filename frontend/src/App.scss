@@ -1,0 +1,5 @@
+@use './variables.module';
+.app {
+    min-height: 100vh;
+    background-color: variables.$bg-color;
+}

@@ -1,4 +1,4 @@
-import { Link as ReactRouterLink } from 'react-router-dom';
+import { Link as ReactRouterLink, useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
 import {
     Box,
@@ -10,34 +10,39 @@ import {
 } from '@chakra-ui/react';
 
 import { useBackendAPIContext } from '../../contexts/BackendAPIContext/BackendAPIContext';
-import { useUserContext } from '../../contexts/UserContext/UserContext';
 
 import Icon from '../../components/Icon/Icon';
 import CustomTextInput from '../../components/CustomTextInput/CustomTextInput';
 import NavBar from '../../components/NavBar/NavBar';
 import FormBorder from '../../components/FormBorder/FormBorder';
-import './Login.scss';
 
-const Login = () => {
+import './Register.scss';
+
+const Register = () => {
+    const navigate = useNavigate();
     const { client } = useBackendAPIContext();
-    const { fetchUser } = useUserContext();
 
+    const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [name, setName] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
-    const handleLogin = async () => {
+    const handleRegister = async () => {
+        setIsLoading(true);
         setIsLoading(true);
         const userDetails = {
+            name,
+            username,
             email,
             password,
         };
         client
-            .post('/auth/login', userDetails)
+            .post('/auth/register', userDetails)
             .then((res) => {
                 console.log(res.data);
-                fetchUser();
                 setIsLoading(false);
+                navigate('/login');
             })
             .catch((err) => {
                 console.error(err);
@@ -47,15 +52,38 @@ const Login = () => {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        handleLogin();
+        handleRegister();
     };
     return (
-        <Box className='login-page'>
+        <Box className='register-page'>
             <NavBar />
-            <Box className='login-stuff-container'>
-                <Heading className='greeting'>Welcome Back</Heading>
-                <Text className='login-info-text'>Login to your account</Text>
-                <form className='login-form' onSubmit={handleSubmit}>
+            <Box className='register-stuff-container'>
+                <Heading className='greeting'>Create Account</Heading>
+                <Text className='register-info-text'>
+                    Create your new account!
+                </Text>
+                <form className='register-form' onSubmit={handleSubmit}>
+                    <CustomTextInput
+                        label='Full Name'
+                        type='name'
+                        value={name}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                            setName(e.target.value);
+                        }}
+                        placeholder='Full Name'
+                        className='custom-input custom-input-username'
+                    />
+                    <CustomTextInput
+                        label='Username'
+                        type='text'
+                        value={username}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                            setUsername(e.target.value);
+                        }}
+                        placeholder='Username'
+                        className='custom-input custom-input-username'
+                        required
+                    />
                     <CustomTextInput
                         label='Email'
                         type='email'
@@ -97,7 +125,7 @@ const Login = () => {
                         fontWeight={600}
                         isLoading={isLoading}
                     >
-                        Sign In
+                        Sign Up
                     </Button>
                 </form>
                 <FormBorder />
@@ -110,14 +138,14 @@ const Login = () => {
                 </Button>
                 <ChakraLink
                     as={ReactRouterLink}
-                    to={'/register'}
-                    className='register-page-link'
+                    to={'/login'}
+                    className='login-page-link'
                     textAlign={'center'}
                     marginTop={'28px'}
                 >
-                    Don't have an account?{' '}
+                    Have an account?{' '}
                     <Text as={'span'} fontWeight={700}>
-                        Sign Up!
+                        Sign In!
                     </Text>
                 </ChakraLink>
                 <ChakraLink
@@ -133,4 +161,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default Register;

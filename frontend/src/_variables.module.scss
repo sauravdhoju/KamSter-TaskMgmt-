@@ -5,6 +5,7 @@ $pure-black-50: #00000080;
 $pure-black-20: #00000033;
 $off-black-1: #252525;
 $pure-white: #ffffff;
+$bg-color: #e5e5e5;
 
 /* PADDING */
 $padding-small: 10px;
@@ -19,11 +20,14 @@ $primary-font: 'Jost', sans-serif;
     // fonts
     primaryFont: $primary-font;
 
+    pureBlack: $pure-black;
+    pureBlack80: $pure-black-80;
+    pureBlack60: $pure-black-60;
+    pureBlack50: $pure-black-50;
+    pureBlack20: $pure-black-20;
     offBlack1: $off-black-1;
     pureWhite: $pure-white;
+    bgColor: $bg-color;
 
-    paddingSmall: $padding-small;
-    paddingMedium: $padding-medium;
-    paddingLarge: $padding-large;
 }
 

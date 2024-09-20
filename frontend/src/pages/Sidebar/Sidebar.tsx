@@ -3,6 +3,7 @@ import './Sidebar.scss';
 import { Link } from 'react-router-dom'; 
 import { Box } from '@chakra-ui/react';
 import 'boxicons/css/boxicons.min.css';
+import { AiOutlineAlignLeft } from 'react-icons/ai';
 
 const Sidebar: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
@@ -49,7 +50,7 @@ const Sidebar: React.FC = () => {
 
       {/* Menu List */}
       {isOpen && (
-        <div className="menu-list">
+        <div className="menu-list"> 
           <h3 className="menu-heading">My List</h3>
           <p>My Task</p>
           <p>College Stuffs</p>
@@ -60,3 +61,4 @@ const Sidebar: React.FC = () => {
 };
 
 export default Sidebar;
+
