@@ -1,7 +1,8 @@
 import React from 'react';
 import './Sidebar.scss';
 import { Link } from 'react-router-dom';
-import { Box, Flex, Heading } from '@chakra-ui/react';
+import { useState } from 'react';
+import { Box, Flex } from '@chakra-ui/react';
 import 'Boxicons/css/Boxicons.min.css';
 import Icon from '../Icon/Icon';
 
@@ -11,6 +12,8 @@ type SidebarTypes = {
 };
 
 const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }: SidebarTypes) => {
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
     const toggleSidebar = () => {
         setIsSideBarOpen(!isSideBarOpen);
     };
@@ -40,7 +43,7 @@ const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }: SidebarTypes) => {
             {/* Icons*/}
             <Box className='icons-container'>
                 <Link to='/home'>
-                    <Icon name='bx-home' className='sidebar-icon' />
+                    <Icon name='bx-home-alt-2' className='sidebar-icon' />
                     <span>Home</span>
                 </Link>
                 <Link to='/calendar'>
@@ -52,21 +55,84 @@ const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }: SidebarTypes) => {
                     <Icon name='bx-grid' className='sidebar-icon' />
                     <span>Kanban</span>
                 </Link>
+                <Link to='/pomodoro'>
+                    <Icon name='bx-chalkboard' className='sidebar-icon' />
+                    <span>Pomodoro</span>
+                </Link>
+                <Box
+                    as={Link}
+                    to='/newlist'
+                    w={'220px'}
+                    borderRadius={'md'}
+                    backgroundColor={'transparent'}
+                    borderStyle={'dashed'}
+                    borderWidth={1}
+                    borderColor={'white'}
+                    display="flex" 
+                    alignItems="center" 
+                    p={2}
+                    >
+                    <Icon name='bx-list-plus' className='sidebar-icon' />
+                    <span>New List</span>
+                </Box>
+                    <Flex
+                        // alignItems='center'
+                       
+                        className='list-heading'
+                        onClick={() => setIsDropdownOpen(!isDropdownOpen)}  // Toggle dropdown
+                    >
+                        <Flex alignItems='center'>
+                            <Icon name='bx-check-square' className='sidebar-icon' />
+                            <span>Lists</span>
+                        </Flex>
+                        <Icon name={isDropdownOpen ? 'bx-caret-up' : 'bx-caret-down'} className='drop-icon' />
+                    </Flex>
+
+                    {isDropdownOpen && (
+                        <Box className='dropdown-list'>
+                            <Link to='/list1'>List 1</Link>
+                            <Link to='/list2'>List 2</Link>
+                        </Box>
+                    )}
             </Box>
+          
 
             {/* Menu List */}
-            <Box className='menu-list'>
-                <Box className='menu-heading'>
+            {/* <Box className='menu-list'> */}
+                {/* <Box className='menu-heading'>
                     <Box className='border'></Box>
                     <Heading className='menu-heading-text' as={'h2'}>
                         My List
                     </Heading>
                     <Box className='border'></Box>
-                </Box>
-                <p>My Task</p>
-                <p>College Stuffs</p>
+                </Box> */}
+                {/* <p>My Task</p>
+                <p>College Stuffs</p> */}
+                {/* </Box> */}
+
+            {/* logout */}
+            <Box className='logout-container' mt={'auto'}>
+                <Link to='/login'>
+                    <Flex
+                        as='button'
+                        alignItems={'center'}
+                        justifyContent={'flex-start'}
+                        w={'220px'}
+                        p={2}
+                        borderRadius={'md'}
+                        backgroundColor={'transparent'}
+                        borderWidth={1}
+                        borderColor={'white'}
+                        className='logout-btn'
+                    >
+                        <Icon name='bx-log-out' className='sidebar-icon' />
+                        <span> Logout</span>
+                    </Flex>
+                </Link>
             </Box>
         </Box>
+      
+        
     );
 };
 
