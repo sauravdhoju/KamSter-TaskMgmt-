@@ -183,27 +183,7 @@
                 transition: transform 1s ease-in-out;
             }
         }
-        .logout-container {
-            width: 100%;
-            display: flex;
-            justify-content: flex-start;
-            margin-top: auto;
-            padding-top: 20px;
-    
-            .logout-link {
-                display: inline-block;
-                width: 100%;
-    
-                .logout-btn {
-                    display: flex;
-                    align-items: center;
-                }
-            }
-    
-            .sidebar-icon {
-                margin-right: 10px;
-            }
-        }
+       
     }
 
     // .menu-list {
@@ -241,6 +221,28 @@
     //         display: none;
     //     }
     // }
+    .logout-container {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        margin-top: auto;
+        padding: 20px 15px 10px;
+
+        .logout-link {
+            display: block;
+            width: 100%;
+
+            .logout-btn {
+                display: flex;
+                align-items: center;
+                width: 100%;
+            }
+        }
+
+        .sidebar-icon {
+            margin-right: 10px;
+        }
+    }
 
 }
 

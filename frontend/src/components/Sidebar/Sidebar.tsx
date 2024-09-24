@@ -77,7 +77,7 @@ const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }: SidebarTypes) => {
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)} // Toggle dropdown
                 >
                     <Flex alignItems='center'>
-                        <Icon name='bx-check-square' className='sidebar-icon' />
+                        <Icon name='bx-list-ul' className='sidebar-icon' />
                         <span>Lists</span>
                     </Flex>
                     <Icon
@@ -90,17 +90,31 @@ const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }: SidebarTypes) => {
 
                 {isDropdownOpen && (
                     <Box className='dropdown-list'>
-                        <Link to='/list1'>List 1</Link>
-                        <Link to='/list2'>List 2</Link>
-                        <Link to='/list2'>List 2</Link>
-                        <Link to='/list2'>List 2</Link>
-                        <Link to='/list2'>List 2</Link>
-                        <Link to='/list2'>List 2</Link>
-                        <Link to='/list2'>List 2</Link>
-                        <Link to='/list2'>List 2</Link>
-                        <Link to='/list2'>List 2</Link>
-                        <Link to='/list2'>List 2</Link>
-                        <Link to='/list2'>List 2</Link>
+                        <Link to='/list1'>
+                         <Icon name='bx-checkbox-checked' className='sidebar-icon'  />
+                         <span>List 1</span>
+                        </Link>
+                        <Link to='/list2'>
+                         <Icon name='bx-checkbox-checked' className='sidebar-icon'  />
+                         <span>List 2</span>
+                        </Link>
+                        <Link to='/list3'>
+                         <Icon name='bx-checkbox-checked' className='sidebar-icon'  />
+                         <span>List 3</span>
+                        </Link>
+                        <Link to='/list4'>
+                         <Icon name='bx-checkbox-checked' className='sidebar-icon'  />
+                         <span>List 4</span>
+                        </Link>
+                        <Link to='/list5'>
+                         <Icon name='bx-checkbox-checked' className='sidebar-icon'  />
+                         <span>List 5</span>
+                        </Link>
+                        <Link to='/list6'>
+                         <Icon name='bx-checkbox-checked' className='sidebar-icon'  />
+                         <span>List 6</span>
+                        </Link>
+                        
                     </Box>
                 )}
             </Box>
