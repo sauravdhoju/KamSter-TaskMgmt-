@@ -50,6 +50,7 @@
 
     .profile-container {
         align-self: flex-start;
+        padding: 20px 0 0 20px;
         .profile-btn {
             width: 100px;
             height: 100px;
@@ -95,7 +96,7 @@
         align-items: flex-start;
         gap: 20px;
         width: 100%;
-        margin-top: variables.$padding-large;
+        margin-top: variables.$padding-small;
         padding: 20px;
         overflow-y: auto;
 
@@ -182,6 +183,27 @@
                 transition: transform 1s ease-in-out;
             }
         }
+        .logout-container {
+            width: 100%;
+            display: flex;
+            justify-content: flex-start;
+            margin-top: auto;
+            padding-top: 20px;
+    
+            .logout-link {
+                display: inline-block;
+                width: 100%;
+    
+                .logout-btn {
+                    display: flex;
+                    align-items: center;
+                }
+            }
+    
+            .sidebar-icon {
+                margin-right: 10px;
+            }
+        }
     }
 
     // .menu-list {
@@ -220,27 +242,6 @@
     //     }
     // }
 
-    .logout-container {
-        width: 100%;
-        display: flex;
-        justify-content: flex-start;
-        margin-top: auto;
-        padding-top: 20px;
-
-        .logout-link {
-            display: inline-block;
-            width: 100%;
-
-            .logout-btn {
-                display: flex;
-                align-items: center;
-            }
-        }
-
-        .sidebar-icon {
-            margin-right: 10px;
-        }
-    }
 }
 
 @media screen and (min-width: 512px) {
