@@ -92,6 +92,16 @@ const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }: SidebarTypes) => {
                         <Box className='dropdown-list'>
                             <Link to='/list1'>List 1</Link>
                             <Link to='/list2'>List 2</Link>
+                            <Link to='/list2'>List 2</Link>
+                            <Link to='/list2'>List 2</Link>
+                            <Link to='/list2'>List 2</Link>
+                            <Link to='/list2'>List 2</Link>
+                            <Link to='/list2'>List 2</Link>
+                            <Link to='/list2'>List 2</Link>
+                            <Link to='/list2'>List 2</Link>
+                            <Link to='/list2'>List 2</Link>
+                            <Link to='/list2'>List 2</Link>
+                            
                         </Box>
                     )}
             </Box>
