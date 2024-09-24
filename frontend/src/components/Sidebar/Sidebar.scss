@@ -1,10 +1,11 @@
 @use '../../variables.module';
 .sidebar {
     width: 80%;
+    max-width: 320px;
     height: 100vh;
     background-color: variables.$off-black-1;
     color: variables.$pure-white;
-    padding: 30px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start; // content stays aligned to the top
@@ -15,7 +16,7 @@
     border-radius: 0px 22px 22px 0px;
     transform: translateX(-100%);
     transition: transform 0.3s ease;
-    overflow-y: auto;
+    overflow-x: visible;
 
     &.collapsed {
         transform: translateX(0);
@@ -95,10 +96,35 @@
         gap: 20px;
         width: 100%;
         margin-top: variables.$padding-large;
+        padding: 20px;
+        overflow-y: auto;
+
+        overflow-x: visible;
+
+        scrollbar-width: none;
 
         // Adjust alignment for collapsed state
         .sidebar.collapsed & {
             align-items: center; // Center icons
+        }
+
+        .new-list-button {
+            position: relative;
+            overflow: visible;
+            &::before {
+                content: '';
+                display: block;
+                position: absolute;
+                top: -5px;
+                left: -10px;
+                bottom: 0;
+                right: 0;
+                width: calc(100% + 10px);
+                height: calc(100% + 10px);
+                border: 2px dashed variables.$half-white;
+                border-radius: 5px;
+                z-index: 100;
+            }
         }
 
         a {
@@ -133,33 +159,29 @@
             }
         }
 
-            .list-heading {
-                display: flex;
-                justify-content: space-between; 
-                align-items: center;
-    
-                .sidebar-icon {
-                    font-size: 24px;
-                    margin-right: 15px;
-                    color: variables.$pure-white;
-                }
+        .list-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+
+            .sidebar-icon {
+                font-size: 24px;
+                margin-right: 15px;
+                color: variables.$pure-white;
             }
-            .drop-icon{
-               margin-left: 130px;
+        }
+
+        .dropdown-list {
+            display: flex;
+            flex-direction: column;
+            padding-left: 30px;
+            transition: transform 1s ease-in-out;
+            a {
+                padding: 2px 5px;
+                transition: transform 1s ease-in-out;
             }
-    
-            .dropdown-list {
-                display: flex;
-                flex-direction: column;
-                padding-left: 30px;
-                transition:  transform 1s ease-in-out;
-                overflow-y: auto;
-                a {
-                    padding: 2px 5px;
-                    transition:  transform 1s ease-in-out;  
-    
-                }
-            }
+        }
     }
 
     // .menu-list {
@@ -199,38 +221,30 @@
     // }
 
     .logout-container {
-        width: 100%; 
+        width: 100%;
         display: flex;
-        justify-content: flex-start; 
-        margin-top: auto; 
+        justify-content: flex-start;
+        margin-top: auto;
         padding-top: 20px;
 
+        .logout-link {
+            display: inline-block;
+            width: 100%;
+
+            .logout-btn {
+                display: flex;
+                align-items: center;
+            }
+        }
+
         .sidebar-icon {
-            margin-right: 10px; 
+            margin-right: 10px;
         }
-          
-        .logout-btn {
-            display: flex;
-            align-items: center;
-        }
-    }  
-    
-}  
+    }
+}
 
 @media screen and (min-width: 512px) {
     .sidebar {
         width: 60%;
-    }
-}
-
-@media screen and (min-width: 700px) {
-    .sidebar {
-        width: 40%;
-    }
-}
-
-@media screen and (min-width: 700px) {
-    .sidebar {
-        width: 40%;
     }
 }

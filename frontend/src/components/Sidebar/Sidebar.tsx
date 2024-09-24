@@ -62,72 +62,70 @@ const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }: SidebarTypes) => {
                 <Box
                     as={Link}
                     to='/newlist'
-                    w={'220px'}
-                    borderRadius={'md'}
-                    backgroundColor={'transparent'}
-                    borderStyle={'dashed'}
-                    borderWidth={1}
-                    borderColor={'white'}
-                    display="flex" 
-                    alignItems="center" 
-                    p={2}
-                    >
+                    w={'100%'}
+                    display='flex'
+                    alignItems='center'
+                    className='new-list-button'
+                >
                     <Icon name='bx-list-plus' className='sidebar-icon' />
                     <span>New List</span>
                 </Box>
-                    <Flex
-                        // alignItems='center'
-                       
-                        className='list-heading'
-                        onClick={() => setIsDropdownOpen(!isDropdownOpen)}  // Toggle dropdown
-                    >
-                        <Flex alignItems='center'>
-                            <Icon name='bx-check-square' className='sidebar-icon' />
-                            <span>Lists</span>
-                        </Flex>
-                        <Icon name={isDropdownOpen ? 'bx-caret-up' : 'bx-caret-down'} className='drop-icon' />
-                    </Flex>
+                <Flex
+                    // alignItems='center'
 
-                    {isDropdownOpen && (
-                        <Box className='dropdown-list'>
-                            <Link to='/list1'>List 1</Link>
-                            <Link to='/list2'>List 2</Link>
-                            <Link to='/list2'>List 2</Link>
-                            <Link to='/list2'>List 2</Link>
-                            <Link to='/list2'>List 2</Link>
-                            <Link to='/list2'>List 2</Link>
-                            <Link to='/list2'>List 2</Link>
-                            <Link to='/list2'>List 2</Link>
-                            <Link to='/list2'>List 2</Link>
-                            <Link to='/list2'>List 2</Link>
-                            <Link to='/list2'>List 2</Link>
-                            
-                        </Box>
-                    )}
+                    className='list-heading'
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)} // Toggle dropdown
+                >
+                    <Flex alignItems='center'>
+                        <Icon name='bx-check-square' className='sidebar-icon' />
+                        <span>Lists</span>
+                    </Flex>
+                    <Icon
+                        name={
+                            isDropdownOpen ? 'bx-caret-down' : 'bx-caret-right'
+                        }
+                        className='drop-icon'
+                    />
+                </Flex>
+
+                {isDropdownOpen && (
+                    <Box className='dropdown-list'>
+                        <Link to='/list1'>List 1</Link>
+                        <Link to='/list2'>List 2</Link>
+                        <Link to='/list2'>List 2</Link>
+                        <Link to='/list2'>List 2</Link>
+                        <Link to='/list2'>List 2</Link>
+                        <Link to='/list2'>List 2</Link>
+                        <Link to='/list2'>List 2</Link>
+                        <Link to='/list2'>List 2</Link>
+                        <Link to='/list2'>List 2</Link>
+                        <Link to='/list2'>List 2</Link>
+                        <Link to='/list2'>List 2</Link>
+                    </Box>
+                )}
             </Box>
-          
 
             {/* Menu List */}
             {/* <Box className='menu-list'> */}
-                {/* <Box className='menu-heading'>
+            {/* <Box className='menu-heading'>
                     <Box className='border'></Box>
                     <Heading className='menu-heading-text' as={'h2'}>
                         My List
                     </Heading>
                     <Box className='border'></Box>
                 </Box> */}
-                {/* <p>My Task</p>
+            {/* <p>My Task</p>
                 <p>College Stuffs</p> */}
-                {/* </Box> */}
+            {/* </Box> */}
 
             {/* logout */}
             <Box className='logout-container' mt={'auto'}>
-                <Link to='/login'>
+                <Link to='/login' className='logout-link'>
                     <Flex
                         as='button'
                         alignItems={'center'}
                         justifyContent={'flex-start'}
-                        w={'220px'}
+                        w={'100%'}
                         p={2}
                         borderRadius={'md'}
                         backgroundColor={'transparent'}
@@ -141,8 +139,6 @@ const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }: SidebarTypes) => {
                 </Link>
             </Box>
         </Box>
-      
-        
     );
 };
 
