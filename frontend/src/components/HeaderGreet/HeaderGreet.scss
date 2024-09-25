@@ -1,0 +1,15 @@
+@use '../../variables.module';
+.header-greet {
+    font-family: variables.$primary-font;
+
+    .header-container {
+        .greet-container {
+            .greet-texts {
+                .greet-header {
+                    font-family: variables.$primary-font;
+                    font-weight: 600;
+                }
+            }
+        }
+    }
+}
