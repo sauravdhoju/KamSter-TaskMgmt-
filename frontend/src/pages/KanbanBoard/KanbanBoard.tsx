@@ -7,7 +7,7 @@ import Icon from '../../components/Icon/Icon';
 const tabs = ['My List', 'Exam Schedule', 'Test', 'Travelling', 'Add Lists'];
 
 const KanbanBoard = () => {
-    const [activeTab, setActiveTab] = useState('My List');
+    const [activeTab, setActiveTab] = useState('My List');//initially render after loading the localhost opens 'my list'
 
     const renderContent = () => {
         switch (activeTab) {
@@ -81,7 +81,7 @@ const KanbanBoard = () => {
                         </Box>
                         <Box className='text-area'>
                         <Icon name='bx-circle' className='small-icon' />
-                            <Text className='list-name'>Numerical Methods</Text>
+                            <Text className='list-name'>AAD</Text>
                             <Icon name='bx-star' className='favorite-icon' />
                         </Box>
                     </Box>
@@ -98,7 +98,7 @@ const KanbanBoard = () => {
                         </Box>
                         <Box className='text-area'>
                         <Icon name='bx-circle' className='small-icon' />
-                            <Text className='list-name'>Trip to Langtang-Gosaikunda</Text>
+                            <Text className='list-name'>Gosaikunda</Text>
                             <Icon name='bx-star' className='favorite-icon' />
                         </Box>
                     </Box>
