@@ -19,7 +19,7 @@
     background-color: #D9D9D9;
     border: 3px solid rgb(46, 39, 39); 
     padding: 8px 16px; 
-    color: white; // Text color
+    color: white; 
     border-radius: 26px; 
     font-size: 14px; 
     text-transform: lowercase;
@@ -29,16 +29,12 @@
     display: flex;  
     align-items: front;
     justify-content: center;
-    gap: 5px; // Space between icon and text
-    // margin-top: 150px;
+    gap: 5px; 
     width: 232px;
     margin-left: 60px;
     position: absolute;
     height:32px
-    
 }
-
-
 
 .task-summary {
     margin-top: px; 
@@ -61,23 +57,20 @@
     margin-bottom: 25px; 
 }
 
-.task-summary a:hover { // remove
-    text-decoration: underline; // Underline on hover
+.task-summary a:hover { 
+    text-decoration: underline; 
 }
 
-
-
-
 .button-section {
-    margin: 30px 40px; // Space around the section
+    margin: 30px 40px; 
     display: flex;
-    justify-content: left; // Center the buttons horizontally
-    gap: 20px; // Space between buttons
+    justify-content: left; 
+    gap: 20px; 
 }
 
 .my-list-button,
 .new-list-button {
-    background-color: #007BFF; // Primary button color
+    background-color: #007BFF; 
     color: white;
     border: none;
     border-radius: 5px;
@@ -89,7 +82,7 @@
 
 .my-list-button:hover,
 .new-list-button:hover {
-    background-color: #0056b3; // Darker shade on hover
+    background-color: #0056b3; 
     text-decoration: underline;
 }
 
@@ -97,18 +90,16 @@
     border: 0;
     height: 1px;
     background: #ccc;
-    margin: 5px 10px; // Space above and below the line
+    margin: 5px 10px; 
 }
 
-
-
 .hire-me-text {
-    text-align: left; // Center the text
-    margin: 20px 30px; // Space around the text
-    font-size: 18px; // Font size
-    color: #000000; // Text color
-    cursor: pointer; // Pointer cursor on hover
-    font-weight: bold; // Make the text bold
+    text-align: left; 
+    margin: 20px 30px; 
+    font-size: 18px; 
+    color: #000000; 
+    cursor: pointer; 
+    font-weight: bold; 
 }
 
 .circle-sign {
@@ -118,46 +109,15 @@
 }
 
 .star-sign {
-    font-size: 20px; // Size of the star
-    margin-left: 2px; // Space between text and star
-    color: #000000; // Star color
+    font-size: 20px; 
+    margin-left: 2px; 
+    color: #000000; 
 }
-
-
-// .plus-button {
-//     //position: fixed; 
-//     top: 150px; 
-//     left: 250px; 
-//     font-size: 35px; 
-//     background-color: #000000; /* Black background */
-//     //color: #000000; /* White plus sign */
-//     //border: none; 
-//     //border-radius: 50%; /* Make the button circular */
-//     //padding: 15px; 
-//     //cursor: pointer; 
-//     display: flex;
-//     align-items: center;
-//     justify-content: center;
-//     margin: 15px 20px;
-//     text-align: center;
-//     // box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
-// }
-
-// .plus-button {
-//     // position: fixed; 
-//     top: 155px; 
-//     left: 250px; 
-    
-//     font-size: 40px; 
-//     background: transparent;
-//     border-radius: 50%;
-
-//     //box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
-// }
 
 .plus-button {
     position: fixed;
-    bottom: 0;  /* Positions it at the bottom */
-    right: 0;   /* Positions it at the right */
-    margin: 20px; /* Adds some space from the edges */
+    bottom: 0;  
+    right: 0;   
+    margin: 20px;
+     
 }

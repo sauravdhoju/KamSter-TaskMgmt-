@@ -29,6 +29,7 @@ const Home: React.FC = () => {
             </Box>
             <input className="search-input" type="text" placeholder="Search for anything..." />
             
+            
             <Box className="button-section">
                 <Button className="my-list-button" onClick={() => console.log('My List clicked')}>
                     <i className="fa-solid fa-star"></i> My List
@@ -39,21 +40,18 @@ const Home: React.FC = () => {
             </Box>
             <hr className="divider" />
             <Text className="hire-me-text">
-                <i className="circle-sign">o</i> Hire Me for Designer <i className="fa-solid fa-star"></i>
+                <span className="circle-sign">o</span> Hire Me for Designer <i className="fa-solid fa-star"></i>
             </Text>
-            
-            {/* Positioned at the bottom-right corner */}
             <Button 
-                className="plus-button" 
-                onClick={() => console.log('Add New List')} 
+                className="plus-button" onClick={() => console.log('Add New List')} 
                 style={{
                     position: 'fixed',
                     bottom: '20px',
                     right: '20px',
-                    background: 'none', // Remove background
-                    border: 'none',     // Remove border
-                    padding: 0,        // Remove padding
-                    cursor: 'pointer'   // Change cursor to pointer
+                    background: 'none', 
+                    border: 'none', 
+                    padding: 0,        
+                    cursor: 'pointer'   
                 }}
             >
                 <i className="fa-solid fa-circle-plus fa-2x"></i> 
