@@ -9,7 +9,7 @@
     text-align: front; 
     position: relative; 
     min-height: 30px;
-    width: 270px;
+    width: 293px;
     margin-left: 30px;
     margin-top: 20px;
 
@@ -17,10 +17,10 @@
 
 .search-input {
     background-color: #D9D9D9;
-    border: 1px solid white; 
+    border: 3px solid rgb(46, 39, 39); 
     padding: 8px 16px; 
     color: white; // Text color
-    border-radius: 5px; 
+    border-radius: 26px; 
     font-size: 14px; 
     text-transform: lowercase;
     cursor: pointer;
@@ -31,7 +31,7 @@
     justify-content: center;
     gap: 5px; // Space between icon and text
     // margin-top: 150px;
-    width: 200px;
+    width: 232px;
     margin-left: 60px;
     position: absolute;
     height:32px
@@ -100,10 +100,6 @@
     margin: 5px 10px; // Space above and below the line
 }
 
-.star-sign,
-.plus-sign{
-    font-size: 20px;
-}
 
 
 .hire-me-text {
@@ -128,21 +124,40 @@
 }
 
 
+// .plus-button {
+//     //position: fixed; 
+//     top: 150px; 
+//     left: 250px; 
+//     font-size: 35px; 
+//     background-color: #000000; /* Black background */
+//     //color: #000000; /* White plus sign */
+//     //border: none; 
+//     //border-radius: 50%; /* Make the button circular */
+//     //padding: 15px; 
+//     //cursor: pointer; 
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     margin: 15px 20px;
+//     text-align: center;
+//     // box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
+// }
+
+// .plus-button {
+//     // position: fixed; 
+//     top: 155px; 
+//     left: 250px; 
+    
+//     font-size: 40px; 
+//     background: transparent;
+//     border-radius: 50%;
+
+//     //box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
+// }
+
 .plus-button {
-    position: fixed; 
-    top: 150px; 
-    left: 250px; 
-    font-size: 24px; 
-    //background-color: #fff; /* Black background */
-    //color: #000000; /* White plus sign */
-    //border: none; 
-    //border-radius: 50%; /* Make the button circular */
-    //padding: 15px; 
-    cursor: pointer; 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 15px 20px;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
+    position: fixed;
+    bottom: 0;  /* Positions it at the bottom */
+    right: 0;   /* Positions it at the right */
+    margin: 20px; /* Adds some space from the edges */
 }

@@ -26,25 +26,37 @@ const Home: React.FC = () => {
                 <Box className="task-summary">
                     <a href="#!">10 tasks completed, 5 pending</a>
                 </Box>
-                </Box>
-                <input className="search-input" type="text" placeholder="Search for anything..." />
-            
+            </Box>
+            <input className="search-input" type="text" placeholder="Search for anything..." />
             
             <Box className="button-section">
                 <Button className="my-list-button" onClick={() => console.log('My List clicked')}>
-                    <span className="star-sign">★</span> My List
+                    <i className="fa-solid fa-star"></i> My List
                 </Button>
                 <Button className="new-list-button" onClick={() => console.log('New List clicked')}>
-                    <span className="plus-sign">+</span> New List
+                    <i className="fa-solid fa-plus"></i> New List
                 </Button>
             </Box>
             <hr className="divider" />
             <Text className="hire-me-text">
-                <span className="circle-sign">o</span> Hire Me for Designer <span className= "star-sign">★</span>
+                <i className="circle-sign">o</i> Hire Me for Designer <i className="fa-solid fa-star"></i>
             </Text>
-             {/* Positioned at the bottom-right corner */}
-            <Button className="plus-button" onClick={() => console.log('Add New List')}>
-                <span className="plus-sign">+</span>
+            
+            {/* Positioned at the bottom-right corner */}
+            <Button 
+                className="plus-button" 
+                onClick={() => console.log('Add New List')} 
+                style={{
+                    position: 'fixed',
+                    bottom: '20px',
+                    right: '20px',
+                    background: 'none', // Remove background
+                    border: 'none',     // Remove border
+                    padding: 0,        // Remove padding
+                    cursor: 'pointer'   // Change cursor to pointer
+                }}
+            >
+                <i className="fa-solid fa-circle-plus fa-2x"></i> 
             </Button>
         </Box>
     );
