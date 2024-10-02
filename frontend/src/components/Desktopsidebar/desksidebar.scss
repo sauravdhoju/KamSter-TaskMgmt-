@@ -1,0 +1,215 @@
+@use '../../variables.module';
+
+.sidebar {
+    width: 80%;
+    max-width: 320px;
+    height: 100vh;
+    background-color: variables.$off-black-1;
+    color: variables.$pure-white;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; // content stays aligned to the top
+    align-items: center;
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-radius: 0px 22px 22px 0px;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    overflow-x: visible;
+
+    &.open {
+        transform: translateX(0); 
+        width: 100%;
+    }
+
+    &.collapsed {
+        width:70px;
+        transform: translateX(0);
+    }
+
+    .toggle-btn {
+        position: absolute;
+        top: 55px;
+        right: 0;
+        background-color: variables.$bg-color;
+        border-radius: 50px 0px 0px 50px;
+        width: 33px;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+        position: absolute;
+
+        // the back icon design
+        .sidebar-close-icon {
+            font-size: 32px !important;
+            font-weight: 800;
+            color: variables.$off-black-1;
+        }
+        &:hover {
+            transform: scale(1.1);
+        }
+    }
+
+    .profile-container {
+        align-self: flex-start;
+        padding: 20px 0 0 20px;
+
+    
+        &.profile-container-collapsed{
+            display: none;
+         }   
+        .profile-btn {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: width 0.3s ease, height 0.3s ease;
+            background-color: variables.$greyish;
+
+            .sidebar-icon {
+                font-size: 50px;
+                color: variables.$pure-white;
+                transition: font-size 0.3s ease;
+            }
+         
+          
+        }
+        .user-email {
+            font-family: variables.$primary-font;
+            font-size: 15px;
+            text-align: center;
+     
+        }
+    }
+
+    .icons-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+        width: 100%;
+        margin-top: variables.$padding-small;
+        padding: 20px;
+        overflow-y: auto;
+
+        overflow-x: visible;
+
+        scrollbar-width: none;
+
+
+        .new-list-button {
+            position: relative;
+            overflow: visible;
+            &::before {
+                content: '';
+                display: block;
+                position: absolute;
+                top: -5px;
+                left: -10px;
+                bottom: 0;
+                right: 0;
+                width: calc(100% + 10px);
+                height: calc(100% + 10px);
+                border: 2px dashed variables.$half-white;
+                border-radius: 5px;
+                z-index: 100;
+            }
+        }
+
+        a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: variables.$pure-white;
+            font-family: variables.$primary-font;
+            font-size: 16px;
+
+            .sidebar.collapsed & {
+                justify-content: center; // Center link content
+                padding-left: 0; // Remove padding in collapsed state
+            }
+
+            .sidebar-icon {
+                font-size: 24px;
+                margin-right: 15px;
+                color: variables.$pure-white;
+
+                .sidebar.collapsed & {
+                    margin-right: 0; // Remove margin for icons when collapsed
+                }
+            }
+
+            span {
+                display: inline-block;
+
+                .sidebar.collapsed & {
+                    display: none; // Hide text when collapsed
+                }
+            }
+        }
+
+        .list-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+
+            .sidebar-icon {
+                font-size: 24px;
+                margin-right: 15px;
+                color: variables.$pure-white;
+            }
+        }
+
+        .dropdown-list {
+            display: flex;
+            flex-direction: column;
+            padding-left: 30px;
+            transition: transform 1s ease-in-out;
+            a {
+                padding: 2px 5px;
+                transition: transform 1s ease-in-out;
+            }
+        }
+       
+    }
+
+    .logout-container {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        margin-top: auto;
+        padding: 20px 15px 10px;
+
+        .logout-link {
+            display: block;
+            width: 100%;
+
+            .logout-btn {
+                display: flex;
+                align-items: center;
+                width: 100%;
+            }
+        }
+
+        .sidebar-icon {
+            margin-right: 10px;
+        }
+   
+    }
+
+}
+
+@media screen and (min-width: 512px) {
+    .sidebar {
+        width: 60%;
+    }
+}
