@@ -1,6 +1,6 @@
 import React from 'react';
 import './Sidebar.scss';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { Box, Flex } from '@chakra-ui/react';
 import 'Boxicons/css/Boxicons.min.css';
@@ -12,6 +12,7 @@ type SidebarTypes = {
 };
 
 const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }: SidebarTypes) => {
+    const navigate = useNavigate();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     const toggleSidebar = () => {
@@ -20,6 +21,25 @@ const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }: SidebarTypes) => {
 
     const userEmail = 'jinaa@gmail.com';
     const isUserLoggedIn = true;
+
+    const sidebarLinks = [
+        {
+            name: 'home',
+            icon: 'bx-home-alt-2',
+        },
+        {
+            name: 'calendar',
+            icon: 'bx-calendar',
+        },
+        {
+            name: 'kanban',
+            icon: 'bx-grid',
+        },
+        {
+            name: 'pomodoro',
+            icon: 'bx-chalkboard',
+        },
+    ];
 
     return (
         <Box className={`sidebar ${isSideBarOpen ? 'open' : 'collapsed'}`}>
@@ -37,28 +57,33 @@ const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }: SidebarTypes) => {
                         <i className='bx bx-user sidebar-icon'></i>
                     )}
                 </Box>
-                <p className='user-email'>{userEmail}</p>
+                <p
+                    className={`user-email ${
+                        isSideBarOpen ? '' : 'bar-item-collapsed'
+                    }`}
+                >
+                    {userEmail}
+                </p>
             </Flex>
 
             {/* Icons*/}
-            <Box className='icons-container'>
-                <Link to='/home'>
-                    <Icon name='bx-home-alt-2' className='sidebar-icon' />
-                    <span>Home</span>
-                </Link>
-                <Link to='/calendar'>
-                    <Icon name='bx-calendar' className='sidebar-icon' />
-
-                    <span>Calendar</span>
-                </Link>
-                <Link to='/kanban'>
-                    <Icon name='bx-grid' className='sidebar-icon' />
-                    <span>Kanban</span>
-                </Link>
-                <Link to='/pomodoro'>
-                    <Icon name='bx-chalkboard' className='sidebar-icon' />
-                    <span>Pomodoro</span>
-                </Link>
+            <Box
+                className={`icons-container ${
+                    isSideBarOpen ? '' : 'icons-container-collapsed'
+                }`}
+            >
+                {sidebarLinks.map((link, index) => {
+                    return (
+                        <Link
+                            to={`/${link.name}`}
+                            key={index}
+                            className='sidebar-link'
+                        >
+                            <Icon name={link.icon} className='sidebar-icon' />
+                            <span>{link.name}</span>
+                        </Link>
+                    );
+                })}
                 <Box
                     as={Link}
                     to='/newlist'
@@ -70,53 +95,78 @@ const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }: SidebarTypes) => {
                     <Icon name='bx-list-plus' className='sidebar-icon' />
                     <span>New List</span>
                 </Box>
-                <Flex
-                    // alignItems='center'
+                <Box width={'100%'} className='my-lists-container'>
+                    <Flex
+                        // alignItems='center'
 
-                    className='list-heading'
-                    onClick={() => setIsDropdownOpen(!isDropdownOpen)} // Toggle dropdown
-                >
-                    <Flex alignItems='center'>
-                        <Icon name='bx-list-ul' className='sidebar-icon' />
-                        <span>Lists</span>
+                        className='list-heading'
+                        onClick={() =>
+                            isSideBarOpen
+                                ? setIsDropdownOpen(!isDropdownOpen)
+                                : navigate('/my-lists')
+                        } // Toggle dropdown
+                    >
+                        <Flex alignItems='center'>
+                            <Icon name='bx-list-ul' className='sidebar-icon' />
+                            <span>Lists</span>
+                        </Flex>
+                        <Icon
+                            name={
+                                isDropdownOpen
+                                    ? 'bx-caret-down'
+                                    : 'bx-caret-right'
+                            }
+                            className='drop-icon'
+                        />
                     </Flex>
-                    <Icon
-                        name={
-                            isDropdownOpen ? 'bx-caret-down' : 'bx-caret-right'
-                        }
-                        className='drop-icon'
-                    />
-                </Flex>
 
-                {isDropdownOpen && (
-                    <Box className='dropdown-list'>
-                        <Link to='/list1'>
-                         <Icon name='bx-checkbox-checked' className='sidebar-icon'  />
-                         <span>List 1</span>
-                        </Link>
-                        <Link to='/list2'>
-                         <Icon name='bx-checkbox-checked' className='sidebar-icon'  />
-                         <span>List 2</span>
-                        </Link>
-                        <Link to='/list3'>
-                         <Icon name='bx-checkbox-checked' className='sidebar-icon'  />
-                         <span>List 3</span>
-                        </Link>
-                        <Link to='/list4'>
-                         <Icon name='bx-checkbox-checked' className='sidebar-icon'  />
-                         <span>List 4</span>
-                        </Link>
-                        <Link to='/list5'>
-                         <Icon name='bx-checkbox-checked' className='sidebar-icon'  />
-                         <span>List 5</span>
-                        </Link>
-                        <Link to='/list6'>
-                         <Icon name='bx-checkbox-checked' className='sidebar-icon'  />
-                         <span>List 6</span>
-                        </Link>
-                        
-                    </Box>
-                )}
+                    {isDropdownOpen && (
+                        <Box className='dropdown-list'>
+                            <Link to='/list1'>
+                                <Icon
+                                    name='bx-checkbox-checked'
+                                    className='sidebar-icon'
+                                />
+                                <span>List 1</span>
+                            </Link>
+                            <Link to='/list2'>
+                                <Icon
+                                    name='bx-checkbox-checked'
+                                    className='sidebar-icon'
+                                />
+                                <span>List 2</span>
+                            </Link>
+                            <Link to='/list3'>
+                                <Icon
+                                    name='bx-checkbox-checked'
+                                    className='sidebar-icon'
+                                />
+                                <span>List 3</span>
+                            </Link>
+                            <Link to='/list4'>
+                                <Icon
+                                    name='bx-checkbox-checked'
+                                    className='sidebar-icon'
+                                />
+                                <span>List 4</span>
+                            </Link>
+                            <Link to='/list5'>
+                                <Icon
+                                    name='bx-checkbox-checked'
+                                    className='sidebar-icon'
+                                />
+                                <span>List 5</span>
+                            </Link>
+                            <Link to='/list6'>
+                                <Icon
+                                    name='bx-checkbox-checked'
+                                    className='sidebar-icon'
+                                />
+                                <span>List 6</span>
+                            </Link>
+                        </Box>
+                    )}
+                </Box>
             </Box>
 
             {/* Menu List */}
@@ -133,7 +183,12 @@ const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }: SidebarTypes) => {
             {/* </Box> */}
 
             {/* logout */}
-            <Box className='logout-container' mt={'auto'}>
+            <Box
+                className={`logout-container ${
+                    isSideBarOpen ? '' : 'logout-container-collapsed'
+                }`}
+                mt={'auto'}
+            >
                 <Link to='/login' className='logout-link'>
                     <Flex
                         as='button'
