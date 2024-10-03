@@ -4,11 +4,20 @@ import { BiUser, BiSolidUser } from 'react-icons/bi';
 
 import './NavBar.scss';
 
-const NavBar = () => {
+type NavBarType = {
+    isSideBarOpen: boolean;
+    setIsSideBarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const NavBar = ({ isSideBarOpen, setIsSideBarOpen }: NavBarType) => {
     const isUserLoggedIn = true;
+
     return (
         <Box className='nav-bar-container'>
-            <Box className='menu-toggler'>
+            <Box
+                className='menu-toggler'
+                onClick={() => setIsSideBarOpen(!isSideBarOpen)}
+            >
                 <BsFillGridFill className='menu-icon' />
             </Box>
             <Heading className='site-name' as={'h1'}>
