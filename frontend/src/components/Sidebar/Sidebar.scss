@@ -14,7 +14,7 @@
 
 .sidebar {
     width: 80%;
-    max-width: 320px;
+    max-width: 250px;
     height: 100vh;
     background-color: variables.$off-black-1;
     color: variables.$pure-white;
@@ -23,9 +23,9 @@
     flex-direction: column;
     justify-content: flex-start; // content stays aligned to the top
     align-items: center;
-    position: absolute;
-    left: 0;
-    top: 0;
+    // position: absolute;
+    // left: 0;
+    // top: 0;
     border-radius: 0px 22px 22px 0px;
     transition: all 0.3s ease;
     overflow-x: visible;
@@ -345,6 +345,10 @@
 
 @media screen and (max-width: 512px) {
     .sidebar {
+        // make sidebar position absolute for small screens
+        position: absolute;
+        top: 0;
+        left: 0;
         &.collapsed {
             @include collapse-sidebar($large-screen: false);
         }
