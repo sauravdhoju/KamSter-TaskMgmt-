@@ -49,12 +49,14 @@ const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }: SidebarTypes) => {
             </Box>
 
             {/* Profile Section */}
-            <Flex flexDir={'column'} gap={'10px'} className='profile-container'>
-                <Box className='profile-btn'>
+            <Flex flexDir={'column'} gap={'10px'} 
+            className='profile-container'  >
+                <Box 
+                className={`profile-btn ${isSideBarOpen ? '' : 'profile-btn-minimized'}`}>
                     {isUserLoggedIn ? (
-                        <i className='bx bxs-user sidebar-icon'></i>
+                        <Icon name="bxs-user" className="profile-icon" />
                     ) : (
-                        <i className='bx bx-user sidebar-icon'></i>
+                        <Icon name="bx-user" className="profile-icon" />
                     )}
                 </Box>
                 <p
