@@ -44,8 +44,13 @@ const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }: SidebarTypes) => {
     return (
         <Box className={`sidebar ${isSideBarOpen ? 'open' : 'collapsed'}`}>
             {/* Toggle Button */}
-            <Box className='toggle-btn' onClick={toggleSidebar}>
-                <Icon name={'bx-chevron-left'} className='sidebar-close-icon' />
+            <Box className={`toggle-btn ${isSideBarOpen ? '' : 'collapsed'}`} 
+            onClick={toggleSidebar}>
+                {isSideBarOpen ? (
+                    <Icon name={'bx-chevron-left'} className='sidebar-close-icon' />
+                ) : (
+                    <Icon name={'bx-menu'} className='sidebar-menu-icon' />
+                )}
             </Box>
 
             {/* Profile Section */}
