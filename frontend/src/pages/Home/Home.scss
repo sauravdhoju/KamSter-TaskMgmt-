@@ -5,19 +5,37 @@
     border-radius: 22px; 
     display: flex;
     flex-direction: column; 
-    align-items: front; 
-    text-align: front; 
+    align-items: flex-start; 
+    text-align: left; 
     position: relative; 
     min-height: 30px;
     width: 293px;
     margin-left: 30px;
     margin-top: 20px;
 
+    .task-summary {
+        font-size: 12px; 
+        color: #ccc;
+        display: flex;
+        flex-direction: column;
+
+        a {
+            color: #fff; 
+            text-decoration: none; 
+            cursor: pointer;
+            display: block; 
+            margin-bottom: 25px; 
+
+            &:hover { 
+                text-decoration: underline; 
+            }
+        }
+    }
 }
 
 .search-input {
     background-color: #D9D9D9;
-    border: 3px solid rgb(46, 39, 39); 
+    //border: 3px solid rgb(46, 39, 39); 
     padding: 8px 16px; 
     color: white; 
     border-radius: 26px; 
@@ -26,64 +44,34 @@
     cursor: pointer;
     outline: none;
     margin-top: -20px; 
-    display: flex;  
-    align-items: front;
-    justify-content: center;
-    gap: 5px; 
     width: 232px;
     margin-left: 60px;
     position: absolute;
-    height:32px
-}
-
-.task-summary {
-    margin-top: px; 
-    font-size: 12px; 
-    color: #ccc;
-    text-align: left; 
-    display: flex;
-    justify-content: center;
-    align-items: left;
-    flex-direction: column;
-    // border: 1px solid white; 
-
-}
-
-.task-summary a {
-    color: #fff; 
-    text-decoration: none; 
-    cursor: pointer;
-    display: block; 
-    margin-bottom: 25px; 
-}
-
-.task-summary a:hover { 
-    text-decoration: underline; 
+    height: 32px;
 }
 
 .button-section {
     margin: 30px 40px; 
     display: flex;
-    justify-content: left; 
+    justify-content: flex-start; 
     gap: 20px; 
-}
 
-.my-list-button,
-.new-list-button {
-    background-color: #007BFF; 
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 8px 16px;
-    width: 76px;
-    cursor: pointer;
-    
-}
+    .my-list-button,
+    .new-list-button {
+        background-color: #fff; 
+        color: black;
+        border: none;
+        border-radius: 5px;
+        padding: 8px 16px;
+        width: 76px;
+        cursor: pointer;
+        font-size: 18px;
 
-.my-list-button:hover,
-.new-list-button:hover {
-    background-color: #0056b3; 
-    text-decoration: underline;
+        &:hover {
+            background-color: #fff; 
+            text-decoration: underline;
+        }
+    }
 }
 
 .divider {
@@ -100,18 +88,18 @@
     color: #000000; 
     cursor: pointer; 
     font-weight: bold; 
-}
 
-.circle-sign {
-    font-size: 18px;
-    margin-right: 10px; 
-    color: #000000;
-}
+    .circle-sign {
+        font-size: 18px;
+        margin-right: 10px; 
+        color: #000000;
+    }
 
-.star-sign {
-    font-size: 20px; 
-    margin-left: 2px; 
-    color: #000000; 
+    .star-sign {
+        font-size: 20px; 
+        margin-left: 2px; 
+        color: #000000; 
+    }
 }
 
 .plus-button {
@@ -119,5 +107,8 @@
     bottom: 0;  
     right: 0;   
     margin: 20px;
-     
+    background: none; /* Ensure no background */
+    border: none;     /* Remove border */
+    padding: 0;      /* No padding */
+    cursor: pointer;  /* Pointer cursor */
 }
