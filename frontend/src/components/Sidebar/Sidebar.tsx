@@ -44,24 +44,39 @@ const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }: SidebarTypes) => {
     return (
         <Box className={`sidebar ${isSideBarOpen ? 'open' : 'collapsed'}`}>
             {/* Toggle Button */}
-            <Box className={`toggle-btn ${isSideBarOpen ? '' : 'collapsed'}`} 
-            onClick={toggleSidebar}>
-                {isSideBarOpen ? (
-                    <Icon name={'bx-chevron-left'} className='sidebar-close-icon' />
-                ) : (
-                    <Icon name={'bx-menu'} className='sidebar-menu-icon' />
-                )}
+            <Box
+                className={`toggle-btn ${isSideBarOpen ? '' : 'collapsed'}`}
+                onClick={toggleSidebar}
+            >
+                <Icon name={'bx-chevron-left'} className='sidebar-close-icon' />
+            </Box>
+            <Box
+                className={`menu-toggle-btn ${
+                    isSideBarOpen ? '' : 'menu-toggle-btn-collapsed'
+                }`}
+                onClick={toggleSidebar}
+            >
+                <Icon name={'bx-menu'} className='sidebar-menu-icon' />
             </Box>
 
             {/* Profile Section */}
-            <Flex flexDir={'column'} gap={'10px'} 
-            className='profile-container'  >
-                <Box 
-                className={`profile-btn ${isSideBarOpen ? '' : 'profile-btn-minimized'}`}>
+            <Flex
+                flexDir={'column'}
+                gap={'10px'}
+                className={`profile-container ${
+                    isSideBarOpen ? '' : 'profile-container-minimized'
+                }`}
+                onClick={() => navigate('/my-profile')}
+            >
+                <Box
+                    className={`profile-btn ${
+                        isSideBarOpen ? '' : 'profile-btn-minimized'
+                    }`}
+                >
                     {isUserLoggedIn ? (
-                        <Icon name="bxs-user" className="profile-icon" />
+                        <Icon name='bxs-user' className='profile-icon' />
                     ) : (
-                        <Icon name="bx-user" className="profile-icon" />
+                        <Icon name='bx-user' className='profile-icon' />
                     )}
                 </Box>
                 <p
@@ -105,7 +120,6 @@ const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }: SidebarTypes) => {
                 <Box width={'100%'} className='my-lists-container'>
                     <Flex
                         // alignItems='center'
-
                         className='list-heading'
                         onClick={() =>
                             isSideBarOpen
