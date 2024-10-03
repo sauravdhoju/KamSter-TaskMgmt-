@@ -10,6 +10,8 @@ const HeaderGreet = () => {
             width={'100%'}
             padding={'30px 25px 0 25px'}
             className='header-greet'
+            flexWrap={'wrap'}
+            gap={'10px'}
         >
             <Flex
                 alignItems={'center'}
@@ -19,7 +21,10 @@ const HeaderGreet = () => {
                 <Image
                     src='/ghost.jpg'
                     width={'55px'}
-                    height={'55px'}
+                    minW={'40px'}
+                    minH={'40px'}
+                    maxH={'55px'}
+                    aspectRatio={'1 / 1'}
                     borderRadius={'50%'}
                 />
                 <Flex gap={'5px'} className='greet-container'>
@@ -45,7 +50,7 @@ const HeaderGreet = () => {
                     <Icon name='bx-sun' />
                 </Flex>
             </Flex>
-            <Flex gap={'10px'}>
+            <Flex gap={'10px'} className='times-container'>
                 <Text>01:15:55 AM</Text>
                 <Icon name='bxs-cog' />
                 <Icon name='bx-user' />
