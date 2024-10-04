@@ -1,4 +1,4 @@
-import { Box, Flex, Image, Heading, Text } from '@chakra-ui/react';
+import { Flex, Image, Heading, Text } from '@chakra-ui/react';
 import Icon from '../Icon/Icon';
 import './HeaderGreet.scss';
 const HeaderGreet = () => {
