@@ -40,7 +40,7 @@ const Home: React.FC = () => {
             </Box>
             <hr className="divider" />
             <Text className="hire-me-text">
-                <span className="circle-sign">o</span> Hire Me for Designer <i className="fa-solid fa-star"></i>
+                <i className="fa-regular fa-circle"></i> Hire Me for Designer <i className="fa-solid fa-star"></i>
             </Text>
             <Button 
                 className="plus-button" onClick={() => console.log('Add New List')} 
