@@ -8,10 +8,11 @@ import Home from './pages/Home/Home';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
 import MyAccount from './pages/MyAccount/MyAccount';
+import Calendar from './pages/Calendar/Calendar'; 
 
 
 // import Sidebar from './pages/Sidebar/Sidebar';
-// import Calender from './pages/Calender/Calender';
+
 // import Kanban from './pages/Kanban/Kanban';
 
 import './App.scss';
@@ -48,6 +49,7 @@ const App = () => {
                 <Route path='/login' element={<Login />} />
                 <Route path='/register' element={<Register />} />
                 <Route path='/my-account' element={<MyAccount />} />
+                <Route path='/calendar' element={<Calendar />} /> 
             </Routes>
         </Box>
     );
