@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Box, Grid, Text, Button, Tabs, TabList, Tab, TabPanel, TabPanels } from '@chakra-ui/react';
+import { Box, Grid, Flex, Text, Button, Tabs, TabList, Tab, TabPanel, TabPanels } from '@chakra-ui/react';
+
+import './Calendar.scss';
 
 // Dummy data for months and days
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 // Calender Component
 const Calender = () => {
@@ -11,20 +13,52 @@ const Calender = () => {
 
   // Yearly View
  
+// Monthly View
+const MonthView = () => {
+  const daysInMonth = 30;
+  const firstDayOffset = 2; // April 1st starts on Tuesday
 
-  // Monthly View
-  const MonthView = () => (
-    <Grid templateColumns="repeat(7, 1fr)" gap={2}>
-      {daysOfWeek.map((day) => (
-        <Text key={day} fontWeight="bold" textAlign="center">{day}</Text>
-      ))}
-      {Array.from({ length: 30 }, (_, i) => (
-        <Box key={i} border="1px solid" borderRadius="md" padding="10px" textAlign="center">
-          {i + 1}
-        </Box>
-      ))}
-    </Grid>
+  return (
+    <Box className="calendar-container">
+      {/* Days of the week */}
+      <Grid templateColumns="repeat(7, 1fr)" className="calendar-grid-header">
+        {daysOfWeek.map((day) => (
+          <Text key={day} className="day-header" textAlign="center" >
+            {day}
+          </Text>
+        ))}
+      </Grid>
+
+      {/* Grid for days */}
+      <Grid templateColumns="repeat(7, 1fr)" className="calendar-grid">
+        {/* Empty boxes before the first day of the month */}
+        {Array.from({ length: firstDayOffset }).map((_, index) => (
+          <Box key={`empty-${index}`} />
+        ))}
+
+        {/* Days of the month */}
+        {Array.from({ length: daysInMonth }, (_, i) => {
+          const day = i + 1;
+          const isSaturday = (firstDayOffset + day) % 7 === 0;
+
+          return (
+            <Box
+              key={day}
+              className={`day-box ${isSaturday ? 'saturday' : ''}`}
+              p="10px"
+              textAlign="center"
+            >
+              <Text fontSize="md" color={isSaturday ? 'red.500' : 'black'}>
+                {day}
+              </Text>
+            </Box>
+          );
+        })}
+      </Grid>
+    </Box>
   );
+};
+
 
   // Weekly View
   const WeekView = () => (
