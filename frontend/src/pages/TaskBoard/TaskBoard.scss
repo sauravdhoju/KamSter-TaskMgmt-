@@ -62,6 +62,16 @@
     }
 
     .task-board-workarea {
+
+
+        .empty-starred-task {
+            font-family: variables.$primary-font;
+            font-size: 18px;
+            padding-left: 10px;
+            color: gray; // Or any other color to differentiate it
+            text-align: center; // Center align for better visibility
+        }
+        
         .my-list {
             background-color: #dbdbdb;
             display: flex;
@@ -87,6 +97,8 @@
                 margin: 0;
                 padding-left: 10px;
             }
+
+            
         }
 
         .text-area {

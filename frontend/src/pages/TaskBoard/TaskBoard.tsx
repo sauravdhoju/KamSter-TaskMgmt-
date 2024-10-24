@@ -102,32 +102,32 @@ const TaskBoard = () => {
 
   const renderContent = () => {
     if (activeTab === 'star') {
-      return (
-        <Box className="task-board-workarea">
-          <Box className="my-list">
-            <Text className="task-list-heading">Starred Tasks</Text>
-            <Box className="icon-container">
-              <Icon name="bx-shuffle" className="icon" />
-              <Icon name="bx-dots-vertical-rounded" className="icon" />
+        return (
+          <Box className="task-board-workarea">
+            <Box className="my-list">
+              <Text className="task-list-heading">Starred Tasks</Text>
+              <Box className="icon-container">
+                <Icon name="bx-shuffle" className="icon" />
+                <Icon name="bx-dots-vertical-rounded" className="icon" />
+              </Box>
             </Box>
+            {starredTasks.length === 0 ? (
+              <Text className="empty-starred-task">No starred tasks</Text>
+            ) : (
+              starredTasks.map((task, index) => (
+                <TaskItem
+                  key={index}
+                  item={task}
+                  isCircleFilled={taskState[task]?.isCircleFilled || false}
+                  isFavorite={true} // This is always true for starred tasks
+                  onIconClick={handleIconClick}
+                  onFavoriteClick={handleFavoriteClick}
+                />
+              ))
+            )}
           </Box>
-          {starredTasks.length === 0 ? (
-            <Text>No starred tasks</Text>
-          ) : (
-            starredTasks.map((task, index) => (
-              <TaskItem
-                key={index}
-                item={task}
-                isCircleFilled={taskState[task]?.isCircleFilled || false}
-                isFavorite={true} // This is always true for starred tasks
-                onIconClick={handleIconClick}
-                onFavoriteClick={handleFavoriteClick}
-              />
-            ))
-          )}
-        </Box>
-      );
-    }
+        );
+      }
 
     return (
       <Box className="task-board-workarea">
