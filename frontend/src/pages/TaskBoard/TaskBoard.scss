@@ -8,14 +8,12 @@
     }
 
     .task-board-list {
-        padding-left: 10px;
+        padding: 10px 0 6px 10px; // Combined padding for top, left, and bottom
         font-size: 16px;
-        padding-top: 10px;
         font-family: variables.$primary-font;
         display: flex;
         gap: 25px;
         border-bottom: 2px solid #000;
-        padding-bottom: 6px;
     }
 
     .tab-item {
@@ -26,10 +24,8 @@
         padding-bottom: 2px;
         transition: all 0.2s ease-in-out;
 
-        &.star-tab {
-            .icon {
-                margin-left: 5px;
-            }
+        &.star-tab .icon {
+            margin-left: 5px;
         }
 
         .task-my-list {
@@ -62,13 +58,13 @@
     }
 
     .task-board-workarea {
-
+        overflow-x: auto; // Allows horizontal scrolling
 
         .empty-starred-task {
             font-family: variables.$primary-font;
             font-size: 18px;
             padding-left: 10px;
-            color: gray; // Or any other color to differentiate it
+            color: gray; // Differentiate it
             text-align: center; // Center align for better visibility
         }
 
@@ -78,17 +74,12 @@
             align-items: center;
             justify-content: space-between;
             padding: 5px 7px;
-            border-bottom: 1px solid #ccc;
-            margin-left: 20px;
-            margin-right: 20px;
-            margin-top: 10px;
+            margin: 10px 20px; // Combined margin for top, left, and right
             border-radius: 10px;
 
             .icon-container {
                 display: flex;
-                gap: 0px;
                 align-items: center;
-                padding-right: -10px;
             }
 
             .task-list-heading {
@@ -97,17 +88,13 @@
                 margin: 0;
                 padding-left: 10px;
             }
-
-            
         }
 
         .text-area {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding-left: 25px;
-            padding-top: 10px;
-            padding-right: 25px;
+            padding: 10px 25px; // Combined padding for top, left, and right
 
             .small-icon {
                 font-size: 12px !important;
@@ -131,52 +118,39 @@
 
         .task-completed {
             display: flex;
-            padding-left: 25px;
             flex-direction: column;
-
-            // padding-top: 10px;
-            // padding-right: 25px;
 
             .completed-heading {
                 justify-content: space-between;
                 display: flex;
                 font-family: variables.$primary-font;
-                padding-top: 10px;
-                padding-right: 35px;
+                padding: 10px 35px 0; // Combined padding for top and right
                 align-items: center;
 
                 .completed-icon {
                     margin-left: 8px;
-                    text-decoration: none;
                 }
             }
-
-
 
             .completed-dropdown {
                 font-family: variables.$primary-font;    
                 padding-top: 7px;
-                flex-direction: column;
-                margin-left: 20px;
-            
+                margin-left: 35px;
+
                 .completed-task-item {
                     display: flex;
                     align-items: center;
                     margin-bottom: 8px; // Space between each completed task
-                    text-decoration: none; // No strikethrough by default
-            
+
                     .completed-text {
                         text-decoration: line-through; // Strikethrough only on text
                     }
                 }
             }
 
-            &.is-open {
-                .completed-dropdown {
-                  display: flex; // Display when the dropdown is open
-                }
-              }
-              
+            &.is-open .completed-dropdown {
+                display: flex; // Display when the dropdown is open
+            }
         }
     }
 
