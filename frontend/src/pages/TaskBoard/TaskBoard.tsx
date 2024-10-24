@@ -54,26 +54,39 @@ const TaskBoard = () => {
   const [activeTab, setActiveTab] = useState('My List');
   const [taskState, setTaskState] = useState({});
   const [starredTasks, setStarredTasks] = useState([]); // State for starred tasks
+  const [completedTasks, setCompletedTasks] = useState({}); // State for completed tasks, per tab
+  const [isCompletedOpen, setIsCompletedOpen] = useState({}); // Track "Completed" dropdown state per tab
 
   const handleIconClick = (task) => {
-    setTaskState((prevState) => ({
-      ...prevState,
-      [task]: {
-        ...prevState[task],
-        isCircleFilled: !prevState[task]?.isCircleFilled,
-      },
-    }));
+    setTaskState((prevState) => {
+      const isCompleted = !prevState[task]?.isCircleFilled; // Check if the task is completed
+      const updatedCompletedTasks = isCompleted
+        ? [...(completedTasks[activeTab] || []), task] // Add to completed tasks for the current tab
+        : (completedTasks[activeTab] || []).filter((t) => t !== task); // Remove from completed tasks
+
+      setCompletedTasks((prevState) => ({
+        ...prevState,
+        [activeTab]: updatedCompletedTasks, // Update the completed tasks for the active tab
+      }));
+
+      return {
+        ...prevState,
+        [task]: {
+          ...prevState[task],
+          isCircleFilled: isCompleted,
+        },
+      };
+    });
   };
 
   const handleFavoriteClick = (task) => {
     setTaskState((prevState) => {
       const isFavorite = !prevState[task]?.isFavorite;
-      // Update the starredTasks list based on favorite status
       const updatedStarredTasks = isFavorite
-        ? [...starredTasks, task] // Add task to starred if favorited
-        : starredTasks.filter((t) => t !== task); // Remove task from starred if unfavorited
+        ? [...starredTasks, task] // Add to starred tasks
+        : starredTasks.filter((t) => t !== task); // Remove from starred tasks
 
-      setStarredTasks(updatedStarredTasks); // Update the starredTasks state
+      setStarredTasks(updatedStarredTasks); // Update starred tasks
 
       return {
         ...prevState,
@@ -83,6 +96,13 @@ const TaskBoard = () => {
         },
       };
     });
+  };
+
+  const toggleCompleted = () => {
+    setIsCompletedOpen((prevState) => ({
+      ...prevState,
+      [activeTab]: !prevState[activeTab], // Toggle the completed dropdown for the active tab
+    }));
   };
 
   const renderListItems = (items) => (
@@ -100,34 +120,57 @@ const TaskBoard = () => {
     </>
   );
 
+  const renderCompletedTasks = () => (
+    <Box className="task-completed">
+      <Text className="completed-heading" onClick={toggleCompleted} style={{ cursor: 'pointer' }}>
+        Completed 
+        <Icon name={isCompletedOpen[activeTab] ? "bx-chevron-down" : "bx-chevron-right"} />
+      </Text>
+      {isCompletedOpen[activeTab] && ( // Render completed tasks if dropdown is open for the active tab
+        <Box className="completed-dropdown">
+          {(completedTasks[activeTab] || []).length === 0 ? (
+            <Text>No tasks completed yet in this tab.</Text>
+          ) : (
+            completedTasks[activeTab].map((task, index) => (
+              <Box key={index} className="completed-task-item">
+                <Icon name="bx-check" className="completed-icon" style={{ marginRight: '8px' }} />
+                <Text className="completed-text">{task}</Text>
+              </Box>
+            ))
+          )}
+        </Box>
+      )}
+    </Box>
+  );
+
   const renderContent = () => {
     if (activeTab === 'star') {
-        return (
-          <Box className="task-board-workarea">
-            <Box className="my-list">
-              <Text className="task-list-heading">Starred Tasks</Text>
-              <Box className="icon-container">
-                <Icon name="bx-shuffle" className="icon" />
-                <Icon name="bx-dots-vertical-rounded" className="icon" />
-              </Box>
+      return (
+        <Box className="task-board-workarea">
+          <Box className="my-list">
+            <Text className="task-list-heading">Starred Tasks</Text>
+            <Box className="icon-container">
+              <Icon name="bx-shuffle" className="icon" />
+              <Icon name="bx-dots-vertical-rounded" className="icon" />
             </Box>
-            {starredTasks.length === 0 ? (
-              <Text className="empty-starred-task">No starred tasks</Text>
-            ) : (
-              starredTasks.map((task, index) => (
-                <TaskItem
-                  key={index}
-                  item={task}
-                  isCircleFilled={taskState[task]?.isCircleFilled || false}
-                  isFavorite={true} // This is always true for starred tasks
-                  onIconClick={handleIconClick}
-                  onFavoriteClick={handleFavoriteClick}
-                />
-              ))
-            )}
           </Box>
-        );
-      }
+          {starredTasks.length === 0 ? (
+            <Text className="empty-starred-task">No starred tasks</Text>
+          ) : (
+            starredTasks.map((task, index) => (
+              <TaskItem
+                key={index}
+                item={task}
+                isCircleFilled={taskState[task]?.isCircleFilled || false}
+                isFavorite={true} // This is always true for starred tasks
+                onIconClick={handleIconClick}
+                onFavoriteClick={handleFavoriteClick}
+              />
+            ))
+          )}
+        </Box>
+      );
+    }
 
     return (
       <Box className="task-board-workarea">
@@ -139,12 +182,7 @@ const TaskBoard = () => {
           </Box>
         </Box>
         {renderListItems(tabData[activeTab])}
-        {activeTab === 'My List' && (
-          <Box className="task-completed">
-            <Text className="completed-heading">Completed</Text>
-            <Icon name="bx-chevron-right" className="small-icon" />
-          </Box>
-        )}
+        {renderCompletedTasks()}
       </Box>
     );
   };

@@ -71,7 +71,7 @@
             color: gray; // Or any other color to differentiate it
             text-align: center; // Center align for better visibility
         }
-        
+
         .my-list {
             background-color: #dbdbdb;
             display: flex;
@@ -131,14 +131,52 @@
 
         .task-completed {
             display: flex;
-            margin: auto;
             padding-left: 25px;
-            padding-top: 10px;
-            padding-right: 25px;
+            flex-direction: column;
+
+            // padding-top: 10px;
+            // padding-right: 25px;
 
             .completed-heading {
+                justify-content: space-between;
+                display: flex;
                 font-family: variables.$primary-font;
+                padding-top: 10px;
+                padding-right: 35px;
+                align-items: center;
+
+                .completed-icon {
+                    margin-left: 8px;
+                    text-decoration: none;
+                }
             }
+
+
+
+            .completed-dropdown {
+                font-family: variables.$primary-font;    
+                padding-top: 7px;
+                flex-direction: column;
+                margin-left: 20px;
+            
+                .completed-task-item {
+                    display: flex;
+                    align-items: center;
+                    margin-bottom: 8px; // Space between each completed task
+                    text-decoration: none; // No strikethrough by default
+            
+                    .completed-text {
+                        text-decoration: line-through; // Strikethrough only on text
+                    }
+                }
+            }
+
+            &.is-open {
+                .completed-dropdown {
+                  display: flex; // Display when the dropdown is open
+                }
+              }
+              
         }
     }
 
