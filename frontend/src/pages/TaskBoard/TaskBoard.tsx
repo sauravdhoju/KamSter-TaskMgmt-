@@ -120,29 +120,33 @@ const TaskBoard = () => {
     </>
   );
 
-  const renderCompletedTasks = () => (
-    <Box className="task-completed">
-      <Text className="completed-heading" onClick={toggleCompleted} style={{ cursor: 'pointer' }}>
-        Completed 
-        <Icon name={isCompletedOpen[activeTab] ? "bx-chevron-down" : "bx-chevron-right"} />
-      </Text>
-      {isCompletedOpen[activeTab] && ( // Render completed tasks if dropdown is open for the active tab
-        <Box className="completed-dropdown">
-          {(completedTasks[activeTab] || []).length === 0 ? (
-            <Text>No tasks completed yet in this tab.</Text>
-          ) : (
-            completedTasks[activeTab].map((task, index) => (
-              <Box key={index} className="completed-task-item">
-                <Icon name="bx-check" className="completed-icon" style={{ marginRight: '8px' }} />
-                <Text className="completed-text">{task}</Text>
-              </Box>
-            ))
-          )}
-        </Box>
-      )}
-    </Box>
-  );
-
+  const renderCompletedTasks = () => {
+    const completedCount = (completedTasks[activeTab] || []).length; // Count of completed tasks for the active tab
+  
+    return (
+      <Box className="task-completed">
+        <Text className="completed-heading" onClick={toggleCompleted} style={{ cursor: 'pointer' }}>
+          Completed ({completedCount}) {/* Display the count here */}
+          <Icon name={isCompletedOpen[activeTab] ? "bx-chevron-down" : "bx-chevron-right"} />
+        </Text>
+        {isCompletedOpen[activeTab] && ( // Render completed tasks if dropdown is open for the active tab
+          <Box className="completed-dropdown">
+            {completedCount === 0 ? ( // Use completedCount instead of calculating again
+              <Text>No tasks completed yet in this tab.</Text>
+            ) : (
+              completedTasks[activeTab].map((task, index) => (
+                <Box key={index} className="completed-task-item">
+                  <Icon name="bx-check" className="completed-icon" style={{ marginRight: '8px' }} />
+                  <Text className="completed-text">{task}</Text>
+                </Box>
+              ))
+            )}
+          </Box>
+        )}
+      </Box>
+    );
+  };
+  
   const renderContent = () => {
     if (activeTab === 'star') {
       return (
