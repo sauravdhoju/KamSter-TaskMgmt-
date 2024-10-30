@@ -33,7 +33,7 @@ const UserProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
             })
             .catch((err) => {
                 console.warn(err);
-                navigate('/login');
+                // navigate('/login');
             });
     };
 

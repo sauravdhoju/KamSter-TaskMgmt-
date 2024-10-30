@@ -2,7 +2,7 @@ import React from 'react';
 import './Sidebar.scss';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { Box, Flex } from '@chakra-ui/react';
+import { Box, Flex, Image } from '@chakra-ui/react';
 import 'Boxicons/css/Boxicons.min.css';
 import Icon from '../Icon/Icon';
 
@@ -74,7 +74,13 @@ const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }: SidebarTypes) => {
                     }`}
                 >
                     {isUserLoggedIn ? (
-                        <Icon name='bxs-user' className='profile-icon' />
+                        <Image
+                            src='/simpmom.jpg'
+                            alt='simpmom'
+                            objectFit={'cover'}
+                            width={'100%'}
+                            height={'100%'}
+                        />
                     ) : (
                         <Icon name='bx-user' className='profile-icon' />
                     )}
