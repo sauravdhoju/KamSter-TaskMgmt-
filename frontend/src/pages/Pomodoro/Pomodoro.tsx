@@ -10,15 +10,22 @@ import './Pomodoro.scss';
 
 const Pomodoro = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const [breakTime, setBreakTime] = useState(300000);
-    const [sessionTime, setSessionTime] = useState(1500000);
     const [sessionType, setSessionType] = useState<'break' | 'session'>(
         'session'
     );
 
-    const [sessionCountDownString, setSessionCountDownString] =
-        useState('25:00');
-    const [breakCountDownString, setBreakCountDownString] = useState('05:00');
+    const [inputBreakTime, setInputBreakTime] = useState(
+        new Date(0, 0, 0, 0, 5, 0)
+    );
+    const [inputSessionTime, setInputSessionTime] = useState(
+        new Date(0, 0, 0, 0, 25, 0)
+    );
+    const [timerBreakTime, setTimerBreakTime] = useState(
+        new Date(0, 0, 0, 0, 0, 0, 0)
+    );
+    const [timerSessionTime, setTimerSessionTime] = useState(
+        new Date(0, 0, 0, 0, 0, 0, 0)
+    );
 
     const getTimeString = (time: Date) => {
         const min = time.getMinutes();
@@ -29,44 +36,42 @@ const Pomodoro = () => {
         return timeStr;
     };
 
-    useEffect(() => {}, [breakTime, sessionTime]);
-
     const handleTimerIncreaseDecrease = (
-        type: 'break' | 'session',
-        incDec: 'increase' | 'decrease'
+        sesType: 'break' | 'session',
+        opType: 'increase' | 'decrease'
     ) => {
-        const time = new Date();
-        time.setHours(0, 0, 0, 0);
-        if (type === 'break') {
-            if (incDec === 'increase') {
-                if (breakTime + 60000 > 1800000) return;
-                setBreakTime(breakTime + 60000);
-                time.setMilliseconds(breakTime + 60000);
-
-                setBreakCountDownString(getTimeString(time));
-            } else if (incDec === 'decrease') {
-                if (breakTime - 60000 <= 0) return;
-                setBreakTime(breakTime - 60000);
-                time.setMilliseconds(breakTime - 60000);
-
-                setBreakCountDownString(getTimeString(time));
+        if (opType === 'increase') {
+            if (sesType === 'break') {
+                let breakMins = inputBreakTime.getMinutes();
+                if (breakMins >= 30) return;
+                setInputBreakTime(new Date(0, 0, 0, 0, breakMins + 1, 0, 0));
+            } else {
+                let sessionMins = inputSessionTime.getMinutes();
+                if (sessionMins >= 59) return;
+                setInputSessionTime(
+                    new Date(0, 0, 0, 0, sessionMins + 1, 0, 0)
+                );
             }
-        } else if (type === 'session') {
-            if (incDec === 'increase') {
-                if (sessionTime + 60000 >= 3600000) return;
-                setSessionTime(sessionTime + 60000);
-                time.setMilliseconds(sessionTime + 60000);
-
-                setSessionCountDownString(getTimeString(time));
-            } else if (incDec === 'decrease') {
-                if (sessionTime - 60000 <= 0) return;
-                setSessionTime(sessionTime - 60000);
-                time.setMilliseconds(sessionTime - 60000);
-
-                setSessionCountDownString(getTimeString(time));
+        } else {
+            if (sesType === 'break') {
+                let breakMins = inputBreakTime.getMinutes();
+                if (breakMins <= 0) return;
+                setInputBreakTime(new Date(0, 0, 0, 0, breakMins - 1, 0, 0));
+            } else {
+                let sessionMins = inputSessionTime.getMinutes();
+                if (sessionMins <= 0) return;
+                setInputSessionTime(
+                    new Date(0, 0, 0, 0, sessionMins - 1, 0, 0)
+                );
             }
         }
     };
+
+    // change the timer break and session as input break and session changes
+    useEffect(() => {
+        setTimerBreakTime(inputBreakTime);
+        setTimerSessionTime(inputSessionTime);
+    }, [inputBreakTime, inputSessionTime]);
 
     return (
         <Flex
@@ -91,6 +96,7 @@ const Pomodoro = () => {
                 templateRows={'min-content 1fr'}
                 flexGrow={1}
                 padding={'0 10px'}
+                userSelect={'none'}
             >
                 <HeaderGreet />
                 <Box
@@ -106,8 +112,8 @@ const Pomodoro = () => {
                         </Text>
                         <Text className='session-countdown'>
                             {sessionType === 'break'
-                                ? breakCountDownString
-                                : sessionCountDownString}
+                                ? getTimeString(timerBreakTime)
+                                : getTimeString(timerSessionTime)}
                         </Text>
                     </Box>
                     <Grid
@@ -144,11 +150,7 @@ const Pomodoro = () => {
                                         className='inc-dec-icon'
                                     />
                                 </Box>
-                                <Text>
-                                    {breakTime / 60000 < 10
-                                        ? '0' + breakTime / 60000
-                                        : breakTime / 60000}
-                                </Text>
+                                <Text>{inputBreakTime.getMinutes()}</Text>
                                 <Box
                                     className='decrease-increase-btn'
                                     onClick={() =>
@@ -182,7 +184,7 @@ const Pomodoro = () => {
                                         className='inc-dec-icon'
                                     />
                                 </Box>
-                                <Text>{sessionTime / 60000}</Text>
+                                <Text>{inputSessionTime.getMinutes()}</Text>
                                 <Box
                                     className='decrease-increase-btn'
                                     onClick={() =>
