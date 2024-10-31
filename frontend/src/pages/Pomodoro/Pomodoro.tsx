@@ -13,6 +13,9 @@ const Pomodoro = () => {
     const [sessionType, setSessionType] = useState<'break' | 'session'>(
         'session'
     );
+    const [timerState, setTimerState] = useState<'started' | 'stopped'>(
+        'stopped'
+    );
 
     const [inputBreakTime, setInputBreakTime] = useState(
         new Date(0, 0, 0, 0, 5, 0)
@@ -55,11 +58,11 @@ const Pomodoro = () => {
         } else {
             if (sesType === 'break') {
                 let breakMins = inputBreakTime.getMinutes();
-                if (breakMins <= 0) return;
+                if (breakMins <= 1) return;
                 setInputBreakTime(new Date(0, 0, 0, 0, breakMins - 1, 0, 0));
             } else {
                 let sessionMins = inputSessionTime.getMinutes();
-                if (sessionMins <= 0) return;
+                if (sessionMins <= 5) return;
                 setInputSessionTime(
                     new Date(0, 0, 0, 0, sessionMins - 1, 0, 0)
                 );
@@ -67,11 +70,59 @@ const Pomodoro = () => {
         }
     };
 
+    const resetTimer = () => {
+        setTimerBreakTime(inputBreakTime);
+        setTimerSessionTime(inputSessionTime);
+    };
+
     // change the timer break and session as input break and session changes
     useEffect(() => {
         setTimerBreakTime(inputBreakTime);
         setTimerSessionTime(inputSessionTime);
     }, [inputBreakTime, inputSessionTime]);
+
+    // run timer
+    useEffect(() => {
+        if (timerState === 'stopped') return;
+
+        const interval = setInterval(() => {
+            if (sessionType === 'break') {
+                const newTime = new Date(
+                    0,
+                    0,
+                    0,
+                    0,
+                    timerBreakTime.getMinutes(),
+                    timerBreakTime.getSeconds()
+                );
+                if (newTime.getMinutes() <= 0 && newTime.getSeconds() <= 0) {
+                    setSessionType('session');
+                    setTimerBreakTime(inputBreakTime);
+                    return;
+                }
+                newTime.setSeconds(newTime.getSeconds() - 1);
+                setTimerBreakTime(newTime);
+            } else {
+                const newTime = new Date(
+                    0,
+                    0,
+                    0,
+                    0,
+                    timerSessionTime.getMinutes(),
+                    timerSessionTime.getSeconds()
+                );
+                if (newTime.getMinutes() <= 0 && newTime.getSeconds() <= 0) {
+                    setSessionType('break');
+                    setTimerSessionTime(inputSessionTime);
+                } else {
+                    newTime.setSeconds(newTime.getSeconds() - 1);
+                    setTimerSessionTime(newTime);
+                }
+            }
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [timerBreakTime, timerSessionTime, sessionType, timerState]);
 
     return (
         <Flex
@@ -125,12 +176,20 @@ const Pomodoro = () => {
                         <GridItem
                             as={'button'}
                             className='action-btn action-btn-start'
+                            onClick={() =>
+                                setTimerState(
+                                    timerState === 'started'
+                                        ? 'stopped'
+                                        : 'started'
+                                )
+                            }
                         >
-                            Start
+                            {timerState === 'started' ? 'Stop' : 'Start'}
                         </GridItem>
                         <GridItem
                             as={'button'}
                             className='action-btn action-btn-reset'
+                            onClick={resetTimer}
                         >
                             Reset
                         </GridItem>
