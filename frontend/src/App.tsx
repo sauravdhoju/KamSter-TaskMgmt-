@@ -8,7 +8,10 @@ import Home from './pages/Home/Home';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
 import MyAccount from './pages/MyAccount/MyAccount';
+
 import Calendar from './pages/Calendar/Calendar'; 
+import Pomodoro from './pages/Pomodoro/Pomodoro';
+
 
 
 // import Sidebar from './pages/Sidebar/Sidebar';
@@ -50,6 +53,7 @@ const App = () => {
                 <Route path='/register' element={<Register />} />
                 <Route path='/my-account' element={<MyAccount />} />
                 <Route path='/calendar' element={<Calendar />} /> 
+                <Route path='/pomodoro' element={<Pomodoro />} />
             </Routes>
         </Box>
     );
