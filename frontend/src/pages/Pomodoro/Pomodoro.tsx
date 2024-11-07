@@ -3,7 +3,7 @@ import { Box, Flex, Grid, GridItem, Text } from '@chakra-ui/react';
 
 import Icon from '../../components/Icon/Icon';
 
-import HeaderGreet from '../../components/HeaderGreet/HeaderGreet';
+import HeaderRenderer from '../../components/HeaderRenderer/HeaderRenderer';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import SessionCountCircle from '../../components/SessionCountCircle/SessionCountCircle';
 
@@ -171,7 +171,10 @@ const Pomodoro = () => {
                 userSelect={'none'}
             >
                 <audio src='beepbeep.mp3' id='alarmSound' ref={audioRef} />
-                <HeaderGreet />
+                <HeaderRenderer
+                    isSideBarOpen={isSidebarOpen}
+                    setIsSideBarOpen={setIsSidebarOpen}
+                />
                 <Box
                     className='pomodoro-timer'
                     width={'330px'}
