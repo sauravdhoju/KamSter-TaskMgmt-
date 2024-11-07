@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Text } from '@chakra-ui/react';
+import { Box, Text, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
 import './TaskBoard.scss';
 import NavBar from '../../components/NavBar/NavBar';
 import Icon from '../../components/Icon/Icon';
@@ -39,6 +39,14 @@ const TaskBoard = () => {
   const [starredTasks, setStarredTasks] = useState([]);
   const [completedTasks, setCompletedTasks] = useState({});
   const [isCompletedOpen, setIsCompletedOpen] = useState({});
+  
+  // Shuffle the tasks in the current tab
+  const shuffleTasks = () => {
+    const currentTasks = tabData[activeTab];
+    const shuffledTasks = currentTasks.sort(() => Math.random() - 0.5);
+    tabData[activeTab] = [...shuffledTasks]; // Update the task data
+    setTaskState({}); // Reset the task state to reflect shuffled state
+  };
 
   // Handle icon click to toggle task completion state
   const handleIconClick = (task) => {
@@ -137,8 +145,17 @@ const TaskBoard = () => {
           <Box className="my-list">
             <Text className="task-list-heading">Starred Tasks</Text>
             <Box className="icon-container">
-              <Icon name="bx-shuffle" className="icon" />
-              <Icon name="bx-dots-vertical-rounded" className="icon" />
+              <Icon name="bx-shuffle" className="icon" onClick={shuffleTasks} /> {/* Shuffle icon */}
+              <Menu>
+                <MenuButton>
+                  <Icon name="bx-dots-vertical-rounded" className="icon" />
+                </MenuButton>
+                <MenuList>
+                  <MenuItem onClick={() => alert('Add Task functionality')}>Add Task</MenuItem>
+                  <MenuItem onClick={() => alert('Edit Task functionality')}>Edit Task</MenuItem>
+                  {/* Add more options here as needed */}
+                </MenuList>
+              </Menu>
             </Box>
           </Box>
           {starredTasks.length === 0 ? (
@@ -164,8 +181,17 @@ const TaskBoard = () => {
         <Box className="my-list">
           <Text className="task-list-heading">{activeTab}</Text>
           <Box className="icon-container">
-            <Icon name="bx-shuffle" className="icon" />
-            <Icon name="bx-dots-vertical-rounded" className="icon" />
+            <Icon name="bx-shuffle" className="icon" onClick={shuffleTasks} /> {/* Shuffle icon */}
+            <Menu>
+              <MenuButton>
+                <Icon name="bx-dots-vertical-rounded" className="icon" />
+              </MenuButton>
+              <MenuList>
+                <MenuItem onClick={() => alert('Add Task functionality')}>Add Task</MenuItem>
+                <MenuItem onClick={() => alert('Edit Task functionality')}>Edit Task</MenuItem>
+                {/* Add more options here as needed */}
+              </MenuList>
+            </Menu>
           </Box>
         </Box>
         {renderListItems(tabData[activeTab])}
@@ -193,7 +219,7 @@ const TaskBoard = () => {
             className={`tab-item ${activeTab === tab ? 'active' : ''}`}
             onClick={() => setActiveTab(tab)}
           >
-            <Text className="task-my-list">{tab}</Text>
+            {tab}
           </Box>
         ))}
       </Box>
