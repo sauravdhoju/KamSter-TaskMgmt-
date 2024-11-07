@@ -5,6 +5,7 @@ import Icon from '../../components/Icon/Icon';
 
 import HeaderGreet from '../../components/HeaderGreet/HeaderGreet';
 import Sidebar from '../../components/Sidebar/Sidebar';
+import SessionCountCircle from '../../components/SessionCountCircle/SessionCountCircle';
 
 import './Pomodoro.scss';
 
@@ -16,6 +17,8 @@ const Pomodoro = () => {
     const [timerState, setTimerState] = useState<'started' | 'stopped'>(
         'stopped'
     );
+    // current session count
+    const [sessionCount, setSessionCount] = useState(1);
 
     const [inputBreakTime, setInputBreakTime] = useState(
         new Date(0, 0, 0, 0, 5, 0)
@@ -76,6 +79,17 @@ const Pomodoro = () => {
     const resetTimer = () => {
         setTimerBreakTime(inputBreakTime);
         setTimerSessionTime(inputSessionTime);
+        setSessionCount(1);
+    };
+
+    // returns session circle elements
+    const renderSessionCircles = () => {
+        let circlesArr = [];
+        for (let i = 0; i < sessionCount; ++i) {
+            circlesArr.push(<SessionCountCircle />);
+        }
+
+        return circlesArr;
     };
 
     // change the timer break and session as input break and session changes
@@ -102,6 +116,8 @@ const Pomodoro = () => {
                     setSessionType('session');
                     setTimerBreakTime(inputBreakTime);
                     audioRef.current?.play();
+                    // increase current session count after each break finishes
+                    setSessionCount((prevVal) => prevVal + 1);
                     return;
                 }
                 newTime.setSeconds(newTime.getSeconds() - 1);
@@ -149,7 +165,7 @@ const Pomodoro = () => {
                 flexDir={'column'}
                 // templateRows={'repeat(2, 1fr)'}
                 templateColumns={'1fr'}
-                templateRows={'min-content 1fr'}
+                templateRows={'min-content 1fr min-content'}
                 flexGrow={1}
                 padding={'0 10px'}
                 userSelect={'none'}
@@ -161,115 +177,119 @@ const Pomodoro = () => {
                     width={'330px'}
                     justifySelf={'center'}
                     marginBottom={'85px'}
-                    padding={'24px'}
                 >
-                    <Box className='timer-screen'>
-                        <Text className='session-name'>
-                            {sessionType === 'break' ? 'BREAK' : 'SESSION'}
-                        </Text>
-                        <Text className='session-countdown'>
-                            {sessionType === 'break'
-                                ? getTimeString(timerBreakTime)
-                                : getTimeString(timerSessionTime)}
-                        </Text>
+                    <Box className='clock-container' padding={'24px'}>
+                        <Box className='timer-screen'>
+                            <Text className='session-name'>
+                                {sessionType === 'break' ? 'BREAK' : 'SESSION'}
+                            </Text>
+                            <Text className='session-countdown'>
+                                {sessionType === 'break'
+                                    ? getTimeString(timerBreakTime)
+                                    : getTimeString(timerSessionTime)}
+                            </Text>
+                        </Box>
+                        <Grid
+                            gridTemplateRows={'min-content min-content'}
+                            gridTemplateColumns={'repeat(2, 1fr)'}
+                            gap={'10px'}
+                            className='action-buttons-container'
+                        >
+                            <GridItem
+                                as={'button'}
+                                className='action-btn action-btn-start'
+                                onClick={() => {
+                                    setTimerState(
+                                        timerState === 'started'
+                                            ? 'stopped'
+                                            : 'started'
+                                    );
+                                    audioRef.current?.pause();
+                                    audioRef.current!.currentTime = 0;
+                                }}
+                            >
+                                {timerState === 'started' ? 'Stop' : 'Start'}
+                            </GridItem>
+                            <GridItem
+                                as={'button'}
+                                className='action-btn action-btn-reset'
+                                onClick={resetTimer}
+                            >
+                                Reset
+                            </GridItem>
+                            <GridItem className='set-action-btn set-break'>
+                                <Box className='setter-container'>
+                                    <Box
+                                        className='decrease-increase-btn'
+                                        onClick={() =>
+                                            handleTimerIncreaseDecrease(
+                                                'break',
+                                                'decrease'
+                                            )
+                                        }
+                                    >
+                                        <Icon
+                                            name='bx-minus'
+                                            className='inc-dec-icon'
+                                        />
+                                    </Box>
+                                    <Text>{inputBreakTime.getMinutes()}</Text>
+                                    <Box
+                                        className='decrease-increase-btn'
+                                        onClick={() =>
+                                            handleTimerIncreaseDecrease(
+                                                'break',
+                                                'increase'
+                                            )
+                                        }
+                                    >
+                                        <Icon
+                                            name='bx-plus'
+                                            className='inc-dec-icon'
+                                        />
+                                    </Box>
+                                </Box>
+                                <Text>Break</Text>
+                            </GridItem>
+                            <GridItem className='set-action-btn set-session'>
+                                <Box className='setter-container'>
+                                    <Box
+                                        className='decrease-increase-btn'
+                                        onClick={() =>
+                                            handleTimerIncreaseDecrease(
+                                                'session',
+                                                'decrease'
+                                            )
+                                        }
+                                    >
+                                        <Icon
+                                            name='bx-minus'
+                                            className='inc-dec-icon'
+                                        />
+                                    </Box>
+                                    <Text>{inputSessionTime.getMinutes()}</Text>
+                                    <Box
+                                        className='decrease-increase-btn'
+                                        onClick={() =>
+                                            handleTimerIncreaseDecrease(
+                                                'session',
+                                                'increase'
+                                            )
+                                        }
+                                    >
+                                        <Icon
+                                            name='bx-plus'
+                                            className='inc-dec-icon'
+                                        />
+                                    </Box>
+                                </Box>
+                                <Text>Session</Text>
+                            </GridItem>
+                        </Grid>
                     </Box>
-                    <Grid
-                        gridTemplateRows={'min-content min-content'}
-                        gridTemplateColumns={'repeat(2, 1fr)'}
-                        gap={'10px'}
-                        className='action-buttons-container'
-                    >
-                        <GridItem
-                            as={'button'}
-                            className='action-btn action-btn-start'
-                            onClick={() => {
-                                setTimerState(
-                                    timerState === 'started'
-                                        ? 'stopped'
-                                        : 'started'
-                                );
-                                audioRef.current?.pause();
-                                audioRef.current!.currentTime = 0;
-                            }}
-                        >
-                            {timerState === 'started' ? 'Stop' : 'Start'}
-                        </GridItem>
-                        <GridItem
-                            as={'button'}
-                            className='action-btn action-btn-reset'
-                            onClick={resetTimer}
-                        >
-                            Reset
-                        </GridItem>
-                        <GridItem className='set-action-btn set-break'>
-                            <Box className='setter-container'>
-                                <Box
-                                    className='decrease-increase-btn'
-                                    onClick={() =>
-                                        handleTimerIncreaseDecrease(
-                                            'break',
-                                            'decrease'
-                                        )
-                                    }
-                                >
-                                    <Icon
-                                        name='bx-minus'
-                                        className='inc-dec-icon'
-                                    />
-                                </Box>
-                                <Text>{inputBreakTime.getMinutes()}</Text>
-                                <Box
-                                    className='decrease-increase-btn'
-                                    onClick={() =>
-                                        handleTimerIncreaseDecrease(
-                                            'break',
-                                            'increase'
-                                        )
-                                    }
-                                >
-                                    <Icon
-                                        name='bx-plus'
-                                        className='inc-dec-icon'
-                                    />
-                                </Box>
-                            </Box>
-                            <Text>Break</Text>
-                        </GridItem>
-                        <GridItem className='set-action-btn set-session'>
-                            <Box className='setter-container'>
-                                <Box
-                                    className='decrease-increase-btn'
-                                    onClick={() =>
-                                        handleTimerIncreaseDecrease(
-                                            'session',
-                                            'decrease'
-                                        )
-                                    }
-                                >
-                                    <Icon
-                                        name='bx-minus'
-                                        className='inc-dec-icon'
-                                    />
-                                </Box>
-                                <Text>{inputSessionTime.getMinutes()}</Text>
-                                <Box
-                                    className='decrease-increase-btn'
-                                    onClick={() =>
-                                        handleTimerIncreaseDecrease(
-                                            'session',
-                                            'increase'
-                                        )
-                                    }
-                                >
-                                    <Icon
-                                        name='bx-plus'
-                                        className='inc-dec-icon'
-                                    />
-                                </Box>
-                            </Box>
-                            <Text>Session</Text>
-                        </GridItem>
-                    </Grid>
+                    <Box className='session-count-container'>
+                        {renderSessionCircles()}
+                    </Box>
                 </Box>
             </Grid>
         </Flex>
