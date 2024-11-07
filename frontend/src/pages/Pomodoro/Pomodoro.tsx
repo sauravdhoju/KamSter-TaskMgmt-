@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Box, Flex, Grid, GridItem, Text } from '@chakra-ui/react';
 
 import Icon from '../../components/Icon/Icon';
@@ -29,6 +29,9 @@ const Pomodoro = () => {
     const [timerSessionTime, setTimerSessionTime] = useState(
         new Date(0, 0, 0, 0, 0, 0, 0)
     );
+
+    // audio element reference
+    const audioRef = useRef<HTMLAudioElement | null>(null);
 
     const getTimeString = (time: Date) => {
         const min = time.getMinutes();
@@ -98,6 +101,7 @@ const Pomodoro = () => {
                 if (newTime.getMinutes() <= 0 && newTime.getSeconds() <= 0) {
                     setSessionType('session');
                     setTimerBreakTime(inputBreakTime);
+                    audioRef.current?.play();
                     return;
                 }
                 newTime.setSeconds(newTime.getSeconds() - 1);
@@ -114,6 +118,7 @@ const Pomodoro = () => {
                 if (newTime.getMinutes() <= 0 && newTime.getSeconds() <= 0) {
                     setSessionType('break');
                     setTimerSessionTime(inputSessionTime);
+                    audioRef.current?.play();
                 } else {
                     newTime.setSeconds(newTime.getSeconds() - 1);
                     setTimerSessionTime(newTime);
@@ -149,6 +154,7 @@ const Pomodoro = () => {
                 padding={'0 10px'}
                 userSelect={'none'}
             >
+                <audio src='beepbeep.mp3' id='alarmSound' ref={audioRef} />
                 <HeaderGreet />
                 <Box
                     className='pomodoro-timer'
@@ -176,13 +182,15 @@ const Pomodoro = () => {
                         <GridItem
                             as={'button'}
                             className='action-btn action-btn-start'
-                            onClick={() =>
+                            onClick={() => {
                                 setTimerState(
                                     timerState === 'started'
                                         ? 'stopped'
                                         : 'started'
-                                )
-                            }
+                                );
+                                audioRef.current?.pause();
+                                audioRef.current!.currentTime = 0;
+                            }}
                         >
                             {timerState === 'started' ? 'Stop' : 'Start'}
                         </GridItem>
