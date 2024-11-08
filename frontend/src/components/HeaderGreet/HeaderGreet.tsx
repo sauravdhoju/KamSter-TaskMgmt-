@@ -52,8 +52,8 @@ const HeaderGreet = () => {
         currentTime.getHours() > 12 ? 'post' : 'ante'
     );
     const [dateString, setDateString] = useState(
-        `${days[currentTime.getDay() - 1]}, ${currentTime.getDate()} ${
-            months[currentTime.getMonth() - 1]
+        `${days[currentTime.getDay()]}, ${currentTime.getDate()} ${
+            months[currentTime.getMonth()]
         } ${currentTime.getFullYear()}`
     );
 
@@ -63,8 +63,8 @@ const HeaderGreet = () => {
             setTimeString(getTimeString());
             setMeridiemType(currentTime.getHours() > 12 ? 'post' : 'ante');
             setDateString(
-                `${days[currentTime.getDay() - 1]}, ${currentTime.getDate()} ${
-                    months[currentTime.getMonth() - 1]
+                `${days[currentTime.getDay()]}, ${currentTime.getDate()} ${
+                    months[currentTime.getMonth()]
                 } ${currentTime.getFullYear()}`
             );
         }, 1000);
