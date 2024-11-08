@@ -116,7 +116,14 @@ const HeaderGreet = () => {
                             It's {dateString}
                         </Text>
                     </Flex>
-                    <Icon name='bx-sun' />
+                    <Icon
+                        name={
+                            currentTime.getHours() > 17 ||
+                            currentTime.getHours() < 5
+                                ? 'bx-moon'
+                                : 'bx-sun'
+                        }
+                    />
                 </Flex>
             </Flex>
             <Flex gap={'10px'} className='times-container'>
