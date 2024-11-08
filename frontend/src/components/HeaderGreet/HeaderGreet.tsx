@@ -1,7 +1,76 @@
-import { Flex, Image, Heading, Text } from '@chakra-ui/react';
+import { useState, useEffect } from 'react';
+import { Link as ReactRouterLink } from 'react-router-dom';
+import {
+    Link as ChakraLink,
+    Flex,
+    Image,
+    Heading,
+    Text,
+} from '@chakra-ui/react';
 import Icon from '../Icon/Icon';
 import './HeaderGreet.scss';
+
+const days = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+];
+const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+];
+
 const HeaderGreet = () => {
+    const [currentTime, setCurrentTime] = useState(new Date());
+    const getTimeString = () => {
+        let hours = currentTime.getHours();
+        const minutes = currentTime.getMinutes();
+        const seconds = currentTime.getSeconds();
+
+        if (hours > 12) hours = hours - 12;
+        const timeStr = `${hours < 10 ? '0' + hours : hours}:${
+            minutes < 10 ? '0' + minutes : minutes
+        }:${seconds < 10 ? '0' + seconds : seconds}`;
+        return timeStr;
+    };
+    const [timeString, setTimeString] = useState(getTimeString());
+    const [meridiemType, setMeridiemType] = useState<'ante' | 'post'>(
+        currentTime.getHours() > 12 ? 'post' : 'ante'
+    );
+    const [dateString, setDateString] = useState(
+        `${days[currentTime.getDay()]}, ${currentTime.getDate()} ${
+            months[currentTime.getMonth()]
+        } ${currentTime.getFullYear()}`
+    );
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentTime(new Date());
+            setTimeString(getTimeString());
+            setMeridiemType(currentTime.getHours() > 12 ? 'post' : 'ante');
+            setDateString(
+                `${days[currentTime.getDay()]}, ${currentTime.getDate()} ${
+                    months[currentTime.getMonth()]
+                } ${currentTime.getFullYear()}`
+            );
+        }, 1000);
+        return () => clearInterval(interval);
+    }, [currentTime]);
+
     return (
         <Flex
             justifySelf={'flex-start'}
@@ -44,16 +113,30 @@ const HeaderGreet = () => {
                             Good Morning, Saurav!!
                         </Heading>
                         <Text fontWeight={300} fontSize={'16px'}>
-                            It's Monday, 19 August 2024
+                            It's {dateString}
                         </Text>
                     </Flex>
-                    <Icon name='bx-sun' />
+                    <Icon
+                        name={
+                            currentTime.getHours() > 17 ||
+                            currentTime.getHours() < 5
+                                ? 'bx-moon'
+                                : 'bx-sun'
+                        }
+                    />
                 </Flex>
             </Flex>
             <Flex gap={'10px'} className='times-container'>
-                <Text>01:15:55 AM</Text>
-                <Icon name='bxs-cog' />
-                <Icon name='bx-user' />
+                <Text>
+                    {timeString} {meridiemType === 'ante' ? 'AM' : 'PM'}
+                </Text>
+                <ChakraLink
+                    as={ReactRouterLink}
+                    to='/my-account'
+                    cursor={'pointer'}
+                >
+                    <Icon name='bx-user' />
+                </ChakraLink>
             </Flex>
         </Flex>
     );

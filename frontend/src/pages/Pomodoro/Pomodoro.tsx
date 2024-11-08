@@ -86,7 +86,7 @@ const Pomodoro = () => {
     const renderSessionCircles = () => {
         let circlesArr = [];
         for (let i = 0; i < sessionCount; ++i) {
-            circlesArr.push(<SessionCountCircle />);
+            circlesArr.push(<SessionCountCircle key={i} />);
         }
 
         return circlesArr;
