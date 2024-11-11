@@ -8,7 +8,7 @@
     }
 
     .task-board-list {
-        padding: 10px 0 6px 10px; // Combined padding for top, left, and bottom
+        padding: 10px 0 6px 10px; // Padding for top, left, and bottom
         font-size: 16px;
         font-family: variables.$primary-font;
         display: flex;
@@ -23,10 +23,6 @@
         position: relative;
         padding-bottom: 2px;
         transition: all 0.2s ease-in-out;
-
-        &.star-tab .icon {
-            margin-left: 5px;
-        }
 
         .task-my-list {
             color: rgba(0, 0, 0, 0.7);
@@ -58,14 +54,14 @@
     }
 
     .task-board-workarea {
-        overflow-x: auto; // Allows horizontal scrolling
+        overflow-x: auto; // Enables horizontal scrolling for workarea
 
         .empty-starred-task {
             font-family: variables.$primary-font;
             font-size: 18px;
             padding-left: 10px;
-            color: gray; // Differentiate it
-            text-align: center; // Center align for better visibility
+            color: gray; // Differentiate unstarred tasks
+            text-align: center;
         }
 
         .my-list {
@@ -74,7 +70,7 @@
             align-items: center;
             justify-content: space-between;
             padding: 5px 7px;
-            margin: 10px 20px; // Combined margin for top, left, and right
+            margin: 10px 20px; // Space around each task
             border-radius: 10px;
 
             .icon-container {
@@ -94,7 +90,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 10px 25px; // Combined padding for top, left, and right
+            padding: 10px 25px; // Consistent padding for text-area
 
             .small-icon {
                 font-size: 12px !important;
@@ -119,13 +115,15 @@
         .task-completed {
             display: flex;
             flex-direction: column;
+            width: 100%; // Full width of the container
 
             .completed-heading {
                 justify-content: space-between;
                 display: flex;
                 font-family: variables.$primary-font;
-                padding: 10px 35px 0; // Combined padding for top and right
+                padding: 10px 25px; // Match the padding from text-area
                 align-items: center;
+                font-size: 16px;
 
                 .completed-icon {
                     margin-left: 8px;
@@ -133,23 +131,35 @@
             }
 
             .completed-dropdown {
-                font-family: variables.$primary-font;    
-                padding-top: 7px;
-                margin-left: 35px;
+                display: flex;
+                flex-direction: column; // Stack items vertically
+                gap: 1px; // Small gap between each task
+                font-family: variables.$primary-font;
+                margin: 0 25px; // Consistent margin for alignment
 
                 .completed-task-item {
                     display: flex;
                     align-items: center;
-                    margin-bottom: 8px; // Space between each completed task
+                    width: 100%;  // Full width container
+                    padding: 10px 25px; // Padding to match text-area
+                    justify-content: space-between;
 
                     .completed-text {
-                        text-decoration: line-through; // Strikethrough only on text
+                        text-decoration: line-through; // Strikethrough completed tasks
+                        font-size: 16px;
+                        padding-left: 10px;
+                        flex-grow: 1; // Text takes up remaining space
+                    }
+
+                    .completed-icon {
+                        font-size: 16px;
+                        margin-right: 10px; // Space between icon and text
                     }
                 }
             }
 
             &.is-open .completed-dropdown {
-                display: flex; // Display when the dropdown is open
+                display: flex; // Show dropdown when open
             }
         }
     }

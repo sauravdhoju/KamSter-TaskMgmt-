@@ -7,16 +7,26 @@ import Icon from '../../components/Icon/Icon';
 // Define tab names and associated task data
 const tabs = ['My List', 'Exam Schedule', 'Test', 'Travelling', 'Add Lists'];
 
-const tabData = {
+// Define type for tabData and completedTasks to allow string indexing
+const tabData: Record<string, string[]> = {
   'My List': ['Assessment 1', 'Assessment 2', 'Assessment 3'],
   'Exam Schedule': ['Algorithm Analysis & Design'],
   'Test': ['AAD'],
   'Travelling': ['Gosaikunda'],
-  'Add Lists': []
+  'Add Lists': [],
+  'Completed': [] // Completed tasks
 };
 
+interface TaskItemProps {
+  item: string; // task name is a string
+  isCircleFilled: boolean;
+  isFavorite: boolean;
+  onIconClick: (task: string) => void; // expects a function that takes a string (task)
+  onFavoriteClick: (task: string) => void; // expects a function that takes a string (task)
+}
+
 // TaskItem Component
-const TaskItem = ({ item, isCircleFilled, isFavorite, onIconClick, onFavoriteClick }) => {
+const TaskItem = ({ item, isCircleFilled, isFavorite, onIconClick, onFavoriteClick }: TaskItemProps) => {
   return (
     <Box className="text-area">
       <div onClick={(e) => { e.stopPropagation(); onIconClick(item); }} style={{ display: 'inline-block', cursor: 'pointer' }}>
@@ -35,41 +45,52 @@ const TaskItem = ({ item, isCircleFilled, isFavorite, onIconClick, onFavoriteCli
 // Main TaskBoard Component
 const TaskBoard = () => {
   const [activeTab, setActiveTab] = useState('My List');
-  const [taskState, setTaskState] = useState({});
-  const [starredTasks, setStarredTasks] = useState([]);
-  const [completedTasks, setCompletedTasks] = useState({});
-  const [isCompletedOpen, setIsCompletedOpen] = useState({});
-  
+  const [taskState, setTaskState] = useState<Record<string, { isCircleFilled: boolean; isFavorite: boolean }>>({});
+  const [starredTasks, setStarredTasks] = useState<string[]>([]);
+  const [completedTasks, setCompletedTasks] = useState<Record<string, string[]>>({});
+  const [isCompletedOpen, setIsCompletedOpen] = useState<Record<string, boolean>>({});
+
   // Shuffle the tasks in the current tab
   const shuffleTasks = () => {
     const currentTasks = tabData[activeTab];
     const shuffledTasks = currentTasks.sort(() => Math.random() - 0.5);
-    tabData[activeTab] = [...shuffledTasks]; // Update the task data
-    setTaskState({}); // Reset the task state to reflect shuffled state
+    tabData[activeTab] = [...shuffledTasks];
+    setTaskState({});
   };
 
   // Handle icon click to toggle task completion state
-  const handleIconClick = (task) => {
+  const handleIconClick = (task:string) => {
     setTaskState((prevState) => {
       const isCompleted = !prevState[task]?.isCircleFilled;
+  
+      // Remove the task from the active tab in tabData if it is marked as completed
+      if (isCompleted) {
+        tabData[activeTab] = tabData[activeTab].filter((t) => t !== task);
+      } else {
+        // If the task is marked as incomplete, add it back to tabData for the active tab
+        tabData[activeTab].push(task);
+      }
+  
+      // Update the completedTasks state
       const updatedCompletedTasks = isCompleted
         ? [...(completedTasks[activeTab] || []), task]
         : (completedTasks[activeTab] || []).filter((t) => t !== task);
-
+  
       setCompletedTasks((prevState) => ({
         ...prevState,
         [activeTab]: updatedCompletedTasks,
       }));
-
+  
       return {
         ...prevState,
         [task]: { ...prevState[task], isCircleFilled: isCompleted },
       };
     });
   };
+  
 
   // Handle favorite click to toggle task star status
-  const handleFavoriteClick = (task) => {
+  const handleFavoriteClick = (task: string) => {
     setTaskState((prevState) => {
       const isFavorite = !prevState[task]?.isFavorite;
       const updatedStarredTasks = isFavorite
@@ -94,7 +115,7 @@ const TaskBoard = () => {
   };
 
   // Render individual task items
-  const renderListItems = (items) => (
+  const renderListItems = (items: string[]) => (
     <>
       {items.map((item, index) => (
         <TaskItem
@@ -138,67 +159,27 @@ const TaskBoard = () => {
   };
 
   // Render main content based on active tab
-  const renderContent = () => {
-    if (activeTab === 'star') {
-      return (
-        <Box className="task-board-workarea">
-          <Box className="my-list">
-            <Text className="task-list-heading">Starred Tasks</Text>
-            <Box className="icon-container">
-              <Icon name="bx-shuffle" className="icon" onClick={shuffleTasks} /> {/* Shuffle icon */}
-              <Menu>
-                <MenuButton>
-                  <Icon name="bx-dots-vertical-rounded" className="icon" />
-                </MenuButton>
-                <MenuList>
-                  <MenuItem onClick={() => alert('Add Task functionality')}>Add Task</MenuItem>
-                  <MenuItem onClick={() => alert('Edit Task functionality')}>Edit Task</MenuItem>
-                  {/* Add more options here as needed */}
-                </MenuList>
-              </Menu>
-            </Box>
-          </Box>
-          {starredTasks.length === 0 ? (
-            <Text className="empty-starred-task">No starred tasks</Text>
-          ) : (
-            starredTasks.map((task, index) => (
-              <TaskItem
-                key={index}
-                item={task}
-                isCircleFilled={taskState[task]?.isCircleFilled || false}
-                isFavorite={true} // This is always true for starred tasks
-                onIconClick={handleIconClick}
-                onFavoriteClick={handleFavoriteClick}
-              />
-            ))
-          )}
+  const renderContent = () => (
+    <Box className="task-board-workarea">
+      <Box className="my-list">
+        <Text className="task-list-heading">{activeTab}</Text>
+        <Box className="icon-container">
+          <Icon name="bx-shuffle" className="icon" onClick={shuffleTasks} />
+          <Menu>
+            <MenuButton>
+              <Icon name="bx-dots-vertical-rounded" className="icon" />
+            </MenuButton>
+            <MenuList>
+              <MenuItem onClick={() => alert('Add Task functionality')}>Add Task</MenuItem>
+              <MenuItem onClick={() => alert('Edit Task functionality')}>Edit Task</MenuItem>
+            </MenuList>
+          </Menu>
         </Box>
-      );
-    }
-
-    return (
-      <Box className="task-board-workarea">
-        <Box className="my-list">
-          <Text className="task-list-heading">{activeTab}</Text>
-          <Box className="icon-container">
-            <Icon name="bx-shuffle" className="icon" onClick={shuffleTasks} /> {/* Shuffle icon */}
-            <Menu>
-              <MenuButton>
-                <Icon name="bx-dots-vertical-rounded" className="icon" />
-              </MenuButton>
-              <MenuList>
-                <MenuItem onClick={() => alert('Add Task functionality')}>Add Task</MenuItem>
-                <MenuItem onClick={() => alert('Edit Task functionality')}>Edit Task</MenuItem>
-                {/* Add more options here as needed */}
-              </MenuList>
-            </Menu>
-          </Box>
-        </Box>
-        {renderListItems(tabData[activeTab])}
-        {renderCompletedTasks()}
       </Box>
-    );
-  };
+      {renderListItems(tabData[activeTab])}
+      {renderCompletedTasks()}
+    </Box>
+  );
 
   return (
     <Box className="task-board">
