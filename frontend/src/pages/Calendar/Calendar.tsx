@@ -77,23 +77,25 @@ const Calendar = () => {
       
       <Grid className="calendar-container" flexGrow={1} padding="0 10px" templateRows="min-content 1fr">
         <HeaderGreet />
-        
         <Box p={5}>
-          <Tabs variant="soft-rounded" colorScheme="gray">
-            <TabList>
-              <Tab onClick={() => setCurrentView('Year')}>Year</Tab>
-              <Tab onClick={() => setCurrentView('Month')}>Month</Tab>
-              <Tab onClick={() => setCurrentView('Week')}>Week</Tab>
-              <Tab onClick={() => setCurrentView('Day')}>Day</Tab>
-            </TabList>
+        <Tabs
+          variant="unstyled"
+           onChange={(index) => setCurrentView(['Year', 'Month', 'Week', 'Day'][index])}
+          >
+          <TabList className="calendar-toggle">
+            <Tab className="calendar-toggle-button">Year</Tab>
+            <Tab className="calendar-toggle-button">Month</Tab>
+            <Tab className="calendar-toggle-button">Week</Tab>
+            <Tab className="calendar-toggle-button">Day</Tab>
+          </TabList>
 
-            <TabPanels>
-              <TabPanel>{/* YearView  */}</TabPanel>
-              <TabPanel><MonthView /></TabPanel>
-              <TabPanel><WeekView /></TabPanel>
-              <TabPanel><DayView /></TabPanel>
-            </TabPanels>
-          </Tabs>
+          <TabPanels>
+            <TabPanel>{/* Year view content */}</TabPanel>
+            <TabPanel><MonthView /></TabPanel>
+            <TabPanel><WeekView /></TabPanel>
+            <TabPanel><DayView /></TabPanel>
+          </TabPanels>
+        </Tabs>
         </Box>
       </Grid>
     </Flex>
