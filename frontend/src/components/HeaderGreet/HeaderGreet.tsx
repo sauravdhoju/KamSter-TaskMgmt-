@@ -61,7 +61,7 @@ const HeaderGreet = () => {
         const interval = setInterval(() => {
             setCurrentTime(new Date());
             setTimeString(getTimeString());
-            setMeridiemType(currentTime.getHours() > 12 ? 'post' : 'ante');
+            setMeridiemType(currentTime.getHours() >= 12 ? 'post' : 'ante');
             setDateString(
                 `${days[currentTime.getDay()]}, ${currentTime.getDate()} ${
                     months[currentTime.getMonth()]
