@@ -127,7 +127,7 @@ const HeaderGreet = () => {
                 </Flex>
             </Flex>
             <Flex gap={'10px'} className='times-container'>
-                <Text>
+                <Text className='time-string'>
                     {timeString} {meridiemType === 'ante' ? 'AM' : 'PM'}
                 </Text>
                 <ChakraLink
