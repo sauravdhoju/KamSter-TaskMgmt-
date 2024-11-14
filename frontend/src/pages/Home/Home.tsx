@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import HeaderGreet from '../../components/HeaderGreet/HeaderGreet';
 import './Home.scss';
+import PageContainer from '../../components/PageContainer/PageContainer';
 
 
 const baseUrl = 'http://localhost:8080';
@@ -45,13 +46,13 @@ const Home: React.FC = () => {
             clearTimeout(dateTimer);
         };
     }, []);
-    
+
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     const formattedDate = currentDate.toLocaleDateString(undefined, options);
 
     return (
+        <PageContainer>
         <div className="home-container">
-            <HeaderGreet />
             <section className="task-section">
                 <div className="task-header">
                     <div className="task-text">
@@ -112,6 +113,7 @@ const Home: React.FC = () => {
                 </div></div>
             </section>
         </div>
+        </PageContainer>
     );
 };
 
