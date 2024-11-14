@@ -50,6 +50,7 @@
         border-radius: 10px;
         margin-top: 5px;
         box-shadow: 0 0 5px 2px #d6d2d6;
+      
 
         .task-header {
             margin-bottom: 20px;
@@ -105,18 +106,22 @@
                 h3 {
                     font-size: 24px;
                     margin: 10px 0;
+                    display:flex;
+                    justify-items: left;
                 }
 
                 p {
-                    font-size: 14px;
+                    font-size: 16px;
                     color: #666;
+                    display:flex;
+                    justify-items: left;
                 }
 
-                .all-label {
-                    font-size: 14px;
-                    color: #666;
-                    margin-right: 10px;
-                }
+                // .all-label {
+                //     font-size: 14px;
+                //     color: #666;
+                //     margin-right: 10px;
+                // }
 
                 .percent-change {
                     color: green;
@@ -127,10 +132,10 @@
                     content: "";
                     position: absolute;
                     top: 10%;
-                    right: 0;
-                    height: 80%;
-                    width: 1px;
-                    background-color: #ddd;
+                    right: 20px;
+                    height: 60%;
+                    width: 3px;
+                    background-color: #d69898;
                 }
             }
         }
@@ -139,6 +144,7 @@
             display: flex;
             justify-content: space-between;
             margin-top: 20px;
+            margin-bottom: 20px;
             
         .upcoming-tasks {
             background-color: #fff;

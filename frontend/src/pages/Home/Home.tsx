@@ -48,7 +48,7 @@ const Home: React.FC = () => {
     }, []);
 
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    const formattedDate = currentDate.toLocaleDateString(undefined, options);
+    const formattedDate = currentDate.toLocaleDateString(undefined);
 
     return (
         <PageContainer>
@@ -68,23 +68,23 @@ const Home: React.FC = () => {
                 <div className="task-status-container">
                     <div className="task-item">
                         <p>Total Tasks</p>
-                        <p className="all-label">All</p>
+                        {/* <p className="all-label">All</p> */}
                         <h3>{totalTasks}</h3>
                         {/* <span className="percent-change">10% ↑</span> */}
                     </div>
                     <div className="task-item">
                         <p>Ongoing Tasks</p>
-                        <p className="all-label">All</p>
+                        {/* <p className="all-label">All</p> */}
                         <h3>{ongoingTasks}</h3>
                     </div>
                     <div className="task-item">
                         <p>Completed Tasks</p>
-                        <p className="all-label">All</p>
+                        {/* <p className="all-label">All</p> */}
                         <h3>{completedTasks}</h3>
                     </div>
                     <div className="task-item">
                         <p>Overdue Tasks</p>
-                        <p className="all-label">All</p>
+                        {/* <p className="all-label">All</p> */}
                         <h3>{overdueTasks}</h3>
                     </div>
                 </div>
