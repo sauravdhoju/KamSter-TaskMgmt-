@@ -20,6 +20,8 @@ const PageContainer: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
             />
             <Box
                 className='page-content-container'
+                width={'100%'}
+                maxW={'1920px'}
                 minH={'100%'}
                 flexGrow={1}
                 paddingX={'20px'}
