@@ -77,7 +77,7 @@ const HeaderGreet = () => {
             justifyContent={'space-between'}
             alignItems={'center'}
             width={'100%'}
-            padding={'30px 25px 0 25px'}
+            paddingTop={'30px'}
             className='header-greet'
             flexWrap={'wrap'}
             gap={'10px'}
