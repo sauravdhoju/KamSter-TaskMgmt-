@@ -1,16 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
-import { Box, Flex, Grid, GridItem, Text } from '@chakra-ui/react';
+import { Box, Grid, GridItem, Text } from '@chakra-ui/react';
 
 import Icon from '../../components/Icon/Icon';
 
-import HeaderRenderer from '../../components/HeaderRenderer/HeaderRenderer';
-import Sidebar from '../../components/Sidebar/Sidebar';
 import SessionCountCircle from '../../components/SessionCountCircle/SessionCountCircle';
+import PageContainer from '../../components/PageContainer/PageContainer';
 
 import './Pomodoro.scss';
 
 const Pomodoro = () => {
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [sessionType, setSessionType] = useState<'break' | 'session'>(
         'session'
     );
@@ -146,35 +144,15 @@ const Pomodoro = () => {
     }, [timerBreakTime, timerSessionTime, sessionType, timerState]);
 
     return (
-        <Flex
-            className='pomodoro-page'
-            width={'100%'}
-            height={'100vh'}
-            minH={'100vh'}
-            flexDir={'row'}
-        >
-            <Sidebar
-                isSideBarOpen={isSidebarOpen}
-                setIsSideBarOpen={setIsSidebarOpen}
-            />
-            <Grid
+        <PageContainer>
+            <Box
                 className='pomodoro-container'
-                height={'100%'}
-                justifyContent={'flex-start'}
-                alignItems={'center'}
-                flexDir={'column'}
-                // templateRows={'repeat(2, 1fr)'}
-                templateColumns={'1fr'}
-                templateRows={'min-content 1fr min-content'}
                 flexGrow={1}
-                padding={'0 10px'}
-                userSelect={'none'}
+                width={'100%'}
+                display={'flex'}
+                justifyContent={'center'}
+                alignItems={'center'}
             >
-                <audio src='beepbeep.mp3' id='alarmSound' ref={audioRef} />
-                <HeaderRenderer
-                    isSideBarOpen={isSidebarOpen}
-                    setIsSideBarOpen={setIsSidebarOpen}
-                />
                 <Box
                     className='pomodoro-timer'
                     width={'330px'}
@@ -294,8 +272,8 @@ const Pomodoro = () => {
                         {renderSessionCircles()}
                     </Box>
                 </Box>
-            </Grid>
-        </Flex>
+            </Box>
+        </PageContainer>
     );
 };
 

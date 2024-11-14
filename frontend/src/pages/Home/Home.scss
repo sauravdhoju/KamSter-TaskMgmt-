@@ -1,3 +1,200 @@
-.home-page {
-    padding: 0 25px;
+.home-container {
+    // background-color: #f5f5f5;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    width: 100%;
+    overflow-y: scroll;
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        background-color: #f5f5f5;
+        padding: 10px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+
+        .header-left {
+            h1 {
+                font-size: 24px;
+                font-weight: bold;
+                margin-right: 10px;
+            }
+            p {
+                font-size: 14px;
+                color: #888;
+            }
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+
+            .time {
+                font-size: 16px;
+                margin-right: 15px;
+                color: #888;
+            }
+
+            i {
+                font-size: 20px;
+                color: #888;
+                margin-left: 15px;
+            }
+        }
+    }
+
+    .task-section {
+        background-color: #f5f5f5;
+        padding: 10px;
+        border-radius: 10px;
+        margin-top: 5px;
+        box-shadow: 0 0 5px 2px #d6d2d6;
+
+        .task-header {
+            margin-bottom: 20px;
+            margin-top: 10PX;
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column; 
+
+            .task-text {
+                h2 {
+                    font-size: 20px;
+                    font-weight: bold;
+                }
+                p {
+                    font-size: 14px;
+                    color: #666;
+                    margin-bottom: 15px; 
+                }
+            }
+
+            .buttons {
+                button {
+                    margin-right: 10px;
+                    padding: 4px 8px;
+                    border-radius: 15px;
+                    cursor: pointer;
+                    
+
+                    &.schedule-btn, &.add-btn {
+                        background-color: #000;
+                        color: white;
+                        border: none;
+                    }
+                }
+            }
+        }
+
+        .task-status-container {
+            display: flex;
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            border: solid #ddd;
+            box-shadow: 0 0 5px 2px #d6d2d6;
+
+            .task-item {
+                flex: 1;
+                text-align: center;
+                position: relative;
+
+                h3 {
+                    font-size: 24px;
+                    margin: 10px 0;
+                }
+
+                p {
+                    font-size: 14px;
+                    color: #666;
+                }
+
+                .all-label {
+                    font-size: 14px;
+                    color: #666;
+                    margin-right: 10px;
+                }
+
+                .percent-change {
+                    color: green;
+                    font-size: 12px;
+                }
+
+                &:not(:last-child)::after {
+                    content: "";
+                    position: absolute;
+                    top: 10%;
+                    right: 0;
+                    height: 80%;
+                    width: 1px;
+                    background-color: #ddd;
+                }
+            }
+        }
+        
+        .future-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            
+        .upcoming-tasks {
+            background-color: #fff;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            box-shadow: 0 0 5px 2px #d6d2d6;
+            width: 25%;
+            height:25%;
+
+            h3 {
+                font-size: 16px;
+                color: #666;
+            }
+        }
+
+        .calendar {
+            // display: none;
+            border: solid #ddd;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 5px 2px #d6d2d6;
+
+            h4 {
+                font-size: 14px;
+                margin-bottom: 10px;
+            }
+
+            .calendar-grid {
+                display: grid;
+                grid-template-columns: repeat(7, 1fr);
+                gap: 3px;
+
+                .day {
+                    font-weight: bold;
+                    background-color: #ffffff;
+                    // padding: 5px;
+                    font-size: 12px;
+                }
+
+                .date {
+                    background-color: #f0f0f0;
+                    padding: 8px;
+                    border-radius: 5px;
+                    font-size: 12px;
+                    color: #666;
+                    cursor: pointer;
+
+                    &:hover {
+                        background-color: #ddd;
+                    }
+                }
+            }
+        }
+        }
+    }
 }

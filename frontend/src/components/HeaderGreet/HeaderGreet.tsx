@@ -61,7 +61,7 @@ const HeaderGreet = () => {
         const interval = setInterval(() => {
             setCurrentTime(new Date());
             setTimeString(getTimeString());
-            setMeridiemType(currentTime.getHours() > 12 ? 'post' : 'ante');
+            setMeridiemType(currentTime.getHours() >= 12 ? 'post' : 'ante');
             setDateString(
                 `${days[currentTime.getDay()]}, ${currentTime.getDate()} ${
                     months[currentTime.getMonth()]
@@ -77,7 +77,7 @@ const HeaderGreet = () => {
             justifyContent={'space-between'}
             alignItems={'center'}
             width={'100%'}
-            padding={'30px 25px 0 25px'}
+            paddingTop={'30px'}
             className='header-greet'
             flexWrap={'wrap'}
             gap={'10px'}
@@ -127,7 +127,7 @@ const HeaderGreet = () => {
                 </Flex>
             </Flex>
             <Flex gap={'10px'} className='times-container'>
-                <Text>
+                <Text className='time-string'>
                     {timeString} {meridiemType === 'ante' ? 'AM' : 'PM'}
                 </Text>
                 <ChakraLink
