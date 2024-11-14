@@ -3,7 +3,6 @@ import './Sidebar.scss';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { Box, Flex, Image } from '@chakra-ui/react';
-import 'Boxicons/css/Boxicons.min.css';
 import Icon from '../Icon/Icon';
 
 type SidebarTypes = {
