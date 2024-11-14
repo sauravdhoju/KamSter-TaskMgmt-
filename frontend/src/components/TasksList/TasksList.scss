@@ -1,0 +1,39 @@
+@use '../../variables.module';
+
+.tasks-list {
+    font-family: variables.$primary-font;
+
+    .tabs-container {
+        font-size: 20px;
+        overflow-x: scroll;
+        scrollbar-width: none;
+
+        .tabs-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tasks-tab {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 50px;
+            min-width: fit-content;
+
+            &.tasks-tab-selected {
+                border-bottom: 2px solid black;
+            }
+
+            .tab-icon {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+        }
+    }
+
+    .completed-list-container {
+        .toggle-completed-icon {
+            font-size: 20px !important;
+        }
+    }
+}
