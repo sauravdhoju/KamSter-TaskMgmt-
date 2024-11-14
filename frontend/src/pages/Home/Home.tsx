@@ -1,8 +1,10 @@
 import axios from 'axios';
+import { Image, Box } from '@chakra-ui/react';
 import React, { useState, useEffect } from 'react';
 import HeaderGreet from '../../components/HeaderGreet/HeaderGreet';
 import './Home.scss';
 import PageContainer from '../../components/PageContainer/PageContainer';
+import taskPhoto from '../../pages/Home/picture.jpg';
 
 
 const baseUrl = 'http://localhost:8080';
@@ -55,6 +57,12 @@ const Home: React.FC = () => {
         <div className="home-container">
             <section className="task-section">
                 <div className="task-header">
+                <Box className='task-picture'>
+                    <Image
+                        src={taskPhoto}
+                        alt='task-photo'
+                    />
+                </Box>
                     <div className="task-text">
                         <h2>Today Task</h2>
                         <p>Check your daily tasks and schedules</p>

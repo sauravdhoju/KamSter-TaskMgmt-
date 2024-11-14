@@ -51,6 +51,11 @@
         margin-top: 5px;
         box-shadow: 0 0 5px 2px #d6d2d6;
       
+        .task-picture{
+            margin-top: -90px;
+            display: flex;
+            justify-content: right;
+        }
 
         .task-header {
             margin-bottom: 20px;
@@ -135,7 +140,7 @@
                     right: 20px;
                     height: 60%;
                     width: 3px;
-                    background-color: #d69898;
+                    background-color: #a163b8;
                 }
             }
         }
@@ -196,7 +201,8 @@
                     cursor: pointer;
 
                     &:hover {
-                        background-color: #ddd;
+                        background-color: #8475b3;
+                        color: white;
                     }
                 }
             }
