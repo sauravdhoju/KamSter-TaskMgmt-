@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import HeaderGreet from '../../components/HeaderGreet/HeaderGreet';
 import './Home.scss';
 
 
@@ -44,23 +45,13 @@ const Home: React.FC = () => {
             clearTimeout(dateTimer);
         };
     }, []);
-
+    
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     const formattedDate = currentDate.toLocaleDateString(undefined, options);
 
     return (
         <div className="home-container">
-            <header className="header">
-                <div className="header-left">
-                    <h1>Good Morning, Saurav!! <i className="fas fa-sun"></i></h1>
-                    <p>{formattedDate}</p>
-                </div>
-                <div className="header-right">
-                    <div className="time">{currentTime}</div>
-                    <i className="fas fa-cog"></i>
-                    <i className="fas fa-user"></i>
-                </div>
-            </header>
+            <HeaderGreet />
             <section className="task-section">
                 <div className="task-header">
                     <div className="task-text">
@@ -78,12 +69,12 @@ const Home: React.FC = () => {
                         <p>Total Tasks</p>
                         <p className="all-label">All</p>
                         <h3>{totalTasks}</h3>
-                        <span className="percent-change">10% ↑</span>
+                        {/* <span className="percent-change">10% ↑</span> */}
                     </div>
                     <div className="task-item">
                         <p>Ongoing Tasks</p>
                         <p className="all-label">All</p>
-                        <h3>{ongoingTasks}</h3>
+                        <h3>{ongoingTasks}</h3>3
                     </div>
                     <div className="task-item">
                         <p>Completed Tasks</p>
@@ -97,6 +88,7 @@ const Home: React.FC = () => {
                     </div>
                 </div>
 
+                <div className="future-container">
                 <div className="upcoming-tasks">
                     <h3>Upcoming Tasks: </h3>
                 </div>
@@ -117,7 +109,7 @@ const Home: React.FC = () => {
                             </div>
                         ))}
                     </div>
-                </div>
+                </div></div>
             </section>
         </div>
     );

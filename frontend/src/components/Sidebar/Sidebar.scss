@@ -1,0 +1,355 @@
+@use '../../variables.module';
+
+@mixin display-none() {
+    display: none;
+}
+
+@mixin collapse-sidebar($large-screen: false) {
+    @if $large-screen {
+        width: 75px;
+    } @else {
+        transform: translateX(-100%);
+    }
+}
+
+.sidebar {
+    width: 80%;
+    max-width: 250px;
+    height: 100vh;
+    background-color: variables.$off-black-1;
+    color: variables.$pure-white;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; // content stays aligned to the top
+    align-items: center;
+    // position: absolute;
+    // left: 0;
+    // top: 0;
+    border-radius: 0px 22px 22px 0px;
+    transition: all 0.3s ease;
+    overflow-x: visible;
+
+    &.open {
+        transform: translateX(0);
+    }
+
+    .toggle-btn {
+        position: absolute;
+        top: 55px;
+        right: 0;
+        background-color: variables.$bg-color;
+        border-radius: 50px 0px 0px 50px;
+        width: 33px;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+
+        &.collapsed {
+            display: none;
+        }
+
+        // the back icon design
+        .sidebar-close-icon {
+            font-size: 32px !important;
+            font-weight: 800;
+            color: variables.$off-black-1;
+        }
+    }
+
+    .menu-toggle-btn {
+        margin-top: 31px;
+        display: none;
+
+        &:hover {
+            cursor: pointer;
+        }
+
+        .sidebar-menu-icon {
+            font-size: 28px !important;
+            color: variables.$pure-white;
+            transition: color 0.3s;
+        }
+    }
+
+    .profile-container {
+        align-self: center;
+        margin: 60px 0 40px 0;
+
+        &:hover {
+            cursor: pointer;
+        }
+
+        &.profile-container-minimized {
+            margin: 40px 0;
+            padding-left: 0;
+            align-self: center;
+        }
+
+        .profile-btn {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: width 0.3s ease, height 0.3s ease;
+            background-color: variables.$greyish;
+
+            .profile-icon::before {
+                font-size: 60px;
+                color: variables.$pure-white;
+                transition: font-size 0.3s ease;
+            }
+
+            .sidebar-icon {
+                font-size: 100%;
+                color: variables.$pure-white;
+                transition: font-size 0.3s ease;
+            }
+
+            // Adjust size for profile icon when collapsed
+            &.profile-btn-minimized {
+                width: 35px;
+                height: 35px;
+                align-self: center;
+
+                .profile-icon::before {
+                    font-size: 1.5rem; // Smaller icon size when collapsed
+                }
+            }
+        }
+        .user-email {
+            font-family: variables.$primary-font;
+            font-size: 15px;
+            text-align: center;
+
+            // Hide email when collapsed
+            &.bar-item-collapsed {
+                display: none;
+            }
+        }
+    }
+
+    .icons-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+        width: 100%;
+        margin-top: variables.$padding-small;
+        padding: 0 20px;
+        overflow-y: auto;
+
+        overflow-x: visible;
+
+        scrollbar-width: none;
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: variables.$pure-white;
+            font-family: variables.$primary-font;
+            font-size: 16px;
+
+            .sidebar-icon {
+                font-size: 24px !important;
+                margin-right: 15px;
+                color: variables.$pure-white;
+            }
+
+            span {
+                display: inline-block;
+                text-transform: capitalize;
+            }
+        }
+        .new-list-button {
+            position: relative;
+            overflow: visible;
+            &::before {
+                content: '';
+                display: block;
+                position: absolute;
+                top: -5px;
+                left: -10px;
+                bottom: 0;
+                right: 0;
+                width: calc(100% + 10px);
+                height: calc(100% + 10px);
+                border: 2px dashed variables.$half-white;
+                border-radius: 5px;
+                z-index: 100;
+            }
+
+            .sidebar-icon {
+                font-size: 30px !important;
+                margin-right: 15px;
+                color: variables.$pure-white;
+            }
+        }
+
+        .my-lists-container {
+            .list-heading {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+                &:hover {
+                    cursor: pointer;
+                }
+
+                .sidebar-icon {
+                    font-size: 24px;
+                    margin-right: 15px;
+                    color: variables.$pure-white;
+                }
+            }
+
+            .dropdown-list {
+                display: flex;
+                flex-direction: column;
+                padding-left: 30px;
+                transition: transform 1s ease-in-out;
+                gap: 5px;
+                margin-top: 5px;
+
+                a {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 5px;
+                }
+            }
+        }
+        &.icons-container-collapsed {
+            align-items: center; // Center icons
+            padding: 5px;
+
+            .sidebar-link {
+                justify-content: center; // Center link content
+                padding-left: 0; // Remove padding in collapsed state
+
+                .sidebar-icon {
+                    margin-right: 0; // Remove margin for icons when collapsed
+                }
+
+                span {
+                    display: none;
+                }
+            }
+
+            .new-list-button {
+                justify-content: center;
+                .sidebar-icon {
+                    margin-right: 0;
+                }
+            }
+
+            .my-lists-container {
+                .sidebar-icon {
+                    margin-right: 0;
+                }
+                .list-heading {
+                    justify-content: center;
+                    .drop-icon {
+                        display: none;
+                    }
+                    span {
+                        display: none;
+                    }
+                }
+                .dropdown-list {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    .logout-container {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        // margin-top: auto;
+        padding: 20px 15px 10px;
+
+        .logout-link {
+            display: block;
+            width: 100%;
+
+            .logout-btn {
+                display: flex;
+                align-items: center;
+                width: 100%;
+            }
+        }
+
+        .sidebar-icon {
+            margin-right: 10px;
+        }
+
+        &.logout-container-collapsed {
+            padding: 0;
+            margin-bottom: 20px;
+            .logout-link {
+                .logout-btn {
+                    justify-content: center;
+                    border: none;
+
+                    .sidebar-icon {
+                        margin-right: 5px;
+                    }
+
+                    span {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media screen and (min-width: 512px) {
+    .sidebar {
+        width: 60%;
+    }
+}
+
+@media screen and (min-width: 513px) {
+    .sidebar {
+        &.collapsed {
+            @include collapse-sidebar($large-screen: true);
+
+            .icons-container {
+                .new-list-button {
+                    &::before {
+                        display: none;
+                    }
+                    span {
+                        @include display-none();
+                    }
+                }
+            }
+        }
+        .menu-toggle-btn {
+            &.menu-toggle-btn-collapsed {
+                display: block;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 512px) {
+    .sidebar {
+        // make sidebar position absolute for small screens
+        position: absolute;
+        top: 0;
+        left: 0;
+        &.collapsed {
+            @include collapse-sidebar($large-screen: false);
+        }
+    }
+}

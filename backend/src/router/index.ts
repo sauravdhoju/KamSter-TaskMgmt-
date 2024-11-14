@@ -1,10 +1,12 @@
 import express from 'express';
 
-import testRouter from './testRouter';
+import authenticationRouter from './authenticationRouter';
+import userRouter from './userRouter';
 
 const router = express.Router();
 
 export default (): express.Router => {
-    testRouter(router);
+    authenticationRouter(router);
+    userRouter(router);
     return router;
 };

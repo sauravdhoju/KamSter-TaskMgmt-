@@ -1,0 +1,144 @@
+@use '../../variables.module';
+
+.my-account-page {
+  padding: 0 25px;
+  position: relative;
+  min-height: 100vh;
+  background-color: #e5e5e5;
+
+  .account-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center items horizontally */
+    padding: 5px; /* Padding around the container */
+
+    .heading-row {
+      display: flex;
+      align-items: center;
+      justify-content: center; /* Center content horizontally */
+      width: 100%; /* Ensure the heading row takes full width */
+      position: relative; /* To position the icon absolutely within the container */
+      padding: 10px 0; /* Vertical and horizontal padding */
+      margin-bottom: 20px; /* Space below the heading row */
+
+      .icon {
+        position: absolute;
+        left: 20px; /* Space from the left edge */
+        font-size: 24px; /* Size of the icon */
+        color: black; /* Icon color */
+      }
+
+      .profile-heading {
+        font-family: variables.$primary-font;
+        font-size: 24px;
+        padding-top: 10px;
+        color: black; /* Text color */
+        text-align: center; /* Center text alignment */
+        flex-grow: 1; /* Allows the heading to take up available space */
+      }
+    }
+
+    .profile-picture {
+      display: flex;
+      align-items: center;
+      justify-content: center; /* Center image horizontally */
+      width: 100%; /* Ensure the picture container takes full width */
+
+      .profile-photo {
+        margin-top: 10px; /* Space above the image */
+        width: 100px;
+        height: 100px;
+        border-radius: 50%; /* Make the image round */
+        object-fit: cover; /* Ensure the image covers the area */
+      }
+    }
+
+    .profile-info {
+      font-family: variables.$primary-font;
+      text-align: center; /* Center text horizontally */
+
+      .profile-name {
+        margin-top: 10px;
+        font-size: 20px;
+      }
+
+      .profile-user-name {
+        margin-top: 1px; /* Corrected from '1' to '1px' */
+        font-size: 16px;
+      }
+    }
+  }
+
+  .profile-container {
+    .profile-heading {
+      font-family: variables.$primary-font;
+      font-weight: bold;
+    }
+
+    .profile-details {
+      font-family: variables.$primary-font;
+      font-size: 16px;
+
+      .detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 15px; /* Set padding here */
+        margin-bottom: 1px; /* Spacing between rows */
+        background-color: rgba(255, 255, 255, 0.3); /* Use rgba for background opacity */
+        border-radius: 4px; /* Set border radius here */
+        border: 1px solid #e0e0e0; /* Optional: Add a border for better visibility */
+      }
+    }
+  }
+
+  .setting-container {
+    .setting-heading {
+      padding-top: 10px;
+      font-family: variables.$primary-font;
+      font-weight: bold;
+    }
+
+    .setting-details {
+      font-family: variables.$primary-font;
+      font-size: 16px;
+
+      .setting-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 15px; /* Set padding here */
+        margin-bottom: 1px; /* Spacing between rows */
+        background-color: rgba(255, 255, 255, 0.3); /* Use rgba for background opacity */
+        border-radius: 4px; /* Set border radius here */
+        border: 1px solid #e0e0e0; /* Optional: Add a border for better visibility */
+        cursor: pointer;
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.5);
+        }
+      }
+    }
+  }
+
+  .logout-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+
+    .logout-heading {
+      font-family: variables.$primary-font;
+      text-align: center;
+      background-color: #d9d9d9;
+      color: black;
+      border: none;
+      border-radius: 40px;
+      padding: 10px 20px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: #4b4e4e;
+        color: white;
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+@use '../../variables.module';
+.header-greet {
+    font-family: variables.$primary-font;
+
+    .header-container {
+        .greet-container {
+            .greet-texts {
+                .greet-header {
+                    font-family: variables.$primary-font;
+                    font-weight: 600;
+                }
+            }
+        }
+    }
+
+    .times-container {
+        .time-string {
+            font-variant-numeric: tabular-nums;
+        }
+    }
+}
+
+@media screen and (max-width: 785px) {
+    .header-greet {
+        flex-direction: column;
+
+        .header-container {
+            width: 100%;
+            justify-content: flex-end;
+        }
+
+        .times-container {
+            justify-content: flex-end;
+            width: 100%;
+        }
+    }
+}

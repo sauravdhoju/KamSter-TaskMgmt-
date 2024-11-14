@@ -5,12 +5,30 @@ $pure-black-50: #00000080;
 $pure-black-20: #00000033;
 $off-black-1: #252525;
 $pure-white: #ffffff;
+$bg-color: #e5e5e5;
+$greyish: #9f9d9d;
+$greyish-2: #d9d9d9;
+$half-white: #ffffff7f;
+
+/* PADDING */
+$padding-small: 10px;
+$padding-medium: 20px;
+$padding-large: 30px;
 
 /* FONTS */
 $primary-font: 'Jost', sans-serif;
+$digital-font: 'Digital Numbers', sans-serif;
 
 // export variables to tsx file
 :export {
     // fonts
     primaryFont: $primary-font;
+    pureBlack: $pure-black;
+    pureBlack80: $pure-black-80;
+    pureBlack60: $pure-black-60;
+    pureBlack50: $pure-black-50;
+    pureBlack20: $pure-black-20;
+    offBlack1: $off-black-1;
+    pureWhite: $pure-white;
+    bgColor: $bg-color;
 }

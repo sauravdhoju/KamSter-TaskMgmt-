@@ -1,0 +1,27 @@
+@use '../../variables.module';
+.input-container {
+    .input-label {
+        margin: 0;
+        position: absolute;
+        top: calc(-50% + 10px);
+        left: 10px;
+        z-index: 10;
+        background-color: variables.$bg-color;
+        font-family: variables.$primary-font;
+        font-weight: 700;
+        font-size: 16px;
+        padding: 5px 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .required-indicator {
+            color: red;
+            margin-left: 2px;
+        }
+    }
+    .input-area {
+        height: 55px;
+        border: 2px solid black;
+    }
+}

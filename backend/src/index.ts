@@ -6,12 +6,19 @@ import compression from 'compression';
 import cors from 'cors';
 import mongoose from 'mongoose';
 
-import { port } from './envconfig';
+import { mongo_uri, port } from './envconfig';
 
 import router from './router/index';
 
 const app = express();
 
+// app.use(
+//     cors({
+//         credentials: true,
+//         // origin: 'http://localhost:5173',
+//         optionsSuccessStatus: 200,
+//     })
+// );
 app.use(
     cors({
         credentials: true,
@@ -30,4 +37,10 @@ const server = http.createServer(app);
 
 server.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
+});
+
+mongoose.Promise = Promise;
+mongoose.connect(mongo_uri);
+mongoose.connection.on('error', (err: Error) => {
+    console.log(err);
 });

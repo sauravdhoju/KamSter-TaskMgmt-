@@ -130,11 +130,15 @@
             }
         }
         
+        .future-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            
         .upcoming-tasks {
             background-color: #fff;
             padding: 10px;
             margin-bottom: 10px;
-            margin-top: 20px;
             width: 250px;
 
             h3 {
@@ -148,10 +152,7 @@
             background-color: #fff;
             padding: 10px;
             border-radius: 10px;
-            position: absolute;
-            bottom: 100px;
-            right: 40px;
-            width: 350px;
+            width: 300px;
             text-align: center;
 
             h4 {
@@ -184,6 +185,7 @@
                     }
                 }
             }
+        }
         }
     }
 }

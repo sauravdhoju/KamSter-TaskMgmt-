@@ -1,0 +1,103 @@
+@use '../../variables.module';
+
+.register-page {
+    padding: 0 25px;
+    position: relative;
+    min-height: 100vh;
+
+    .register-stuff-container {
+        margin-top: 52px;
+        display: flex;
+        flex-direction: column;
+
+        .greeting {
+            font-family: variables.$primary-font;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .register-info-text {
+            font-family: variables.$primary-font;
+            font-size: 12px;
+        }
+
+        .register-form {
+            margin: 5px 0 38px 0;
+            display: flex;
+            flex-direction: column;
+
+            .custom-input {
+                margin-top: 25px;
+            }
+
+            .forgot-password-link {
+                text-align: right;
+                font-family: variables.$primary-font;
+                display: inline-block;
+                align-self: flex-end;
+                font-size: 14px;
+                font-weight: 600;
+                color: variables.$pure-black-60;
+                margin-top: 15px;
+            }
+            .form-submit-btn {
+                font-family: variables.$primary-font;
+
+                &:hover {
+                    background-color: variables.$pure-black-80;
+                }
+            }
+        }
+
+        .or-continue-with {
+            text-align: center;
+            margin: 10px 0 18px 0;
+            font-size: 18px;
+            font-weight: 500;
+            color: variables.$pure-black-80;
+        }
+
+        .google-sign-in-btn {
+            height: 50px;
+            border-radius: 8px;
+            background-color: variables.$pure-white;
+            font-family: variables.$primary-font;
+            font-size: 18px;
+            font-weight: 600;
+            color: variables.$pure-black-80;
+
+            .google-logo-container {
+                display: block;
+                width: 35px;
+                height: 35px;
+                margin-right: 10px;
+
+                .google-logo {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+            }
+        }
+
+        .login-page-link {
+            font-family: variables.$primary-font;
+            font-weight: 400;
+            font-size: 18px;
+        }
+
+        .back-home-link {
+            display: inline-flex;
+            align-self: flex-end;
+            margin: 25px 0 25px 0;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: variables.$primary-font;
+            text-decoration: none;
+            .arrow {
+                margin-right: 3px;
+                font-size: 20px !important;
+            }
+        }
+    }
+}
