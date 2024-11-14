@@ -8,7 +8,7 @@ const PageContainer: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     return (
         <Flex
-            className='tasks-page'
+            className='page-container'
             width={'100%'}
             height={'100vh'}
             minH={'100vh'}
