@@ -75,7 +75,7 @@ const Home: React.FC = () => {
                     <div className="task-item">
                         <p>Ongoing Tasks</p>
                         <p className="all-label">All</p>
-                        <h3>{ongoingTasks}</h3>3
+                        <h3>{ongoingTasks}</h3>
                     </div>
                     <div className="task-item">
                         <p>Completed Tasks</p>
