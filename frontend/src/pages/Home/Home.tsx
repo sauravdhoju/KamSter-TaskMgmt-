@@ -56,8 +56,8 @@ const Home: React.FC = () => {
         <PageContainer>
         <div className="home-container">
             <section className="task-section">
-                <div className="task-header">
-                <Box className='task-picture'>
+                <Box className="task-header" position={'relative'}>
+                <Box className='task-picture' position={'absolute'} right={0} bottom={0} zIndex={'99'}>
                     <Image
                         src={taskPhoto}
                         alt='task-photo'
@@ -71,7 +71,7 @@ const Home: React.FC = () => {
                         <button className="schedule-btn">Today's Schedule</button>
                         <button className="add-btn">Add Task</button>
                     </div>
-                </div>
+                </Box>
 
                 <div className="task-status-container">
                     <div className="task-item">
