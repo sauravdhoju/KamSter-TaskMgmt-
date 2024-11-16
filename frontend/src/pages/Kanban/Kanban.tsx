@@ -22,7 +22,7 @@ const Kanban = () => {
             <Text as="span">Add a task</Text>
           </Box>
           <Box className="tasks">
-            {/* Task list would go here */}
+            {/* Task list*/}
           </Box>
         </Box>
       ))}
