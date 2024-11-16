@@ -2,31 +2,36 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
+    gap: 16px;
+    padding: 16px;
   }
   
   .column {
-    // background: $greyish;
     padding: 1rem;
     border-radius: 8px;
     min-width: 220px;
     max-width: 220px;
     flex-grow: 1;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    background: #fff;  // You can uncomment and change this if you want a greyish background
   
     .column-header {
       font-weight: bold;
       text-align: left;
+      font-size: 1rem;
+      color: #333;
     }
   
     .add-task {
       display: flex;
       align-items: center;
-      background: white;
+      background: #fff;
       padding: 0.5rem;
       border-radius: 4px;
       margin-bottom: 1rem;
       box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
       cursor: pointer;
+  
       &:hover {
         background: #f9f9f9;
       }
@@ -40,11 +45,12 @@
       .task {
         display: flex;
         align-items: center;
-        background: white;
+        background: #fff;
         padding: 0.5rem;
         border-radius: 4px;
         box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
         font-size: 0.875rem;
+        color: #333;
   
         &:hover {
           background: #f9f9f9;
