@@ -13,7 +13,7 @@ import Pomodoro from './pages/Pomodoro/Pomodoro';
 
 // import Sidebar from './pages/Sidebar/Sidebar';
 // import Calender from './pages/Calender/Calender';
-// import Kanban from './pages/Kanban/Kanban';
+import Kanban from './pages/Kanban/Kanban';
 
 import './App.scss';
 
@@ -50,6 +50,7 @@ const App = () => {
                 <Route path='/register' element={<Register />} />
                 <Route path='/my-account' element={<MyAccount />} />
                 <Route path='/pomodoro' element={<Pomodoro />} />
+                <Route path='/kanban' element={<Kanban />} /> 
             </Routes>
         </Box>
     );
