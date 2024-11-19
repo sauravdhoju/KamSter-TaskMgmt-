@@ -36,4 +36,42 @@
             font-size: 20px !important;
         }
     }
+
+    .new-list-form {
+        display: flex;
+        gap: 5px;
+        margin-top: 20px;
+
+        .new-list-input-container {
+            &:before {
+                content: '';
+                width: 100vw;
+                height: 100vh;
+                position: fixed;
+                top: 0;
+                left: 0;
+                background-color: #1f1f1fcc;
+            }
+
+            .click-detector {
+                width: 100vw;
+                height: 100vh;
+                position: fixed;
+                top: 0;
+                left: 0;
+                z-index: 20;
+            }
+
+            .new-list-input {
+                background-color: white;
+                color: #1f1f1f;
+                position: relative;
+                z-index: 50;
+            }
+        }
+        .new-list-add-btn {
+            position: relative;
+            z-index: 50;
+        }
+    }
 }
