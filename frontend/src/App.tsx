@@ -11,7 +11,7 @@ import MyAccount from './pages/MyAccount/MyAccount';
 
 import Calendar from './pages/Calendar/Calendar'; 
 import Pomodoro from './pages/Pomodoro/Pomodoro';
-
+import Tasks from './pages/Tasks/Tasks';
 
 
 // import Sidebar from './pages/Sidebar/Sidebar';
@@ -21,8 +21,7 @@ import Pomodoro from './pages/Pomodoro/Pomodoro';
 import './App.scss';
 
 const App = () => {
-
-    // return ( 
+    // return (
     //     <Box className='app'>
     //         <NavBar />
 
@@ -34,10 +33,9 @@ const App = () => {
     //         <Routes>
     //             <Route path='/' element={<Home />} />
     //             <Route path='/auth/login' element={<Login />} />
-            
+
     //             {/* <Route path="/calendar" element={<Calender />} />
     //             <Route path="/kanban" element={<Kanban />} /> */}
-     
 
     // try to fetch user on site load
     const { fetchUser } = useUserContext();
@@ -54,6 +52,7 @@ const App = () => {
                 <Route path='/my-account' element={<MyAccount />} />
                 <Route path='/calendar' element={<Calendar />} /> 
                 <Route path='/pomodoro' element={<Pomodoro />} />
+                <Route path='/tasks' element={<Tasks />} />
             </Routes>
         </Box>
     );

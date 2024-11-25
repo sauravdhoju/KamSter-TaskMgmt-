@@ -51,23 +51,46 @@ const HeaderGreet = () => {
     const [meridiemType, setMeridiemType] = useState<'ante' | 'post'>(
         currentTime.getHours() > 12 ? 'post' : 'ante'
     );
+    const [currentGreet, setCurrentGreet] = useState<
+        'Good Morning' | 'Good Afternoon' | 'Good Evening' | 'Good Night'
+    >('Good Morning');
     const [dateString, setDateString] = useState(
         `${days[currentTime.getDay()]}, ${currentTime.getDate()} ${
             months[currentTime.getMonth()]
         } ${currentTime.getFullYear()}`
     );
 
+    const handleGreeting = () => {
+        if (currentTime.getHours() > 3 && currentTime.getHours() < 12) {
+            setCurrentGreet('Good Morning');
+        } else if (
+            currentTime.getHours() >= 12 &&
+            currentTime.getHours() < 17
+        ) {
+            setCurrentGreet('Good Afternoon');
+        } else if (
+            currentTime.getHours() >= 17 &&
+            currentTime.getHours() < 20
+        ) {
+            setCurrentGreet('Good Evening');
+        } else {
+            setCurrentGreet('Good Night');
+        }
+    };
+
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentTime(new Date());
             setTimeString(getTimeString());
-            setMeridiemType(currentTime.getHours() > 12 ? 'post' : 'ante');
+            setMeridiemType(currentTime.getHours() >= 12 ? 'post' : 'ante');
             setDateString(
                 `${days[currentTime.getDay()]}, ${currentTime.getDate()} ${
                     months[currentTime.getMonth()]
                 } ${currentTime.getFullYear()}`
             );
         }, 1000);
+
+        handleGreeting();
         return () => clearInterval(interval);
     }, [currentTime]);
 
@@ -77,7 +100,7 @@ const HeaderGreet = () => {
             justifyContent={'space-between'}
             alignItems={'center'}
             width={'100%'}
-            padding={'30px 25px 0 25px'}
+            paddingTop={'30px'}
             className='header-greet'
             flexWrap={'wrap'}
             gap={'10px'}
@@ -110,7 +133,7 @@ const HeaderGreet = () => {
                             gap={'5px'}
                             className='greet-header'
                         >
-                            Good Morning, Saurav!!
+                            {currentGreet}, Saurav!!
                         </Heading>
                         <Text fontWeight={300} fontSize={'16px'}>
                             It's {dateString}
@@ -127,7 +150,7 @@ const HeaderGreet = () => {
                 </Flex>
             </Flex>
             <Flex gap={'10px'} className='times-container'>
-                <Text>
+                <Text className='time-string'>
                     {timeString} {meridiemType === 'ante' ? 'AM' : 'PM'}
                 </Text>
                 <ChakraLink
