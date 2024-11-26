@@ -1,87 +1,81 @@
 @use '../../variables.module';
-  .calendar-container {
+.calendar-container {
     // monthly-view
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    
+
     // Calendar header (top navigation part)
     .calendar-grid-header {
-      border: transparent;
-      background-color: #d9d9d9;
-      font-size: 16px;
-      height: 60px; 
+        border: transparent;
+        background-color: #d9d9d9;
+        font-size: 16px;
+        height: 60px;
     }
 
     .day-header {
-      display: flex;
-      justify-content: center; // Centers text horizontally within each box
-      align-items: center; // Centers text vertically 
+        display: flex;
+        justify-content: center; // Centers text horizontally within each box
+        align-items: center; // Centers text vertically
     }
-  
+
     // Calendar grid area (date cells)
     .calendar-grid {
-      border: 1px solid variables.$greyish;
-      flex-grow: 1; // Fills remaining height of  screen
-      display: grid;
-      grid-auto-rows: 1fr; // Make rows of equal height, responsive
-
-      .day-box {
         border: 1px solid variables.$greyish;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-  
-      }
+        flex-grow: 1; // Fills remaining height of  screen
+        display: grid;
+        grid-auto-rows: 1fr; // Make rows of equal height, responsive
 
+        .day-box {
+            border: 1px solid variables.$greyish;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     }
 
     //for toggle
     .calendar-toggle {
-      display: flex;
-      border: 1px solid #231f1f; 
-      border-radius: 16px;
-      background-color: #e5e5e5; 
-      width: 300px;
-      margin: 0 15px 20px auto;  /* t r b l */
-    
-      .calendar-toggle-button {
-        flex: 1; /* Equal space */
-        text-align: center;
-        font-weight: 500;
-        font-size: 14px;
-        color: #555; 
-        cursor: pointer; 
-        transition: background-color 0.2s ease, color 0.2s ease;
-        height: 30px;
-        border-left: 1px solid #231f1f; /* Add a bold separator to the left */
-    
-        /* Remove the left border for the first button */
-        &:first-child {
-          border-left: none;
+        display: flex;
+        border: 1px solid #231f1f;
+        border-radius: 16px;
+        background-color: #e5e5e5;
+        width: 300px;
+        margin: 0 15px 20px auto; /* t r b l */
+
+        .calendar-toggle-button {
+            flex: 1; /* Equal space */
+            text-align: center;
+            font-weight: 500;
+            font-size: 14px;
+            color: #555;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            height: 30px;
+            border-left: 1px solid #231f1f; /* Add a bold separator to the left */
+
+            /* Remove the left border for the first button */
+            &:first-child {
+                border-left: none;
+            }
+
+            /* Active button styling */
+            &[aria-selected='true'] {
+                background-color: #231f1f; /* Match the design's dark background */
+                color: #fff;
+                font-weight: bold;
+            }
+
+            /* Add curved borders for the first and last buttons when active */
+            &:first-child[aria-selected='true'] {
+                border-top-left-radius: 16px;
+                border-bottom-left-radius: 16px;
+            }
+
+            &:last-child[aria-selected='true'] {
+                border-top-right-radius: 16px;
+                border-bottom-right-radius: 16px;
+            }
         }
-    
-        /* Active button styling */
-        &[aria-selected="true"] {
-          background-color: #231f1f; /* Match the design's dark background */
-          color: #fff; 
-          font-weight: bold;
-        }
-    
-        /* Add curved borders for the first and last buttons when active */
-        &:first-child[aria-selected="true"] {
-          border-top-left-radius: 16px;
-          border-bottom-left-radius: 16px;
-        }
-    
-        &:last-child[aria-selected="true"] {
-          border-top-right-radius: 16px;
-          border-bottom-right-radius: 16px;
-        }
-      }
     }
-  }
-  
-
-  
-
+}
