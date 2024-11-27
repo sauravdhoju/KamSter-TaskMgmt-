@@ -13,7 +13,17 @@ import Icon from '../Icon/Icon';
 
 import './CalendarTopBar.scss';
 
-const CalendarTopBar = () => {
+type CalendarTopBarTypes = {
+    currentView: 'year' | 'month' | 'week' | 'day';
+    setCurrentView: React.Dispatch<
+        React.SetStateAction<CalendarTopBarTypes['currentView']>
+    >;
+};
+
+const CalendarTopBar = ({
+    currentView,
+    setCurrentView,
+}: CalendarTopBarTypes) => {
     return (
         <Grid
             width={'100%'}
@@ -94,6 +104,21 @@ const CalendarTopBar = () => {
                 <Tabs
                     variant={'unstyled'}
                     className='calendar-toggle-tabs-container'
+                    defaultIndex={(() => {
+                        const validViews = ['year', 'month', 'week', 'day'];
+                        return validViews.indexOf(currentView);
+                    })()}
+                    onChange={(index) =>
+                        setCurrentView(() => {
+                            const validViews = [
+                                'year',
+                                'month',
+                                'week',
+                                'day',
+                            ] as const;
+                            return validViews[index];
+                        })
+                    }
                 >
                     <TabList className='calendar-toggle' bgColor={'blue'}>
                         <Tab className='calendar-toggle-button' value={'year'}>
