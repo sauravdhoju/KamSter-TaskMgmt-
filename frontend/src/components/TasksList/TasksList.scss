@@ -19,45 +19,47 @@
         font-size: 16px;
         display: flex;
         overflow-x: auto;
-        scrollbar-width: thin;
+        scrollbar-width: none;
         height: 50px;
         white-space: nowrap;
-        gap: 0px;
-
+        gap: 1px; /* Maintain consistent gap */
+    
         &::-webkit-scrollbar {
-            height: 8px;
+            // height: 8px;
+            display: none;
         }
-
+    
         &::-webkit-scrollbar-thumb {
             background-color: #ccc;
             border-radius: 10px;
         }
-
+    
         &::-webkit-scrollbar-track {
             background-color: transparent;
         }
-
+    
         .tasks-tab {
             display: flex;
             justify-content: center;
             align-items: center;
-            min-width: 1px;
+            flex: 0 0 auto; /* Prevent tabs from shrinking */
             padding: 0 15px;
             cursor: pointer;
             white-space: nowrap;
             border-bottom: 2px solid transparent;
+            min-width: 12px; /* Ensure minimum width */
             transition: all 0.2s ease-in-out;
-
+    
             &:hover {
                 background-color: #f4f4f4;
             }
-
+    
             &.selected {
                 border-bottom: 2px solid black;
                 font-weight: bold;
             }
         }
-
+    
         .new-list-btn {
             display: flex;
             align-items: center;
@@ -65,12 +67,13 @@
             font-weight: bold;
             color: #0073e6;
             cursor: pointer;
-
+    
             &:hover {
                 text-decoration: none;
             }
         }
     }
+    
 
     // Task List Section
     .task-list {

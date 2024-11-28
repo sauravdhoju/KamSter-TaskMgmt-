@@ -145,7 +145,11 @@ const TasksList = () => {
                     <Box
                         key={index}
                         className={`tasks-tab ${index === selectedTabIndex ? 'selected' : ''}`}
-                        onClick={() => setSelectedTabIndex(index)}
+                        onClick={() => {
+                            setSelectedTabIndex(index); 
+                            setNewListVisible(false); // Reset the form visibility
+                        }}
+                        
                     >
                         {list.type === 'default' ? (
                             <Icon name="bxs-star" className="important-icon" />
