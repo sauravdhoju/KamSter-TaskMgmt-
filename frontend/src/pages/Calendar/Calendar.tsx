@@ -10,12 +10,10 @@ const Calendar = () => {
         }`;
         return `${dateString} - ${daysOfWeek[today.getDay()]}`;
     };
-    const [viewDay, setViewDay] = useState(
-        `${today.getDate()} - ${daysOfWeek[today.getDay()]}`
-    );
+    const [viewDay, setViewDay] = useState(() => getViewDayString());
     const [currentView, setCurrentView] = useState<
         'year' | 'month' | 'week' | 'day'
-    >('day');
+    >('week');
     return (
         <CalendarContainer
             currentView={currentView}

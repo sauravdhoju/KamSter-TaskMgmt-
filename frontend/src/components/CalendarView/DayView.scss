@@ -1,17 +1,9 @@
+@use '../../mixins.module';
+
 .day-view {
     .day-timestamp-container {
-        &::-webkit-scrollbar {
-            background: transparent;
-        }
-        &::-webkit-scrollbar-thumb {
-            border: none;
-            box-shadow: none;
-            background-color: #00000033;
+        @include mixins.scroll-bar-style;
 
-            &:active {
-                background-color: #00000066;
-            }
-        }
         .day-timestamp-block {
             .timestamp-block-hour {
                 font-variant-numeric: tabular-nums;

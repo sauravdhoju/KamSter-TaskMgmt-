@@ -1,9 +1,10 @@
-import { Box, Grid, GridItem, Text } from '@chakra-ui/react';
+import { Grid, GridItem, Text } from '@chakra-ui/react';
 import './DayView.scss';
 type DayView = {
     viewDay: string;
+    getHours: (hourType: 'ante' | 'post') => React.ReactNode[];
 };
-const DayView = ({ viewDay }: DayView) => {
+const DayView = ({ viewDay, getHours }: DayView) => {
     return (
         <Grid
             bgColor={'#D9D9D9'}
@@ -29,54 +30,8 @@ const DayView = ({ viewDay }: DayView) => {
                 maxH={'100%'}
                 overflowY={'scroll'}
             >
-                {Array.from({ length: 12 }, (_, i) => {
-                    if (i === 0) {
-                        return (
-                            <Box
-                                className='day-timestamp-block'
-                                borderBottom={'1px solid #0000007f'}
-                                height={'50px'}
-                            >
-                                <Text className='timestamp-block-hour'></Text>
-                            </Box>
-                        );
-                    }
-                    return (
-                        <Box
-                            className='day-timestamp-block'
-                            borderBottom={'1px solid #0000007f'}
-                            height={'50px'}
-                        >
-                            <Text className='timestamp-block-hour'>{`${
-                                i < 10 ? '0' + i : i
-                            }:00 AM`}</Text>
-                        </Box>
-                    );
-                })}
-                {Array.from({ length: 12 }, (_, i) => {
-                    if (i === 0) {
-                        return (
-                            <Box
-                                className='day-timestamp-block'
-                                borderBottom={'1px solid #0000007f'}
-                                height={'50px'}
-                            >
-                                <Text className='timestamp-block-hour'>{`12:00 PM`}</Text>
-                            </Box>
-                        );
-                    }
-                    return (
-                        <Box
-                            className='day-timestamp-block'
-                            borderBottom={'1px solid #0000007f'}
-                            height={'50px'}
-                        >
-                            <Text className='timestamp-block-hour'>{`${
-                                i < 10 ? '0' + i : i
-                            }:00 PM`}</Text>
-                        </Box>
-                    );
-                })}
+                {getHours('ante')}
+                {getHours('post')}
             </GridItem>
         </Grid>
     );
