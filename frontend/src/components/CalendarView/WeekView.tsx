@@ -1,4 +1,5 @@
 import { Box, Grid, GridItem, Text } from '@chakra-ui/react';
+import './WeekView.scss';
 
 type WeekViewTypes = {
     getHours: (hourType: 'ante' | 'post') => React.ReactNode[];
@@ -13,6 +14,7 @@ const WeekView = ({ getHours }: WeekViewTypes) => {
             gridTemplateRows={'min-content 1fr'}
             className='week-view'
             height={'100%'}
+            overflowY={'auto'}
         >
             {daysOfWeek.map((day, index) => {
                 return (
@@ -24,7 +26,7 @@ const WeekView = ({ getHours }: WeekViewTypes) => {
                         padding={'20px 0'}
                     >
                         <Text>
-                            {index}:{day}
+                            {index} - {day}
                         </Text>
                     </GridItem>
                 );
