@@ -2,6 +2,7 @@ import { Box, Text } from '@chakra-ui/react';
 import MonthView from './MonthView';
 import DayView from './DayView';
 import WeekView from './WeekView';
+import YearView from './YearView';
 import './CalendarView.scss';
 
 type CalendarViewTypes = {
@@ -52,6 +53,7 @@ const CalendarView = ({ currentView, viewDay }: CalendarViewTypes) => {
             return <DayView viewDay={viewDay} getHours={getHours} />;
         if (currentView === 'month') return <MonthView />;
         if (currentView === 'week') return <WeekView getHours={getHours} />;
+        if (currentView === 'year') return <YearView />;
     };
 
     return (
