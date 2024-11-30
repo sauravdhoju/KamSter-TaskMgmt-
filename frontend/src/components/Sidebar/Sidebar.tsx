@@ -27,6 +27,10 @@ const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }: SidebarTypes) => {
             icon: 'bx-home-alt-2',
         },
         {
+            name: 'tasks',
+            icon: 'bx-task',
+        },
+        {
             name: 'calendar',
             icon: 'bx-calendar',
         },
