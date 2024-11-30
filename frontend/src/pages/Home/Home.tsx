@@ -56,8 +56,13 @@ const Home: React.FC = () => {
         <PageContainer>
         <div className="home-container">
             <section className="task-section">
-                <div className="task-header">
-                
+                <Box className="task-header" position={'relative'}>
+                <Box className='task-picture' position={'absolute'} right={0} bottom={0} zIndex={'99'}>
+                    <Image
+                        src={taskPhoto}
+                        alt='task-photo'
+                    />
+                </Box>
                     <div className="task-text">
                         <h2>Today Task</h2>
                         <p>Check your daily tasks and schedules</p>
