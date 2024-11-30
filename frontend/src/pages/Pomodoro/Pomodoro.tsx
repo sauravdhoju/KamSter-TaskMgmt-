@@ -147,7 +147,8 @@ const Pomodoro = () => {
         <PageContainer>
             <Box
                 className='pomodoro-container'
-                flexGrow={1}
+                // flexGrow={1}
+                height={'100%'}
                 width={'100%'}
                 display={'flex'}
                 justifyContent={'center'}
