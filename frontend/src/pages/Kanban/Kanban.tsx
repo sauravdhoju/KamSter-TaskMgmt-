@@ -50,7 +50,7 @@ const Kanban = () => {
     ]);
   };
 
-  // Enable renaming mode for a column
+  // Enable renaming for a column
   const startRenaming = (columnId: string, currentName: string) => {
     setEditingColumn(columnId);
     setRenameInput(currentName);
@@ -111,6 +111,7 @@ const Kanban = () => {
                 placeholder="Add a task"
                 value={taskInputs[column.id] || ''}
                 onChange={(e) => handleInputChange(column.id, e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && addTask(column.id)} // Add task on Enter key press
               />
             </Box>
             <Box className="tasks">
