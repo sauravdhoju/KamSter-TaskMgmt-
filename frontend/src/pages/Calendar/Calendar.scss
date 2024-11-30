@@ -1,0 +1,38 @@
+@use '../../variables.module';
+  .calendar-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    
+    // Calendar header (top navigation part)
+    .calendar-grid-header {
+      border: transparent;
+      background-color: #d9d9d9;
+      font-size: 16px;
+      height: 60px; 
+    }
+
+    .day-header {
+      display: flex;
+      justify-content: center; // Centers text horizontally within each box
+      align-items: center; // Centers text vertically 
+    }
+  
+    // Calendar grid area (date cells)
+    .calendar-grid {
+      border: 1px solid variables.$greyish;
+      flex-grow: 1; // Fills remaining height of  screen
+      display: grid;
+      grid-auto-rows: 1fr; // Make rows of equal height, responsive
+
+      .day-box {
+        border: 1px solid variables.$greyish;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+  
+      }
+
+    }
+  }
+  

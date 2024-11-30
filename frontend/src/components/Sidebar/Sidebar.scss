@@ -15,7 +15,7 @@
 .sidebar {
     width: 80%;
     max-width: 250px;
-    height: 100vh;
+    min-height: 100vh;
     background-color: variables.$off-black-1;
     color: variables.$pure-white;
     padding: 10px;
