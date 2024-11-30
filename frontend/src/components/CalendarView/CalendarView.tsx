@@ -1,16 +1,16 @@
 import { Box, Text } from '@chakra-ui/react';
+
+import { useCalendarContext } from '../../contexts/CalendarContext/CalendarContext';
+
 import MonthView from './MonthView';
 import DayView from './DayView';
 import WeekView from './WeekView';
 import YearView from './YearView';
+
 import './CalendarView.scss';
 
-type CalendarViewTypes = {
-    currentView: 'year' | 'month' | 'week' | 'day';
-    viewDay: string;
-};
-
-const CalendarView = ({ currentView, viewDay }: CalendarViewTypes) => {
+const CalendarView = () => {
+    const { currentView } = useCalendarContext();
     // returns the hours that you see in left side of week and days view
     const getHours = (hourType: 'ante' | 'post') => {
         let timestampBlocks: React.ReactNode[] = Array.from(
@@ -49,8 +49,7 @@ const CalendarView = ({ currentView, viewDay }: CalendarViewTypes) => {
         return timestampBlocks;
     };
     const renderCurrentView = () => {
-        if (currentView === 'day')
-            return <DayView viewDay={viewDay} getHours={getHours} />;
+        if (currentView === 'day') return <DayView getHours={getHours} />;
         if (currentView === 'month') return <MonthView />;
         if (currentView === 'week') return <WeekView getHours={getHours} />;
         if (currentView === 'year') return <YearView />;

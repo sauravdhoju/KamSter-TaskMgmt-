@@ -11,19 +11,12 @@ import {
 
 import Icon from '../Icon/Icon';
 
+import { useCalendarContext } from '../../contexts/CalendarContext/CalendarContext';
+
 import './CalendarTopBar.scss';
 
-type CalendarTopBarTypes = {
-    currentView: 'year' | 'month' | 'week' | 'day';
-    setCurrentView: React.Dispatch<
-        React.SetStateAction<CalendarTopBarTypes['currentView']>
-    >;
-};
-
-const CalendarTopBar = ({
-    currentView,
-    setCurrentView,
-}: CalendarTopBarTypes) => {
+const CalendarTopBar = () => {
+    const { currentView, setCurrentView } = useCalendarContext();
     return (
         <Grid
             width={'100%'}

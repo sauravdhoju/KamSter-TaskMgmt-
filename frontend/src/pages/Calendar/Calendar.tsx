@@ -1,26 +1,14 @@
-import { useState } from 'react';
+import CalendarContextProvider from '../../contexts/CalendarContext/CalendarContext';
+
 import CalendarContainer from '../../components/CalendarContainer/CalendarContainer';
 import CalendarView from '../../components/CalendarView/CalendarView';
 const Calendar = () => {
-    const today = new Date();
-    const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    const getViewDayString = () => {
-        const dateString = `${
-            today.getDate() < 10 ? '0' + today.getDate() : today.getDate()
-        }`;
-        return `${dateString} - ${daysOfWeek[today.getDay()]}`;
-    };
-    const [viewDay, setViewDay] = useState(() => getViewDayString());
-    const [currentView, setCurrentView] = useState<
-        'year' | 'month' | 'week' | 'day'
-    >('week');
     return (
-        <CalendarContainer
-            currentView={currentView}
-            setCurrentView={setCurrentView}
-        >
-            <CalendarView currentView={currentView} viewDay={viewDay} />
-        </CalendarContainer>
+        <CalendarContextProvider>
+            <CalendarContainer>
+                <CalendarView />
+            </CalendarContainer>
+        </CalendarContextProvider>
     );
 };
 

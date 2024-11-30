@@ -1,18 +1,11 @@
-import { Box, Grid, GridItem } from '@chakra-ui/react';
+import { Grid, GridItem } from '@chakra-ui/react';
 
 import PageContainer from '../PageContainer/PageContainer';
 import CalendarTopBar from '../CalendarTopBar/CalendarTopBar';
 
-type CalendarContainerType = {
-    currentView: 'year' | 'month' | 'week' | 'day';
-    setCurrentView: React.Dispatch<
-        React.SetStateAction<CalendarContainerType['currentView']>
-    >;
-};
-
-const CalendarContainer: React.FC<
-    React.PropsWithChildren<CalendarContainerType>
-> = ({ children, currentView, setCurrentView }) => {
+const CalendarContainer: React.FC<React.PropsWithChildren<{}>> = ({
+    children,
+}) => {
     return (
         <PageContainer>
             <Grid
@@ -26,10 +19,7 @@ const CalendarContainer: React.FC<
                 gridTemplateColumns={'1fr'}
             >
                 <GridItem width={'100%'}>
-                    <CalendarTopBar
-                        currentView={currentView}
-                        setCurrentView={setCurrentView}
-                    />
+                    <CalendarTopBar />
                 </GridItem>
                 <GridItem maxH={'100%'} overflowY={'auto'}>
                     {children}

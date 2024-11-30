@@ -1,17 +1,23 @@
 import { Grid, GridItem, Text } from '@chakra-ui/react';
+import { isToday } from 'date-fns';
+
+import { useCalendarContext } from '../../contexts/CalendarContext/CalendarContext';
+
 import './DayView.scss';
 type DayView = {
-    viewDay: string;
     getHours: (hourType: 'ante' | 'post') => React.ReactNode[];
 };
-const DayView = ({ viewDay, getHours }: DayView) => {
+const DayView = ({ getHours }: DayView) => {
+    const { currentViewDate, getViewDayString } = useCalendarContext();
     return (
         <Grid
             bgColor={'#D9D9D9'}
             gridTemplateColumns={'1fr'}
             gridTemplateRows={'min-content 1fr'}
             gap={'5px'}
-            className='day-view'
+            className={`day-view ${
+                isToday(currentViewDate) ? 'day-view-today' : ''
+            }`}
             height={'100%'}
         >
             <GridItem
@@ -20,7 +26,7 @@ const DayView = ({ viewDay, getHours }: DayView) => {
                 textAlign={'center'}
                 paddingY={'20px'}
             >
-                <Text>{viewDay}</Text>
+                <Text>{getViewDayString(currentViewDate)}</Text>
             </GridItem>
             <GridItem
                 className='day-timestamp-container'

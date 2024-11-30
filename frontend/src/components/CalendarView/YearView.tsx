@@ -1,4 +1,4 @@
-import { Flex, Text, Grid, GridItem } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 import MonthGrid from '../MonthGrid/MonthGrid';
 import './YearView.scss';
 const YearView = () => {

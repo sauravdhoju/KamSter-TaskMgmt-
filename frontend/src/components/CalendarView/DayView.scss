@@ -1,6 +1,12 @@
 @use '../../mixins.module';
 
 .day-view {
+    &.day-view-today {
+        .day-name-date {
+            background-color: #3a3838;
+            color: white;
+        }
+    }
     .day-timestamp-container {
         @include mixins.scroll-bar-style;
 
