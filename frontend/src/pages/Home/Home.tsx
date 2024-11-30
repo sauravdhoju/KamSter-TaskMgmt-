@@ -3,6 +3,7 @@ import { Image, Box } from '@chakra-ui/react';
 import React, { useState, useEffect } from 'react';
 import HeaderGreet from '../../components/HeaderGreet/HeaderGreet';
 import TasksList from '../../components/TasksList/TasksList';
+import MonthGrid from '../../components/MonthGrid/MonthGrid';
 import './Home.scss';
 import PageContainer from '../../components/PageContainer/PageContainer';
 import taskPhoto from '../../pages/Home/picture.jpg';
@@ -121,12 +122,17 @@ const Home: React.FC = () => {
                         {/* <div className='upcoming-tasks'>
                             <h3>Upcoming Tasks: </h3>
                         </div> */}
-                        <Box>
+                        <Box
+                            bgColor={'#fff'}
+                            padding={'10px'}
+                            borderRadius={'10px'}
+                            boxShadow={'0 0 5px 2px #d6d2d6'}
+                        >
                             <TasksList />
                         </Box>
 
                         <Box className='calendar'>
-                            <h4>
+                            {/* <h4>
                                 {currentDate.toLocaleString('default', {
                                     month: 'long',
                                     year: 'numeric',
@@ -145,7 +151,12 @@ const Home: React.FC = () => {
                                         {i + 1}
                                     </div>
                                 ))}
-                            </div>
+                            </div> */}
+                            <MonthGrid
+                                monthName='Dec'
+                                startingDay={2}
+                                numberOfDays={31}
+                            />
                         </Box>
                     </div>
                 </section>
