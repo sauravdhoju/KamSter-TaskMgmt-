@@ -1,0 +1,5 @@
+@use '../../mixins.module';
+
+.year-view {
+    @include mixins.scroll-bar-style;
+}

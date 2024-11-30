@@ -1,0 +1,7 @@
+@use '../../variables.module';
+
+.calendar-view {
+    font-family: variables.$primary-font;
+    height: 100%;
+    max-height: 100%;
+}

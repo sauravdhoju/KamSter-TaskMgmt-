@@ -1,0 +1,185 @@
+@use '../../variables.module';
+
+.tasks-list {
+    font-family: variables.$primary-font;
+
+    // Notification
+    .notification {
+        background-color: #005bb5;
+        color: #fff;
+        padding: 10px 15px;
+        border-radius: 4px;
+        margin: 10px 0;
+        text-align: center;
+        font-size: 14px;
+    }
+    
+    // Tabs Section
+    .tabs-container {
+        font-size: 16px;
+        display: flex;
+        overflow-x: auto;
+        scrollbar-width: none;
+        height: 50px;
+        white-space: nowrap;
+        gap: 1px; /* Maintain consistent gap */
+    
+        &::-webkit-scrollbar {
+            // height: 8px;
+            display: none;
+        }
+    
+        &::-webkit-scrollbar-thumb {
+            background-color: #ccc;
+            border-radius: 10px;
+        }
+    
+        &::-webkit-scrollbar-track {
+            background-color: transparent;
+        }
+    
+        .tasks-tab {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 0 0 auto; /* Prevent tabs from shrinking */
+            padding: 0 15px;
+            cursor: pointer;
+            white-space: nowrap;
+            border-bottom: 2px solid transparent;
+            min-width: 12px; /* Ensure minimum width */
+            transition: all 0.2s ease-in-out;
+    
+            &:hover {
+                background-color: #f4f4f4;
+            }
+    
+            &.selected {
+                border-bottom: 2px solid black;
+                font-weight: bold;
+            }
+        }
+    
+        .new-list-btn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: bold;
+            color: #0073e6;
+            cursor: pointer;
+    
+            &:hover {
+                text-decoration: none;
+            }
+        }
+    }
+    
+
+    // Task List Section
+    .task-list {
+        margin-top: 20px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+
+        .list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #ddd;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+
+            li {
+                display: flex;
+                align-items: center;
+                padding: 10px 15px;
+                border-bottom: 1px solid #eee;
+                // cursor: pointer;
+                transition: background-color 0.2s ease-in-out;
+
+                &:last-child {
+                    border-bottom: none;
+                }
+
+                &:hover {
+                    background-color: #f4f4f4;
+                }
+
+                .task-circle-icon {
+                    font-size: 16px !important; /* Adjust the size as needed */
+                    color: #000000; /* Change the icon color */
+                    cursor: pointer;
+
+                    &:hover {
+                        color: #005bb5;
+                    }
+                }
+
+                .task-text {
+                    margin-left: 10px;
+                    font-size: 16px;
+                    color: #333;
+                    text-decoration: none;
+
+                    &.completed {
+                        text-decoration: line-through;
+                        color: #aaa;
+                    }
+                }
+            }
+        }
+    }
+
+    // Completed Task Section
+    .completed-tasks {
+        margin-top: 20px;
+
+        .toggle-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding: 10px 15px;
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+
+            &:hover {
+                background-color: #eaeaea;
+            }
+
+            .toggle-icon {
+                font-size: 16px;
+                color: #555;
+            }
+        }
+
+        ul {
+            margin-top: 10px;
+            list-style: none;
+            padding: 0;
+
+            li {
+                padding: 10px 15px;
+                background-color: #f9f9f9;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                margin-bottom: 8px;
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
+}
