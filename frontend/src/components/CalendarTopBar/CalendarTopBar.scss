@@ -1,0 +1,54 @@
+@use '../../variables.module';
+//for toggle;
+.calendar-header-grid {
+    font-family: variables.$primary-font;
+    .calendar-toggle-tabs-container {
+        .calendar-toggle {
+            display: flex;
+            border: 1px solid #231f1f;
+            border-radius: 50px;
+            background-color: #e5e5e5;
+            width: 300px;
+
+            .calendar-toggle-button {
+                flex: 1; /* Equal space */
+                text-align: center;
+                font-weight: 400;
+                font-size: 16px;
+                font-family: variables.$primary-font;
+                color: #555;
+                cursor: pointer;
+                transition: background-color 0.2s ease, color 0.2s ease;
+                height: 30px;
+                border-left: 1px solid #231f1f; /* Add a bold separator to the left */
+
+                /* Remove the left border for the first button */
+                &:first-child {
+                    border-top-left-radius: 16px;
+                    border-bottom-left-radius: 16px;
+                }
+                &:last-child {
+                    border-top-right-radius: 16px;
+                    border-bottom-right-radius: 16px;
+                }
+
+                /* Active button styling */
+                &[aria-selected='true'] {
+                    background-color: #3a3838; /* Match the design's dark background */
+                    color: #fff;
+                }
+
+                /* Add curved borders for the first and last buttons when active */
+                &:first-child[aria-selected='true'] {
+                    border-top-left-radius: 16px;
+                    border-bottom-left-radius: 16px;
+                }
+
+                &:last-child[aria-selected='true'] {
+                    border-top-right-radius: 16px;
+                    border-bottom-right-radius: 16px;
+                }
+            }
+        }
+    }
+}

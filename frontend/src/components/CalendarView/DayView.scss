@@ -1,0 +1,13 @@
+@use '../../mixins.module';
+
+.day-view {
+    .day-timestamp-container {
+        @include mixins.scroll-bar-style;
+
+        .day-timestamp-block {
+            .timestamp-block-hour {
+                font-variant-numeric: tabular-nums;
+            }
+        }
+    }
+}
