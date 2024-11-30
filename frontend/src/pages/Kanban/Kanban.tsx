@@ -17,7 +17,9 @@ const Kanban = () => {
     { id: 'done', name: 'Done', tasks: [] },
   ]);
 
-  const [taskInputs, setTaskInputs] = useState<Record<string, string>>({}); // Track input for each column
+  const [taskInputs, setTaskInputs] = useState<Record<string, string>>({});
+  const [editingColumn, setEditingColumn] = useState<string | null>(null); // Track column being renamed
+  const [renameInput, setRenameInput] = useState<string>(''); // Input for renaming
 
   // Add a new task to the specified column
   const addTask = (columnId: string) => {
@@ -30,7 +32,7 @@ const Kanban = () => {
             : column
         )
       );
-      setTaskInputs((prev) => ({ ...prev, [columnId]: '' })); // Clear input field after adding
+      setTaskInputs((prev) => ({ ...prev, [columnId]: '' }));
     }
   };
 
@@ -48,38 +50,68 @@ const Kanban = () => {
     ]);
   };
 
+  // Enable renaming mode for a column
+  const startRenaming = (columnId: string, currentName: string) => {
+    setEditingColumn(columnId);
+    setRenameInput(currentName);
+  };
+
+  // Confirm renaming
+  const renameBoard = (columnId: string) => {
+    setColumns((prevColumns) =>
+      prevColumns.map((column) =>
+        column.id === columnId ? { ...column, name: renameInput.trim() || column.name } : column
+      )
+    );
+    setEditingColumn(null);
+    setRenameInput('');
+  };
+
   return (
     <PageContainer>
       <Flex className="kanban-board">
         {columns.map((column) => (
           <Box key={column.id} className="column">
-            <Heading size="sm" className="column-header">
-              {column.name}
-            </Heading>
+            <Box className="column-header">
+              {editingColumn === column.id ? (
+                <Input
+                  value={renameInput}
+                  onChange={(e) => setRenameInput(e.target.value)}
+                  onBlur={() => renameBoard(column.id)} // Rename on blur
+                  onKeyDown={(e) => e.key === 'Enter' && renameBoard(column.id)} // Rename on Enter key
+                  autoFocus
+                />
+              ) : (
+                <Heading
+                  size="sm"
+                  className="column-header-text"
+                  onDoubleClick={() => startRenaming(column.id, column.name)} // Enable renaming on double-click
+                >
+                  {column.name}
+                </Heading>
+              )}
+            </Box>
             <Box className="task-input">
-            <Box 
-            as="button"
-            onClick={() => addTask(column.id)}
-          >
-            <Icon name="bx-layer-plus"/>
-          </Box>
-          <Input
-            style={{
-              border: 'none',
-              background: 'none',
-              padding: 0,
-              cursor: 'pointer',
-            }}
-            sx={{
-              '::placeholder': {
-                fontWeight: '500', // Makes placeholder text bold
-                color: 'black',     // Makes placeholder text black
-              },
-            }}
-            placeholder="Add a task"
-            value={taskInputs[column.id] || ''}
-            onChange={(e) => handleInputChange(column.id, e.target.value)}
-          />
+              <Box as="button" onClick={() => addTask(column.id)}>
+                <Icon name="bx-layer-plus" />
+              </Box>
+              <Input
+                style={{
+                  border: 'none',
+                  background: 'none',
+                  padding: 0,
+                  cursor: 'pointer',
+                }}
+                sx={{
+                  '::placeholder': {
+                    fontWeight: '500',
+                    color: 'black',
+                  },
+                }}
+                placeholder="Add a task"
+                value={taskInputs[column.id] || ''}
+                onChange={(e) => handleInputChange(column.id, e.target.value)}
+              />
             </Box>
             <Box className="tasks">
               {column.tasks.map((task, index) => (
@@ -90,7 +122,7 @@ const Kanban = () => {
             </Box>
           </Box>
         ))}
-        
+
         {/* Add Board Button */}
         <Box className="add-board">
           <Box
