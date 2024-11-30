@@ -5,6 +5,7 @@
   justify-content: space-between;
   align-items: flex-start;
   padding: 1rem;
+  position: relative;
 
 .column {
   width: 25%;
@@ -56,5 +57,21 @@
       margin-top: 0;
       margin-bottom: 10px;
     }
-  }
+    //for add button tho not working
+    .add-board {
+      position: absolute; 
+      bottom: 0; 
+      right: 1rem; 
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+  
+      .add-board-icon {
+        font-size: 2rem; // Icon 
+        color: #333;
+      }
+    }
+    
+}
   
