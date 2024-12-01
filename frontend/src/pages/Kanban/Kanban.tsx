@@ -30,26 +30,48 @@ const Kanban = () => {
         if (draggedTask) {
             setColumns((prevColumns) =>
                 prevColumns.map((column) => {
-                    // Remove the task from its current column
+                    if (column.id === columnId) {
+                        // Handle dropping within the same column
+                        const taskIndex = column.tasks.indexOf(draggedTask);
+                        if (taskIndex > -1) {
+                            // Remove task from the current position
+                            const updatedTasks = [...column.tasks];
+                            updatedTasks.splice(taskIndex, 1);
+    
+                            // Add the task to the new position
+                            // In this example, we are appending the task to the end of the column
+                            // You can modify this logic to insert the task in the correct position
+                            updatedTasks.push(draggedTask);
+    
+                            return {
+                                ...column,
+                                tasks: updatedTasks,
+                            };
+                        }
+                    }
+    
+                    // Handle moving the task to a different column
                     if (column.tasks.includes(draggedTask)) {
                         return {
                             ...column,
                             tasks: column.tasks.filter((task) => task !== draggedTask),
                         };
                     }
-                    // Add the task to the dropped column
+    
                     if (column.id === columnId) {
                         return {
                             ...column,
                             tasks: [...column.tasks, draggedTask],
                         };
                     }
+    
                     return column;
                 })
             );
             setDraggedTask(null);
         }
     };
+    
 
     
     // Add a new task to the specified column
