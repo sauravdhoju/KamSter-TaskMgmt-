@@ -125,6 +125,14 @@ const Kanban = () => {
         setRenameInput('');
     };
 
+    //delete board
+    const deleteBoard = (columnId: string) => {
+        setColumns((prevColumns) =>
+            prevColumns.filter((column) => column.id !== columnId)
+        );
+    };
+    
+
     return (
         <PageContainer>
             <Flex className='kanban-board'>
@@ -150,6 +158,7 @@ const Kanban = () => {
                                     autoFocus
                                 />
                             ) : (
+                                <Flex alignItems="center" justifyContent="space-between">
                                 <Heading
                                     size='sm'
                                     className='column-header-text'
@@ -159,7 +168,16 @@ const Kanban = () => {
                                 >
                                     {column.name}
                                 </Heading>
-                            )}
+                                {/* for delete */}
+                                <Box
+                                as="button"
+                                className="delete-board"
+                                onClick={() => deleteBoard(column.id)}
+                            >
+                                <Icon name="bx-trash" />
+                            </Box>
+                        </Flex>
+                        )}
                         </Box>
                         <Box className='task-input'>
                             <Box as='button' onClick={() => addTask(column.id)}>

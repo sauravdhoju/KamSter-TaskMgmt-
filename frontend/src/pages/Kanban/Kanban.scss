@@ -1,6 +1,6 @@
 @use '../../mixins.module';
 .kanban-board {
-    padding-top: 30px;
+    padding-top: 20px;
     display: flex;
     gap: 2%;
     align-items: flex-start;
@@ -73,7 +73,6 @@
         margin-bottom: 10px;
     }
     
-
 }
 .add-board {
     display: flex;
@@ -82,7 +81,7 @@
     min-width: 15%;
     padding: 0.5rem 0.5rem;
     background-color:#f5f5f5;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); 
     border-radius: 8px;
     font-size: 1rem;
     font-weight: 500;
@@ -96,5 +95,23 @@
         color: #000000;
         vertical-align: middle; 
 
+    }
+}
+
+.delete-board {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.2rem;
+    font-size: 1rem;
+    color: #333;
+
+    &:hover {
+        color: #e63946;
+    }
+
+    .bx-trash {
+        font-size: 1.2rem;
+        vertical-align: middle;
     }
 }
