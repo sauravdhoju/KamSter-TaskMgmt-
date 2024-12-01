@@ -15,8 +15,9 @@ import Tasks from './pages/Tasks/Tasks';
 
 
 // import Sidebar from './pages/Sidebar/Sidebar';
+// import Calender from './pages/Calender/Calender';
+import Kanban from './pages/Kanban/Kanban';
 
-// import Kanban from './pages/Kanban/Kanban';
 
 import './App.scss';
 
@@ -52,7 +53,9 @@ const App = () => {
                 <Route path='/my-account' element={<MyAccount />} />
                 <Route path='/calendar' element={<Calendar />} /> 
                 <Route path='/pomodoro' element={<Pomodoro />} />
+                <Route path='/kanban' element={<Kanban />} /> 
                 <Route path='/tasks' element={<Tasks />} />
+
             </Routes>
         </Box>
     );
