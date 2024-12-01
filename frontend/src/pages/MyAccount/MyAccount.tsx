@@ -52,10 +52,13 @@ const MyAccount = () => {
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
-        if (file){
-            setProfileImage(URL.createObjectURL(file));//New Image preivew
+        if (file) {
+            const imageUrl = URL.createObjectURL(file);
+            setProfileImage(imageUrl);
+            setUserData((prevData) => ({ ...prevData, profilePhoto: imageUrl }));
         }
     };
+    
 
     const handleLogout = () => {
         navigate('/login');
@@ -66,7 +69,7 @@ const MyAccount = () => {
             <Box className='my-account-page'>
                 <Box className='account-container'>
                     <Flex className='heading-row'>
-                        <Icon name='bx-chevron-left' className='icon' />
+                        {/* <Icon name='bx-chevron-left' className='icon' /> */}
                         <Text className='profile-heading'>My Account</Text>
                     </Flex>
 
