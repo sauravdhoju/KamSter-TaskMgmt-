@@ -197,7 +197,7 @@ const TasksList = () => {
                 <Flex className="list-header">
                     <Text>{activeList.name}</Text>
                 </Flex>
-                <Box as="ul">
+                <Box as="ul" >
                     {activeList.tasks
                         .map((task, index) => ({ task, index }))
                         .filter(({ task }) => !task.completed)

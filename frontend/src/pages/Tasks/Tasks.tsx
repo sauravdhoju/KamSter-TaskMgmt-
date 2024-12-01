@@ -10,7 +10,7 @@ const Tasks = () => {
                 className='tasks-list-container'
                 width={'100%'}
                 height={'100%'}
-                marginTop={'20px'}
+                paddingTop={'20px'}
             >
                 <TasksList />
             </Box>
