@@ -8,6 +8,13 @@ import './MyAccount.scss';
 const MyAccount = () => {
     const navigate = useNavigate();  // useNavigate hook to programmatically navigate
     const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track if the user is logged in
+    const [userData, setUserData] = useState({
+        name: "Saurav Dhoju",
+        username: "@sauravdhoju",
+        phone: "9808827451",
+        email: "sauravdhoju12@gmail.com",
+        profilePhoto: profilePhoto,
+    });
 
     // Modal controls for Edit Profile and Change Password
     const { isOpen: isEditProfileOpen, onOpen: onOpenEditProfile, onClose: onCloseEditProfile } = useDisclosure();
@@ -31,6 +38,11 @@ const MyAccount = () => {
         return null; // Optionally, you could show a loader or redirect, but navigate already handles the redirection.
     }
 
+    const handleInputChange =(e) => {
+        const{ name, value } = e.target;
+        setUserData((prevData) => ({...prevData, [name]: value}));
+    };
+
     return (
         <Box className='my-account-page'>
             <Box className='account-container'>
@@ -41,14 +53,14 @@ const MyAccount = () => {
 
                 <Box className='profile-picture'>
                     <Image
-                        src={profilePhoto}
+                        src={userData.profilePhoto}
                         alt='profile-photo'
                         className='profile-photo'
                     />
                 </Box>
                 <Box className='profile-info'>
-                    <Text className='profile-name'>Saurav Dhoju</Text>
-                    <Text className='profile-user-name'>@sauravdhoju</Text>
+                    <Text className='profile-name'>{userData.name}</Text>
+                    <Text className='profile-user-name'>{userData.username}</Text>
                 </Box>
             </Box>
 
@@ -57,19 +69,19 @@ const MyAccount = () => {
                 <Flex direction="column" mt={2} gap={0} className='profile-details'>
                     <Flex className='detail-row'>
                         <Text className='profile-name'>Name:</Text>
-                        <Text>Saurav Dhoju</Text>
+                        <Text>{userData.name}</Text>
                     </Flex>
                     <Flex className='detail-row'>
                         <Text className='profile-username'>Username:</Text>
-                        <Text>@sauravdhoju</Text>
+                        <Text>{userData.username}</Text>
                     </Flex>
                     <Flex className='detail-row'>
                         <Text className='profile-phone'>Phone:</Text>
-                        <Text>9808827451</Text>
+                        <Text>{userData.phone}</Text>
                     </Flex>
                     <Flex className='detail-row'>
                         <Text className='profile-email'>Email:</Text>
-                        <Text>sauravdhoju12@gmail.com</Text>
+                        <Text>{userData.email}</Text>
                     </Flex>
                 </Flex>
             </Box>
@@ -106,11 +118,11 @@ const MyAccount = () => {
                     <ModalBody>
                         <FormControl mb={4}>
                             <FormLabel>Name</FormLabel>
-                            <Input placeholder='Enter new name' />
+                            <Input name="name" value={userData.name} onChange={handleInputChange} placeholder='Enter new name' />
                         </FormControl>
                         <FormControl mb={4}>
                             <FormLabel>Username</FormLabel>
-                            <Input placeholder='Enter new username' />
+                            <Input name="username" value={userData.username} onChange={handleInputChange} placeholder='Enter new username' />
                         </FormControl>
                         <FormControl mb={4}>
                             <FormLabel>Upload Photo</FormLabel>
