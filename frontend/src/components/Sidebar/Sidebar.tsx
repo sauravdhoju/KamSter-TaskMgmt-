@@ -27,6 +27,10 @@ const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }: SidebarTypes) => {
             icon: 'bx-home-alt-2',
         },
         {
+            name: 'tasks',
+            icon: 'bx-task',
+        },
+        {
             name: 'calendar',
             icon: 'bx-calendar',
         },
@@ -100,6 +104,17 @@ const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }: SidebarTypes) => {
                 }`}
             >
                 {sidebarLinks.map((link, index) => {
+                    if (link.name === 'home') {
+                        return (
+                            <Link to={`/`} key={index} className='sidebar-link'>
+                                <Icon
+                                    name={link.icon}
+                                    className='sidebar-icon'
+                                />
+                                <span>{link.name}</span>
+                            </Link>
+                        );
+                    }
                     return (
                         <Link
                             to={`/${link.name}`}
