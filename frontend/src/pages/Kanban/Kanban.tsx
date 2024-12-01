@@ -39,8 +39,7 @@ const Kanban = () => {
                             updatedTasks.splice(taskIndex, 1);
     
                             // Add the task to the new position
-                            // In this example, we are appending the task to the end of the column
-                            // You can modify this logic to insert the task in the correct position
+                            // appending the task to the end of the column
                             updatedTasks.push(draggedTask);
     
                             return {
@@ -231,8 +230,8 @@ const Kanban = () => {
                     >
                         <Icon
                             name='bx-plus-circle'
-                            className='add-board-icon'
-                        />
+                            className='add-board-icon' 
+                        /> Add another board
                     </Box>
                 </Box>
             </Flex>
