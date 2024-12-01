@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box, Flex, Heading, Input, Grid, GridItem } from '@chakra-ui/react';
+import { Box, Flex, Heading, Input, Grid } from '@chakra-ui/react';
 import Icon from '../../components/Icon/Icon';
 import './Kanban.scss';
 import PageContainer from '../../components/PageContainer/PageContainer';
@@ -20,7 +20,38 @@ const Kanban = () => {
     const [taskInputs, setTaskInputs] = useState<Record<string, string>>({});
     const [editingColumn, setEditingColumn] = useState<string | null>(null); // Track column being renamed
     const [renameInput, setRenameInput] = useState<string>(''); // Input for renaming
+    const [draggedTask, setDraggedTask] = useState<string | null>(null); //for drag and drop
 
+    const handleDragStart = (task: string) => {
+        setDraggedTask(task);
+    };
+    
+    const handleDrop = (columnId: string) => {
+        if (draggedTask) {
+            setColumns((prevColumns) =>
+                prevColumns.map((column) => {
+                    // Remove the task from its current column
+                    if (column.tasks.includes(draggedTask)) {
+                        return {
+                            ...column,
+                            tasks: column.tasks.filter((task) => task !== draggedTask),
+                        };
+                    }
+                    // Add the task to the dropped column
+                    if (column.id === columnId) {
+                        return {
+                            ...column,
+                            tasks: [...column.tasks, draggedTask],
+                        };
+                    }
+                    return column;
+                })
+            );
+            setDraggedTask(null);
+        }
+    };
+
+    
     // Add a new task to the specified column
     const addTask = (columnId: string) => {
         const taskName = taskInputs[columnId]?.trim();
@@ -136,14 +167,30 @@ const Kanban = () => {
                                 } // Add task on Enter key press
                             />
                         </Box>
-                        <Box className='cards-container'>
-                            <Box className='tasks'>
-                                {column.tasks.map((task, index) => (
-                                    <Box key={index} className='task'>
-                                        {task}
-                                    </Box>
-                                ))}
+
+                        {/* Cards Container */}
+                        <Box className='cards-container'
+                         minHeight={5}
+                          bg="F5F5F5"
+                          borderRadius="md"
+                          border={column.tasks.length === 0 ? "1px dashed #F5F5F5F5" : "none"} // Dashed border for empty columns
+                             onDragOver={(e) => e.preventDefault()} // Allow dropping
+                             onDrop={() => handleDrop(column.id)} // Handle dropping
+                        >
+                            <Box className="tasks">
+                            {column.tasks.length > 0 ? (
+                            column.tasks.map((task, index) => (
+                            <Box
+                                key={index}
+                                className="task"
+                                draggable
+                                onDragStart={() => handleDragStart(task)} // Dragging starts
+                            >
+                                {task}
                             </Box>
+                            ))
+                    ) : null}
+                </Box>
                         </Box>
                     </Grid>
                 ))}
