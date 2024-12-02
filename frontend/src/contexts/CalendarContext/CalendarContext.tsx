@@ -21,6 +21,20 @@ const CalendarContextProvider: React.FC<React.PropsWithChildren<{}>> = ({
     // view date for indication of date when client is using the website
     const [currentViewDate, setCurrentViewDate] = useState(today);
     const daysOfWeek3L = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const months3L = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
+    ];
     const months = [
         'January',
         'February',
@@ -56,18 +70,38 @@ const CalendarContextProvider: React.FC<React.PropsWithChildren<{}>> = ({
         }
         if (currentView === 'week') {
             if (
-                previousSunday(currentViewDate).getMonth() ===
-                nextSaturday(currentViewDate).getMonth()
+                (currentViewDate.getDay() === 0
+                    ? currentViewDate.getMonth()
+                    : previousSunday(currentViewDate).getMonth()) ===
+                (currentViewDate.getDay() === 6
+                    ? currentViewDate.getMonth()
+                    : nextSaturday(currentViewDate).getMonth())
             ) {
                 return `${
                     months[currentViewDate.getMonth()]
                 } ${currentViewDate.getFullYear()}`;
             }
             return `${
-                months[currentViewDate.getMonth()]
-            } ${currentViewDate.getFullYear()} - ${
-                months[currentViewDate.getMonth()]
-            } ${currentViewDate.getFullYear()}`;
+                months3L[
+                    currentViewDate.getDay() === 0
+                        ? currentViewDate.getMonth()
+                        : previousSunday(currentViewDate).getMonth()
+                ]
+            } ${
+                currentViewDate.getDay() === 0
+                    ? currentViewDate.getFullYear()
+                    : previousSunday(currentViewDate).getFullYear()
+            } - ${
+                months3L[
+                    currentViewDate.getDay() === 6
+                        ? currentViewDate.getMonth()
+                        : nextSaturday(currentViewDate).getMonth()
+                ]
+            } ${
+                currentViewDate.getDay() === 6
+                    ? currentViewDate.getFullYear()
+                    : nextSaturday(currentViewDate).getFullYear()
+            }`;
         }
         return `${currentViewDate.getDate()} ${
             months[currentViewDate.getMonth()]
