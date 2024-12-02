@@ -28,17 +28,55 @@ const CalendarTopBar = () => {
     const handleDateIncreaseDecrease = (
         actionType: 'increase' | 'decrease'
     ) => {
-        setCurrentViewDate((prevState) => {
-            const newState = new Date(prevState);
+        if (currentView === 'day') {
+            setCurrentViewDate((prevState) => {
+                const newState = new Date(prevState);
 
-            if (actionType === 'increase') {
-                newState.setDate(newState.getDate() + 1);
-            } else {
-                newState.setDate(newState.getDate() - 1);
-            }
+                if (actionType === 'increase') {
+                    newState.setDate(newState.getDate() + 1);
+                } else {
+                    newState.setDate(newState.getDate() - 1);
+                }
 
-            return newState;
-        });
+                return newState;
+            });
+        } else if (currentView === 'week') {
+            setCurrentViewDate((prevState) => {
+                const newState = new Date(prevState);
+
+                if (actionType === 'increase') {
+                    newState.setDate(newState.getDate() + 7);
+                } else {
+                    newState.setDate(newState.getDate() - 7);
+                }
+
+                return newState;
+            });
+        } else if (currentView === 'month') {
+            setCurrentViewDate((prevState) => {
+                const newState = new Date(prevState);
+
+                if (actionType === 'increase') {
+                    newState.setMonth(newState.getMonth() + 1);
+                } else {
+                    newState.setMonth(newState.getMonth() - 1);
+                }
+
+                return newState;
+            });
+        } else if (currentView === 'year') {
+            setCurrentViewDate((prevState) => {
+                const newState = new Date(prevState);
+
+                if (actionType === 'increase') {
+                    newState.setFullYear(newState.getFullYear() + 1);
+                } else {
+                    newState.setFullYear(newState.getFullYear() - 1);
+                }
+
+                return newState;
+            });
+        }
     };
 
     return (
