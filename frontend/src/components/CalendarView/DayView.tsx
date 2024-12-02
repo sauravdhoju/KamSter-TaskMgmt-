@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Grid, GridItem, Text } from '@chakra-ui/react';
 import { isToday } from 'date-fns';
 
@@ -9,6 +10,12 @@ type DayView = {
 };
 const DayView = ({ getHours }: DayView) => {
     const { currentViewDate, getViewDayString } = useCalendarContext();
+    const [viewDayString, setViewDayString] = useState(() =>
+        getViewDayString(currentViewDate)
+    );
+    useEffect(() => {
+        setViewDayString(getViewDayString(currentViewDate));
+    }, [currentViewDate]);
     return (
         <Grid
             bgColor={'#D9D9D9'}
@@ -26,7 +33,7 @@ const DayView = ({ getHours }: DayView) => {
                 textAlign={'center'}
                 paddingY={'20px'}
             >
-                <Text>{getViewDayString(currentViewDate)}</Text>
+                <Text>{viewDayString}</Text>
             </GridItem>
             <GridItem
                 className='day-timestamp-container'

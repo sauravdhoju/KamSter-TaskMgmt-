@@ -1,5 +1,6 @@
 import { Link as ReactRouterLink } from 'react-router-dom';
 import {
+    Box,
     Grid,
     GridItem,
     Link as ChakraLink,
@@ -16,7 +17,30 @@ import { useCalendarContext } from '../../contexts/CalendarContext/CalendarConte
 import './CalendarTopBar.scss';
 
 const CalendarTopBar = () => {
-    const { currentView, setCurrentView } = useCalendarContext();
+    const {
+        currentView,
+        setCurrentView,
+        setCurrentViewDate,
+        getCalendarTopBarDateString,
+        today,
+    } = useCalendarContext();
+
+    const handleDateIncreaseDecrease = (
+        actionType: 'increase' | 'decrease'
+    ) => {
+        setCurrentViewDate((prevState) => {
+            const newState = new Date(prevState);
+
+            if (actionType === 'increase') {
+                newState.setDate(newState.getDate() + 1);
+            } else {
+                newState.setDate(newState.getDate() - 1);
+            }
+
+            return newState;
+        });
+    };
+
     return (
         <Grid
             width={'100%'}
@@ -34,9 +58,14 @@ const CalendarTopBar = () => {
                     fontWeight={400}
                     _hover={{
                         textDecoration: 'none',
+                        cursor: 'pointer',
+                    }}
+                    _active={{
+                        textDecoration: 'none',
                         bgColor: '#3a3838',
                         color: 'white',
                     }}
+                    onClick={() => setCurrentViewDate(today)}
                 >
                     Today
                 </ChakraLink>
@@ -47,8 +76,7 @@ const CalendarTopBar = () => {
                 alignItems={'center'}
                 gap={'20px'}
             >
-                <ChakraLink
-                    as={ReactRouterLink}
+                <Box
                     alignItems={'center'}
                     display={'flex'}
                     justifyContent={'center'}
@@ -57,19 +85,24 @@ const CalendarTopBar = () => {
                     width={'30px'}
                     height={'30px'}
                     _hover={{
+                        cursor: 'pointer',
+                    }}
+                    _active={{
                         textDecoration: 'none',
                         bgColor: '#3a3838',
                         color: 'white',
                     }}
+                    onClick={() => handleDateIncreaseDecrease('decrease')}
                 >
                     <Icon
                         name='bxs-chevron-left'
                         className='move-date-rage-left-icon'
                     />
-                </ChakraLink>
-                <Text fontSize={'16px'}>2024</Text>
-                <ChakraLink
-                    as={ReactRouterLink}
+                </Box>
+                <Text fontSize={'16px'} minWidth={'max-content'}>
+                    {getCalendarTopBarDateString()}
+                </Text>
+                <Box
                     display={'flex'}
                     alignItems={'center'}
                     justifyContent={'center'}
@@ -78,16 +111,20 @@ const CalendarTopBar = () => {
                     width={'30px'}
                     height={'30px'}
                     _hover={{
+                        cursor: 'pointer',
+                    }}
+                    _active={{
                         textDecoration: 'none',
                         bgColor: '#3a3838',
                         color: 'white',
                     }}
+                    onClick={() => handleDateIncreaseDecrease('increase')}
                 >
                     <Icon
                         name='bxs-chevron-right'
                         className='move-date-rage-right-icon'
                     />
-                </ChakraLink>
+                </Box>
             </GridItem>
             <GridItem
                 display={'flex'}
