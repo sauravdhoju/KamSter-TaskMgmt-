@@ -1,4 +1,9 @@
+import { useEffect, useState } from 'react';
 import { Box, Grid, GridItem, Text } from '@chakra-ui/react';
+import { previousSunday, isToday } from 'date-fns';
+
+import { useCalendarContext } from '../../contexts/CalendarContext/CalendarContext';
+
 import './WeekView.scss';
 
 type WeekViewTypes = {
@@ -6,7 +11,30 @@ type WeekViewTypes = {
 };
 
 const WeekView = ({ getHours }: WeekViewTypes) => {
+    const { currentViewDate, getViewDayString } = useCalendarContext();
     const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const getWeekDates = () => {
+        const weekDates = [];
+        // init week's Sunday
+        const weekSunday =
+            currentViewDate.getDay() === 0
+                ? currentViewDate
+                : previousSunday(currentViewDate);
+
+        for (let i = 0; i < 7; ++i) {
+            const currDate = new Date(weekSunday);
+            currDate.setDate(weekSunday.getDate() + i);
+            weekDates.push(new Date(currDate));
+        }
+
+        return weekDates;
+    };
+    const [weekDates, setWeekDates] = useState<Date[]>(() => getWeekDates());
+
+    useEffect(() => {
+        setWeekDates(getWeekDates());
+    }, [currentViewDate]);
+
     return (
         <Grid
             // bgColor={'#D9D9D9'}
@@ -16,7 +44,14 @@ const WeekView = ({ getHours }: WeekViewTypes) => {
             height={'100%'}
             overflowY={'auto'}
         >
-            {daysOfWeek.map((day, index) => {
+            <GridItem
+                textAlign={'center'}
+                padding={'20px 0'}
+                borderBottom={'1px solid #0000007f'}
+            >
+                <Text>Time / Day</Text>
+            </GridItem>
+            {weekDates.map((date, index) => {
                 return (
                     <GridItem
                         key={index}
@@ -24,10 +59,11 @@ const WeekView = ({ getHours }: WeekViewTypes) => {
                         borderLeft={'1px solid #0000007f'}
                         textAlign={'center'}
                         padding={'20px 0'}
+                        bgColor={isToday(date) ? '#3a3838' : '#d9d9d9'}
+                        color={isToday(date) ? 'white' : 'inherit'}
+                        borderBottom={'1px solid #0000007f'}
                     >
-                        <Text>
-                            {index} - {day}
-                        </Text>
+                        <Text>{getViewDayString(date)}</Text>
                     </GridItem>
                 );
             })}
@@ -35,19 +71,12 @@ const WeekView = ({ getHours }: WeekViewTypes) => {
                 {getHours('ante')}
                 {getHours('post')}
             </GridItem>
-            {daysOfWeek.map((index) => {
+            {weekDates.map((date, index) => {
                 return (
-                    <GridItem key={index} borderLeft={'1px solid #0000007f'}>
-                        {Array.from({ length: 24 }, (_, i) => {
-                            return (
-                                <Box
-                                    key={i}
-                                    height={'50px'}
-                                    borderBottom={'1px solid #0000007f'}
-                                ></Box>
-                            );
-                        })}
-                    </GridItem>
+                    <GridItem
+                        key={index}
+                        borderLeft={'1px solid #0000007f'}
+                    ></GridItem>
                 );
             })}
         </Grid>
