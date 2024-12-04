@@ -1,10 +1,47 @@
 import { Box, Grid, GridItem, Text } from '@chakra-ui/react';
-import { getDefaultOptions } from 'date-fns';
+import { lastDayOfMonth } from 'date-fns';
+
+import { useCalendarContext } from '../../contexts/CalendarContext/CalendarContext';
+
+import ClickableDay from '../ClickableDay/ClickableDay';
+
 const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const MonthView = () => {
-    const daysInMonth = 30;
-    const firstDayOffset = 2; //  for starting day
-    console.log(getDefaultOptions());
+    const { currentViewDate } = useCalendarContext();
+    const getOffsetDays = () => {
+        const monthDate = new Date(currentViewDate);
+        monthDate.setDate(1);
+        return monthDate.getDay();
+    };
+    const firstDayOffset = getOffsetDays();
+    const daysInMonth = lastDayOfMonth(currentViewDate).getDate();
+
+    const renderOffsetDays = (offSetType: 'before' | 'after') => {
+        const offsetDates: React.ReactNode[] = [];
+        if (offSetType === 'before') {
+            // this month starts at Sunday
+            if (firstDayOffset === 0) return offsetDates;
+            const firstOffsetDate = new Date(currentViewDate);
+            firstOffsetDate.setDate(1);
+            firstOffsetDate.setDate(firstOffsetDate.getDate() - firstDayOffset);
+            for (let i = 0; i < firstDayOffset; ++i) {
+                const currDate = new Date(firstOffsetDate);
+                currDate.setDate(currDate.getDate() + i);
+                offsetDates.push(<ClickableDay associatedDate={currDate} />);
+            }
+        } else if (offSetType === 'after') {
+            if (lastDayOfMonth(currentViewDate).getDay() === 6)
+                return offsetDates;
+            const firstOffsetDate = new Date(lastDayOfMonth(currentViewDate));
+            firstOffsetDate.setDate(firstOffsetDate.getDate() + 1);
+            for (let i = 0; i < 7 - firstOffsetDate.getDay(); ++i) {
+                const currDate = new Date(firstOffsetDate);
+                currDate.setDate(currDate.getDate() + i);
+                offsetDates.push(<ClickableDay associatedDate={currDate} />);
+            }
+        }
+        return offsetDates;
+    };
 
     return (
         <Box bgColor={'#D9D9D9'} width={'100%'} height={'100%'} padding={'3px'}>
@@ -13,7 +50,7 @@ const MonthView = () => {
                 width={'100%'}
                 height={'100%'}
                 templateColumns={'repeat(7, 1fr)'}
-                templateRows={'min-content repeat(5, 1fr)'}
+                templateRows={'min-content'}
                 justifyContent={'center'}
                 gap={'3px'}
                 fontWeight={400}
@@ -33,33 +70,17 @@ const MonthView = () => {
                 ))}
 
                 {/* Days of the month */}
-                {Array.from({ length: firstDayOffset }).map((_, index) => (
+                {/* {Array.from({ length: firstDayOffset }).map((_, index) => (
                     <GridItem key={`empty-${index}`} />
-                ))}
+                ))} */}
+                {renderOffsetDays('before')}
                 {Array.from({ length: daysInMonth }, (_, i) => {
-                    const day = i + 1;
-                    const isSaturday = (firstDayOffset + day) % 7 === 0;
+                    const dayDate = new Date(currentViewDate);
+                    dayDate.setDate(i + 1);
 
-                    return (
-                        <GridItem
-                            key={day}
-                            className={`day-box ${
-                                isSaturday ? 'saturday' : ''
-                            }`}
-                            p='10px'
-                            display={'flex'}
-                            justifyContent={'center'}
-                            bgColor={'#E5E5E5'}
-                        >
-                            <Text
-                                fontSize='20px'
-                                color={isSaturday ? 'red.500' : 'black'}
-                            >
-                                {day}
-                            </Text>
-                        </GridItem>
-                    );
+                    return <ClickableDay associatedDate={dayDate} />;
                 })}
+                {renderOffsetDays('after')}
             </Grid>
         </Box>
     );
