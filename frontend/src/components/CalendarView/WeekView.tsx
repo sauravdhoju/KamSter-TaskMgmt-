@@ -11,7 +11,12 @@ type WeekViewTypes = {
 };
 
 const WeekView = ({ getHours }: WeekViewTypes) => {
-    const { currentViewDate, getViewDayString } = useCalendarContext();
+    const {
+        currentViewDate,
+        getViewDayString,
+        setCurrentViewDate,
+        setCurrentView,
+    } = useCalendarContext();
     const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const getWeekDates = () => {
         const weekDates = [];
@@ -63,7 +68,15 @@ const WeekView = ({ getHours }: WeekViewTypes) => {
                         color={isToday(date) ? 'white' : 'inherit'}
                         borderBottom={'1px solid #0000007f'}
                     >
-                        <Text>{getViewDayString(date)}</Text>
+                        <Text
+                            _hover={{ cursor: 'pointer' }}
+                            onClick={() => {
+                                setCurrentView('day');
+                                setCurrentViewDate(date);
+                            }}
+                        >
+                            {getViewDayString(date)}
+                        </Text>
                     </GridItem>
                 );
             })}
@@ -73,10 +86,20 @@ const WeekView = ({ getHours }: WeekViewTypes) => {
             </GridItem>
             {weekDates.map((date, index) => {
                 return (
-                    <GridItem
-                        key={index}
-                        borderLeft={'1px solid #0000007f'}
-                    ></GridItem>
+                    <GridItem key={index} borderLeft={'1px solid #0000007f'}>
+                        <Box
+                            display='grid'
+                            gridTemplateRows={`repeat(24, 50px)`} // Matches time row height
+                            height='100%'
+                        >
+                            {Array.from({ length: 24 }).map((_, rowIndex) => (
+                                <Box
+                                    key={rowIndex}
+                                    borderBottom={'1px solid #0000007f'}
+                                ></Box>
+                            ))}
+                        </Box>
+                    </GridItem>
                 );
             })}
         </Grid>

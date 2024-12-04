@@ -79,6 +79,8 @@ const CalendarTopBar = () => {
         }
     };
 
+    const validViews = ['year', 'month', 'week', 'day'];
+    const currentViewIndex = validViews.indexOf(currentView);
     return (
         <Grid
             width={'100%'}
@@ -172,10 +174,7 @@ const CalendarTopBar = () => {
                 <Tabs
                     variant={'unstyled'}
                     className='calendar-toggle-tabs-container'
-                    defaultIndex={(() => {
-                        const validViews = ['year', 'month', 'week', 'day'];
-                        return validViews.indexOf(currentView);
-                    })()}
+                    index={currentViewIndex}
                     onChange={(index) =>
                         setCurrentView(() => {
                             const validViews = [

@@ -19,6 +19,7 @@ const CalendarView = () => {
                 if (i === 0) {
                     return (
                         <Box
+                            key={i}
                             className='day-timestamp-block'
                             borderBottom={'1px solid #0000007f'}
                             height={'50px'}
@@ -34,6 +35,7 @@ const CalendarView = () => {
                 }
                 return (
                     <Box
+                        key={i}
                         className='day-timestamp-block'
                         borderBottom={'1px solid #0000007f'}
                         height={'50px'}
