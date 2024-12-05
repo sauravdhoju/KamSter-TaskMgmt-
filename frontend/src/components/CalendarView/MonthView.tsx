@@ -27,7 +27,12 @@ const MonthView = () => {
             for (let i = 0; i < firstDayOffset; ++i) {
                 const currDate = new Date(firstOffsetDate);
                 currDate.setDate(currDate.getDate() + i);
-                offsetDates.push(<ClickableDay associatedDate={currDate} />);
+                offsetDates.push(
+                    <ClickableDay
+                        associatedDate={currDate}
+                        key={currDate.toString()}
+                    />
+                );
             }
         } else if (offSetType === 'after') {
             if (lastDayOfMonth(currentViewDate).getDay() === 6)
@@ -37,7 +42,12 @@ const MonthView = () => {
             for (let i = 0; i < 7 - firstOffsetDate.getDay(); ++i) {
                 const currDate = new Date(firstOffsetDate);
                 currDate.setDate(currDate.getDate() + i);
-                offsetDates.push(<ClickableDay associatedDate={currDate} />);
+                offsetDates.push(
+                    <ClickableDay
+                        associatedDate={currDate}
+                        key={currDate.toString()}
+                    />
+                );
             }
         }
         return offsetDates;
@@ -78,7 +88,12 @@ const MonthView = () => {
                     const dayDate = new Date(currentViewDate);
                     dayDate.setDate(i + 1);
 
-                    return <ClickableDay associatedDate={dayDate} />;
+                    return (
+                        <ClickableDay
+                            associatedDate={dayDate}
+                            key={dayDate.toString()}
+                        />
+                    );
                 })}
                 {renderOffsetDays('after')}
             </Grid>

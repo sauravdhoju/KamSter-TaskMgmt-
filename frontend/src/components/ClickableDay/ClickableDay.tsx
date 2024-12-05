@@ -1,5 +1,7 @@
 import { GridItem, Text } from '@chakra-ui/react';
 
+import { useCalendarContext } from '../../contexts/CalendarContext/CalendarContext';
+
 import './ClickableDay.scss';
 
 type ClickableDayType = {
@@ -7,6 +9,7 @@ type ClickableDayType = {
 };
 
 const ClickableDay = ({ associatedDate }: ClickableDayType) => {
+    const { setCurrentViewDate, setCurrentView } = useCalendarContext();
     const months3L = [
         'Jan',
         'Feb',
@@ -29,7 +32,12 @@ const ClickableDay = ({ associatedDate }: ClickableDayType) => {
             justifyContent={'center'}
             bgColor={'#E5E5E5'}
         >
-            <Text>
+            <Text
+                onClick={() => {
+                    setCurrentViewDate(new Date(associatedDate));
+                    setCurrentView('day');
+                }}
+            >
                 {dayDate === 1 && months3L[associatedDate.getMonth()]} {dayDate}
             </Text>
         </GridItem>
