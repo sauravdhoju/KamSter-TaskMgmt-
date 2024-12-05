@@ -17,7 +17,6 @@ const WeekView = ({ getHours }: WeekViewTypes) => {
         setCurrentViewDate,
         setCurrentView,
     } = useCalendarContext();
-    const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const getWeekDates = () => {
         const weekDates = [];
         // init week's Sunday
@@ -72,7 +71,7 @@ const WeekView = ({ getHours }: WeekViewTypes) => {
                             _hover={{ cursor: 'pointer' }}
                             onClick={() => {
                                 setCurrentView('day');
-                                setCurrentViewDate(date);
+                                setCurrentViewDate(new Date(date));
                             }}
                         >
                             {getViewDayString(date)}
@@ -84,7 +83,7 @@ const WeekView = ({ getHours }: WeekViewTypes) => {
                 {getHours('ante')}
                 {getHours('post')}
             </GridItem>
-            {weekDates.map((date, index) => {
+            {weekDates.map((_, index) => {
                 return (
                     <GridItem key={index} borderLeft={'1px solid #0000007f'}>
                         <Box
