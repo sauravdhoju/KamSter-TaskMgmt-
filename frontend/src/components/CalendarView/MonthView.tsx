@@ -80,9 +80,6 @@ const MonthView = () => {
                 ))}
 
                 {/* Days of the month */}
-                {/* {Array.from({ length: firstDayOffset }).map((_, index) => (
-                    <GridItem key={`empty-${index}`} />
-                ))} */}
                 {renderOffsetDays('before')}
                 {Array.from({ length: daysInMonth }, (_, i) => {
                     const dayDate = new Date(currentViewDate);

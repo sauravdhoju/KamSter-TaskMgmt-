@@ -1,4 +1,5 @@
 import { GridItem, Text } from '@chakra-ui/react';
+import { isToday } from 'date-fns';
 
 import { useCalendarContext } from '../../contexts/CalendarContext/CalendarContext';
 
@@ -26,7 +27,23 @@ const ClickableMonthGridDay = ({
                 setCurrentView('day');
             }}
         >
-            <Text fontSize={'12px'}>{associatedDate.getDate()}</Text>
+            <Text
+                fontSize={'12px'}
+                display={'inline-flex'}
+                justifyContent={'center'}
+                alignItems={'center'}
+                minW={'20px'}
+                aspectRatio={'1/1'}
+                borderRadius={'50%'}
+                bgColor={
+                    isSameMonth && isToday(associatedDate) ? '#3a3838' : 'none'
+                }
+                color={
+                    isSameMonth && isToday(associatedDate) ? 'white' : 'inherit'
+                }
+            >
+                {associatedDate.getDate()}
+            </Text>
         </GridItem>
     );
 };
