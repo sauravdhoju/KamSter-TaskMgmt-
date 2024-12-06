@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 
+const Schema = mongoose.Schema;
+
 const TaskSchema = new mongoose.Schema({
     created_at: { type: Date, default: Date.now },
     updated_at: { type: Date, default: Date.now },
@@ -8,12 +10,12 @@ const TaskSchema = new mongoose.Schema({
     is_important: { type: Boolean, default: false },
     
     task_list_id: { 
-        type: Number, 
+        type: Schema.Types.ObjectId, 
         required: true,
         ref: 'TaskList'},
 
     user_id: { 
-        type: Number, 
+        type: Schema.Types.ObjectId, 
         required: true,
         ref: 'User'},
 });
