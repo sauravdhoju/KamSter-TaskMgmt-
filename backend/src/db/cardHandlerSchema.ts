@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
-const cardHandlerSchema = new Schema({
+const cardHandlerSchema = new mongoose.Schema({
     user_id: {
         type: Schema.Types.ObjectId, //Indicates a reference to another document
         ref: 'User', // foreign key
@@ -13,7 +13,7 @@ const cardHandlerSchema = new Schema({
         required: true
     }
 }, {
-    timestamps: true // Adds createdAt and updatedAt fields
+    // timestamps: true // Adds createdAt and updatedAt fields
 });
 
-module.exports = mongoose.model('CardHandler', cardHandlerSchema);
+export default cardHandlerSchema;
