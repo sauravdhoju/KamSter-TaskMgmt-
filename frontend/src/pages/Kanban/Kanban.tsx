@@ -22,6 +22,13 @@ const Kanban = () => {
     const [renameInput, setRenameInput] = useState<string>(''); // Input for renaming
     const [draggedTask, setDraggedTask] = useState<string | null>(null); //for drag and drop
 
+    //editing task -- to track which task is being edited and the current edit input.
+    const [editingTask, setEditingTask] = useState<{
+        columnId: string | null;
+        taskIndex: number | null;
+    }>({ columnId: null, taskIndex: null });
+    const [editTaskInput, setEditTaskInput] = useState<string>(''); 
+
     const handleDragStart = (task: string) => {
         setDraggedTask(task);
     };
@@ -70,8 +77,6 @@ const Kanban = () => {
             setDraggedTask(null);
         }
     };
-    
-
     
     // Add a new task to the specified column
     const addTask = (columnId: string) => {
@@ -132,7 +137,36 @@ const Kanban = () => {
         );
     };
     
+    // editing a task
+    const startEditingTask = (columnId: string, taskIndex: number, currentTask: string) => {
+        setEditingTask({ columnId, taskIndex });
+        setEditTaskInput(currentTask);
+    };
 
+    // to save the edited task
+    const renameTask = (columnId: string, taskIndex: number) => {
+        setColumns((prevColumns) =>
+            prevColumns.map((column) =>
+                column.id === columnId
+                    ? {
+                          ...column,
+                          tasks: column.tasks.map((task, index) =>
+                              index === taskIndex ? editTaskInput.trim() || task : task
+                          ),
+                      }
+                    : column
+            )
+        );
+        setEditingTask({ columnId: null, taskIndex: null });
+        setEditTaskInput('');
+    };
+
+    //to cancel editing
+    const cancelEditingTask = () => {
+        setEditingTask({ columnId: null, taskIndex: null });
+        setEditTaskInput('');
+    };
+     
     return (
         <PageContainer>
             <Flex className='kanban-board'>
@@ -225,12 +259,27 @@ const Kanban = () => {
                                 draggable
                                 onDragStart={() => handleDragStart(task)} // Dragging starts
                             >
-                                {task}
-                            </Box>
-                            ))
-                    ) : null}
-                </Box>
+                               {editingTask.columnId === column.id && editingTask.taskIndex === index ? (
+                                    <Input
+                                        value={editTaskInput}
+                                        onChange={(e) => setEditTaskInput(e.target.value)}
+                                        onBlur={() => renameTask(column.id, index)} // Rename on blur
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') renameTask(column.id, index); // Rename on Enter key
+                                            if (e.key === 'Escape') cancelEditingTask(); // Cancel on Escape key
+                                        }}
+                                        autoFocus
+                                    />
+                                ) : (
+                                    <span onDoubleClick={() => startEditingTask(column.id, index, task)}>
+                                        {task}
+                                    </span>
+                                )}
+                                </Box>
+                                ))
+                            ) : null}
                         </Box>
+                    </Box>
                     </Grid>
                 ))}
 
