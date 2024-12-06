@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-import cardHandlerSchema from '../db/cardHandlerSchema';
+import CardHandlerSchema from '../db/cardHandlerSchema';
 
-const cardHandlerModel = mongoose.model('CardHandler', cardHandlerSchema);
+const CardHandlerModel = mongoose.model('CardHandler', CardHandlerSchema);
 
-export default cardHandlerModel;
+export default CardHandlerModel;

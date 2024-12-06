@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
-const cardSchema = new mongoose.Schema({
+const CardSchema = new mongoose.Schema({
     card_name: {
         type: String,
         required: true
@@ -18,4 +18,4 @@ const cardSchema = new mongoose.Schema({
     },
 });
 
-export default cardSchema;
+export default CardSchema;

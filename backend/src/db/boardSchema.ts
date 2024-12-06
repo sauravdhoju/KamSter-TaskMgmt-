@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
-const boardSchema = new mongoose.Schema({
+const BoardSchema = new mongoose.Schema({
     board_name: {
         type: String,
         required: true
@@ -11,11 +11,14 @@ const boardSchema = new mongoose.Schema({
         ref: 'Project', // foreign key
         required: true
     },
-    created_user_id: {
-        type: Schema.Types.ObjectId, //Indicates a reference to another document
-        ref: 'User', // foreign key
-        required: true
-    },
+   created_at: {
+    type: Date,
+    required: true
+   },
+   updated_at: {
+    type: Date,
+    required: true
+   },
 });
 
-export default boardSchema;
+export default BoardSchema;
