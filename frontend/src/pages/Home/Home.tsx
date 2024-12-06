@@ -1,66 +1,47 @@
-import axios from 'axios';
 import { Image, Box } from '@chakra-ui/react';
-import React, { useState, useEffect } from 'react';
-import HeaderGreet from '../../components/HeaderGreet/HeaderGreet';
+
+import { useCalendarContext } from '../../contexts/CalendarContext/CalendarContext';
+
 import TasksList from '../../components/TasksList/TasksList';
 import MonthGrid from '../../components/MonthGrid/MonthGrid';
 import './Home.scss';
 import PageContainer from '../../components/PageContainer/PageContainer';
-import taskPhoto from '../../pages/Home/picture.jpg';
-
-const baseUrl = 'http://localhost:8080';
+import { lastDayOfMonth } from 'date-fns';
 
 const Home: React.FC = () => {
-    const [currentTime, setCurrentTime] = useState(
-        new Date().toLocaleTimeString()
-    );
-    const [currentDate, setCurrentDate] = useState(new Date());
+    const { currentViewDate } = useCalendarContext();
+    const months3L: (
+        | 'Jan'
+        | 'Feb'
+        | 'Mar'
+        | 'Apr'
+        | 'May'
+        | 'Jun'
+        | 'Jul'
+        | 'Aug'
+        | 'Sep'
+        | 'Oct'
+        | 'Nov'
+        | 'Dec'
+    )[] = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
+    ];
 
     const totalTasks = 32;
     const ongoingTasks = 32;
     const completedTasks = 32;
     const overdueTasks = 32;
-
-    useEffect(() => {
-        axios
-            .get<{ message: string }>(`${baseUrl}/whatistoday`, {
-                withCredentials: true,
-            })
-            .then((res) => console.log(res.data.message))
-            .catch((err) => console.log(err));
-    }, []);
-
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setCurrentTime(new Date().toLocaleTimeString());
-        }, 1000);
-
-        const updateDate = () => {
-            setCurrentDate(new Date());
-        };
-
-        const midnight = new Date();
-        midnight.setHours(24, 0, 0, 0);
-        const timeToMidnight = midnight.getTime() - new Date().getTime();
-
-        const dateTimer = setTimeout(() => {
-            updateDate();
-            setInterval(updateDate, 24 * 60 * 60 * 1000);
-        }, timeToMidnight);
-
-        return () => {
-            clearInterval(timer);
-            clearTimeout(dateTimer);
-        };
-    }, []);
-
-    const options = {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-    };
-    const formattedDate = currentDate.toLocaleDateString(undefined);
 
     return (
         <PageContainer>
@@ -75,7 +56,7 @@ const Home: React.FC = () => {
                             zIndex={'99'}
                         >
                             <Image
-                                src={taskPhoto}
+                                src={'taskerDoodle.jpg'}
                                 alt='task-photo'
                                 className='tasker-img'
                             />
@@ -153,9 +134,17 @@ const Home: React.FC = () => {
                                 ))}
                             </div> */}
                             <MonthGrid
-                                monthName='Dec'
-                                startingDay={2}
-                                numberOfDays={31}
+                                associatedDate={
+                                    new Date(
+                                        currentViewDate.getFullYear(),
+                                        currentViewDate.getMonth(),
+                                        1
+                                    )
+                                }
+                                monthName={months3L[currentViewDate.getMonth()]}
+                                numberOfDays={lastDayOfMonth(
+                                    currentViewDate
+                                ).getDate()}
                             />
                         </Box>
                     </div>
