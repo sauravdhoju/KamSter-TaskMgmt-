@@ -8,16 +8,18 @@ const TaskSchema = new mongoose.Schema({
     task_name: { type: String, required: true },
     is_completed: { type: Boolean, default: false },
     is_important: { type: Boolean, default: false },
-    
-    task_list_id: { 
-        type: Schema.Types.ObjectId, 
-        required: true,
-        ref: 'TaskList'},
 
-    user_id: { 
-        type: Schema.Types.ObjectId, 
-        required: true,
-        ref: 'User'},
+    task_list_id: {
+        type: Schema.Types.ObjectId,
+        // required: true,
+        ref: 'TaskList',
+    },
+
+    user_id: {
+        type: Schema.Types.ObjectId,
+        // required: true,
+        ref: 'User',
+    },
 });
 
 export default TaskSchema;
