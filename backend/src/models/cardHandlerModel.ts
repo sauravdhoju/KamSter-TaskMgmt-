@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
 import CardHandlerSchema from '../db/cardHandlerSchema';
+const mongoose = require('mongoose');
 
 const CardHandlerModel = mongoose.model('CardHandler', CardHandlerSchema);
 
