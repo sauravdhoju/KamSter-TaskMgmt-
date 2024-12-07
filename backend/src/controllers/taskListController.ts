@@ -1,6 +1,8 @@
 import express from 'express';
-import TaskListModel from '../models/taskListSchema';
+import TaskListModel from '../models/taskListModel';
 import { get } from 'lodash';
+
+import { getTasksFromList } from '../helpers/taskHelpers';
 
 export const createTaskList = async (
     req: express.Request,
@@ -13,16 +15,23 @@ export const createTaskList = async (
                 message: 'ERROR: You must be logged in to perform this action!',
             });
         }
-        const { task_list_name } = req.body;
+        const { task_list_name, isImportantList, isInitialList } = req.body;
         if (!task_list_name) {
             return res
                 .status(400)
                 .json({ message: 'ERROR: You must provide task list name!' });
         }
-        const newTaskList = {
+        const newTaskList: {
+            user_id: string;
+            task_list_name: string;
+            isImportantList?: boolean;
+            isInitialList?: boolean;
+        } = {
             user_id: userId,
             task_list_name,
         };
+        if (isImportantList) newTaskList.isImportantList = isImportantList;
+        if (isInitialList) newTaskList.isInitialList = isInitialList;
         const createdTaskList = await TaskListModel.create(newTaskList);
 
         return res
@@ -50,7 +59,7 @@ export const getTaskLists = async (
                         "ERROR: You aren't authenticated to perform this action!",
                 })
                 .end();
-        const taskLists = await TaskListModel.find();
+        const taskLists = await TaskListModel.find({ user_id: userId });
         return res
             .status(200)
             .json({ message: 'Successfully retrieved task lists!', taskLists })
@@ -76,8 +85,8 @@ export const updateTaskListName = async (
                 .json({ message: "ERROR: You aren't authenticated!" })
                 .end();
 
-        const { id } = req.params;
-        if (!id)
+        const { taskListId } = req.params;
+        if (!taskListId)
             return res
                 .status(400)
                 .json({ message: 'Please provide task list id!' })
@@ -90,7 +99,7 @@ export const updateTaskListName = async (
                 .json({ message: 'Please provide new task list name!' })
                 .end();
 
-        const taskList = await TaskListModel.findById(id);
+        const taskList = await TaskListModel.findById(taskListId);
         if (!taskList)
             return res
                 .status(404)
@@ -126,14 +135,16 @@ export const deleteTaskList = async (
                 .json({ message: "ERROR: You aren't authenticated!" })
                 .end();
 
-        const { id } = req.params;
-        if (!id)
+        const { taskListId } = req.params;
+        if (!taskListId)
             return res
                 .status(400)
                 .json({ message: 'Please provide task list id!' })
                 .end();
 
-        const taskList = await TaskListModel.findOneAndDelete({ _id: id });
+        const taskList = await TaskListModel.findOneAndDelete({
+            _id: taskListId,
+        });
         if (!taskList)
             return res
                 .status(404)
@@ -150,5 +161,30 @@ export const deleteTaskList = async (
             .status(400)
             .json({ message: "ERROR: Couln't delete task list!", error })
             .end();
+    }
+};
+
+export const getTasksFromTaskList = async (
+    req: express.Request,
+    res: express.Response
+) => {
+    try {
+        const { taskListId } = req.params;
+
+        const tasks = await getTasksFromList(taskListId);
+
+        if (!tasks) {
+            return res.status(404).json({ message: 'Tasks not found!' }).end();
+        }
+
+        return res
+            .status(200)
+            .json({ message: 'Tasks retrieved successfully!', tasks })
+            .end();
+    } catch (error) {
+        console.error(error);
+        return res
+            .status(400)
+            .json({ message: "ERROR: Couldn't get tasks!", error });
     }
 };
