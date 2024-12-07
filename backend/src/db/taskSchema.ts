@@ -9,6 +9,7 @@ const TaskSchema = new mongoose.Schema({
     due_date: { type: Date, default: null },
     is_completed: { type: Boolean, default: false },
     is_important: { type: Boolean, default: false },
+    description: { type: String, default: null },
 
     task_list_id: {
         type: Schema.Types.ObjectId,

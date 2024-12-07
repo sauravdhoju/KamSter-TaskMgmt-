@@ -6,7 +6,8 @@ import { updateTaskListUpdatedAt } from '../helpers/taskListHelpers';
 export const addTask = async (req: express.Request, res: express.Response) => {
     try {
         const currentuserId = get(req, 'identity._id');
-        const { task_name, task_list_id, due_date, is_important } = req.body;
+        const { task_name, task_list_id, due_date, is_important, description } =
+            req.body;
         if (!task_name || !task_list_id) {
             return res
                 .status(400)
@@ -18,16 +19,18 @@ export const addTask = async (req: express.Request, res: express.Response) => {
             user_id: string;
             due_date?: Date;
             is_important?: boolean;
+            description?: string;
         } = {
             task_name,
             task_list_id,
             user_id: currentuserId,
         };
         // add is_important if provided
-        if (is_important) {
+        if ('is_important' in req.body) {
             newTask.is_important = is_important;
         }
         if (due_date) newTask.due_date = due_date;
+        if (description) newTask.description = description;
         const addedTask = await TaskModel.create(newTask);
 
         return res
@@ -50,7 +53,8 @@ export const updateTask = async (
     try {
         const userId = get(req, 'identity._id') as string;
         const { taskId } = req.params;
-        const { task_name, due_date, is_important, is_completed } = req.body;
+        const { task_name, description, due_date, is_important, is_completed } =
+            req.body;
 
         const taskToUpdate = await TaskModel.findById(taskId);
         if (!taskToUpdate)
@@ -82,6 +86,7 @@ export const updateTask = async (
 
         taskToUpdate.task_name = task_name;
         if (due_date) taskToUpdate.due_date = due_date;
+        if (description) taskToUpdate.description = description;
         if ('is_completed' in req.body)
             taskToUpdate.is_completed = is_completed;
         if ('is_important' in req.body)
