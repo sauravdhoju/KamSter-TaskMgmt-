@@ -54,8 +54,11 @@ const App = () => {
                     <Route path='/my-account' element={<MyAccount />} />
                     <Route path='/calendar' element={<Calendar />} />
                     <Route path='/pomodoro' element={<Pomodoro />} />
-                    <Route path='/kanban' element={<Kanban />} />
+                    {/* <Route path='/kanban' element={<Kanban />} /> */}
                     <Route path='/tasks' element={<Tasks />} />
+
+                    <Route path="/" element={<ProjectList />} />
+                    <Route path="/kanban/:projectId" element={<Kanban />} />
                 </Routes>
             </CalendarContextProvider>
         </Box>
