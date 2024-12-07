@@ -40,6 +40,19 @@ const TasksList = () => {
     const activeList = taskLists[selectedTabIndex] || { name: '', tasks: [] };
     const completedCount = activeList.tasks.filter((task) => task.completed).length;
 
+    const deleteTask = (taskIndex: number) => {
+        setTaskLists((prev) =>
+            prev.map((list, index) =>
+                index === selectedTabIndex
+                    ? {
+                          ...list,
+                          tasks: list.tasks.filter((_, i) => i !== taskIndex),
+                      }
+                    : list
+            )
+        );
+        showNotification('Task deleted!');
+    }
     const showNotification = (message: string) => {
         setNotification(message);
         setTimeout(() => setNotification(null), 3000);
@@ -209,20 +222,33 @@ const TasksList = () => {
                                         className="task-circle-icon"
                                     />
                                 </Box>
+                                
                                 <Text ml="10px">{task.task}</Text>
-                                <Box
-                                    ml="auto"
-                                    onClick={() =>
-                                        task.favorite
-                                            ? removeFromFavorites(task)
-                                            : addToFavorites(task, selectedTabIndex)
-                                    }
-                                >
-                                    <Icon
-                                        name={task.favorite ? 'bxs-star' : 'bx-star'}
-                                        className="favorite-icon"
-                                    />
-                                </Box>
+                                
+                                <Flex ml="auto" gap="10px" alignItems="center">
+                                    <Box
+                                        ml="auto"
+                                        onClick={() => deleteTask(index)}
+                                        cursor={'pointer'}
+                                    >
+                                        <Icon name="bx-trash" className="favorite-icon" />
+                                    </Box>
+                                    
+                                    <Box
+                                        ml="auto"
+                                        onClick={() =>
+                                            task.favorite
+                                                ? removeFromFavorites(task)
+                                                : addToFavorites(task, selectedTabIndex)
+                                        }
+                                        cursor={'pointer'}
+                                    >
+                                        <Icon
+                                            name={task.favorite ? 'bxs-star' : 'bx-star'}
+                                            className="favorite-icon"
+                                        />
+                                    </Box>
+                                </Flex>
                             </Flex>
                         ))}
                 </Box>
