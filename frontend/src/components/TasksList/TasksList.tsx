@@ -35,11 +35,34 @@ const TasksList = () => {
     const [newListName, setNewListName] = useState('');
     const [completedVisible, setCompletedVisible] = useState(false);
     const [notification, setNotification] = useState<string | null>(null);
+    
+    const [isAddTaskVisible, setIsAddTaskVisible] = useState(false);
+    const [isBackgroundDimmed, setIsBackgroundDimmed] = useState(false);
+
     const [newTask, setNewTask] = useState('');
+    const [taskDate, setTaskDate] = useState('');
+    const [taskTime, setTaskTime] = useState('');
+    const [taskDescription, setTaskDescription] = useState('');
+
+
 
     const activeList = taskLists[selectedTabIndex] || { name: '', tasks: [] };
     const completedCount = activeList.tasks.filter((task) => task.completed).length;
 
+    const handleAddTaskClick = () => {
+        setIsAddTaskVisible(!isAddTaskVisible);
+        setIsBackgroundDimmed(!isBackgroundDimmed);
+    };
+    
+    const handleCancelClick = () => {
+        setIsAddTaskVisible(false);
+        setIsBackgroundDimmed(false);
+
+        setNewTask('');
+        setTaskDate('');
+        setTaskTime('');
+        setTaskDescription('');
+    }
     const deleteTask = (taskIndex: number) => {
         setTaskLists((prev) =>
             prev.map((list, index) =>
@@ -109,6 +132,15 @@ const TasksList = () => {
     const handleNewTaskSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!newTask.trim()) return;
+
+        const newTaskObj = {
+            task: newTask,
+            completed: false,
+            favorite: false,
+            date: taskDate || null,
+            time: taskTime || null,
+        };
+        
         setTaskLists((prev) =>
             prev.map((list, index) =>
                 index === selectedTabIndex
@@ -117,6 +149,8 @@ const TasksList = () => {
             )
         );
         setNewTask('');
+        setTaskDate('');
+        setTaskTime('');
         showNotification('Task added!');
     };
 
@@ -193,23 +227,104 @@ const TasksList = () => {
                 </form>
             )}
 
-            {/* Task Input Form */}
+            {/* Task Input Form
             <form onSubmit={handleNewTaskSubmit} className="new-task-form">
-                <Flex gap="10px">
+                <Flex gap="10px" alignItems="center">
                     <Input
                         placeholder="Add a new task"
                         value={newTask}
                         onChange={(e) => setNewTask(e.target.value)}
                     />
+
+                    <Input
+                        type="date"
+                        value={taskDate}
+                        onChange={(e) => setTaskDate(e.target.value)}
+                        placeholder="Select Date"
+                    />
+
+                    <Input
+                        type="time"
+                        value={taskTime}
+                        onChange={(e) => setTaskTime(e.target.value)}
+                        placeholder="Select Time"
+                    />
                     <Button type="submit">Add</Button>
                 </Flex>
-            </form>
+            </form> */}
 
             {/* Task List */}
             <Box className="task-list">
                 <Flex className="list-header">
                     <Text>{activeList.name}</Text>
+
+                    {/* add task icon */}
+                    <Box
+                        cursor="pointer"
+                        // onClick={() => setIsAddTaskVisible((prev) => !prev)}
+                        onClick={handleAddTaskClick}
+
+                        className="add-task-icon-container"
+                    >
+                        <Icon 
+                            name='bx-plus-circle'
+                        />
+                    </Box>
                 </Flex>
+                
+                <div className={`background ${isBackgroundDimmed ? 'dimmed' : ''}`} />
+
+                {isAddTaskVisible && (
+                    <Box 
+                        className="add-task-container"
+                        p="4"
+                        border="1px solid #ddd"
+                        borderRadius="md"
+                        mt="4"
+                    >
+                        <form onSubmit={handleNewTaskSubmit}>
+                            <Flex direction="column" gap="10px">
+                                <FormControl isRequired>
+                                    <Input
+                                        placeholder="Task Name"
+                                        value={newTask}
+                                        onChange={(e) => setNewTask(e.target.value)}
+                                    />
+                                </FormControl>
+
+                                <FormControl>
+                                    <Input
+                                        type="text"
+                                        placeholder='Short Description'
+                                        value={taskDescription}
+                                        onChange={(e) => setTaskDescription(e.target.value)}
+                                    />
+                                </FormControl>
+
+                                <FormControl>
+                                    <Input
+                                        type="date"
+                                        value={taskDate}
+                                        onChange={(e) => setTaskDate(e.target.value)}
+                                        placeholder="Select Date"
+                                    />
+                                </FormControl>
+
+                                <FormControl>
+                                    <Input
+                                        type="time"
+                                        value={taskTime}
+                                        onChange={(e) => setTaskTime(e.target.value)}
+                                        placeholder="Select Time"
+                                    />
+                                </FormControl>
+
+                                <Button type="submit">Add Task</Button>
+                                <Button type="button" onClick={handleCancelClick}>Cancel</Button>
+                            </Flex>
+                        </form>
+                    </Box>
+                )}
                 <Box as="ul" >
                     {activeList.tasks
                         .map((task, index) => ({ task, index }))
@@ -223,7 +338,16 @@ const TasksList = () => {
                                     />
                                 </Box>
                                 
-                                <Text ml="10px">{task.task}</Text>
+                                <Flex direction='column' ml="10px">
+                                    <Text>{task.task}</Text>
+                                    {task.date && (
+                                        <Text fontSize="sm" color="gray.500">
+                                            Date: {task.date} {task.time && `Time: ${task.time}`}
+                                        </Text>
+                                    )}
+                                </Flex>
+
+                                {/* <Text ml="10px">{task.task}</Text> */}
                                 
                                 <Flex ml="auto" gap="10px" alignItems="center">
                                     <Box
