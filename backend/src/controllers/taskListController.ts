@@ -15,7 +15,7 @@ export const createTaskList = async (
                 message: 'ERROR: You must be logged in to perform this action!',
             });
         }
-        const { task_list_name, isImportantList, isInitialList } = req.body;
+        const { task_list_name, isInitialList } = req.body;
         if (!task_list_name) {
             return res
                 .status(400)
@@ -24,14 +24,13 @@ export const createTaskList = async (
         const newTaskList: {
             user_id: string;
             task_list_name: string;
-            isImportantList?: boolean;
             isInitialList?: boolean;
         } = {
             user_id: userId,
             task_list_name,
         };
-        if (isImportantList) newTaskList.isImportantList = isImportantList;
-        if (isInitialList) newTaskList.isInitialList = isInitialList;
+        if ('isInitialList' in req.body)
+            newTaskList.isInitialList = isInitialList;
         const createdTaskList = await TaskListModel.create(newTaskList);
 
         return res
