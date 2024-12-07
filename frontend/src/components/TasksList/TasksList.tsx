@@ -151,6 +151,7 @@ const TasksList = () => {
         setNewTask('');
         setTaskDate('');
         setTaskTime('');
+        // console.log('Task added:', {taskDescription,taskDate, taskTime, newTask});
         showNotification('Task added!');
     };
 
