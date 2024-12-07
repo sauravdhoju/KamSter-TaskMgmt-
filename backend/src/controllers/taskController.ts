@@ -2,8 +2,6 @@ import express from 'express';
 import TaskModel from '../models/taskModel';
 import { get } from 'lodash';
 
-import { getTaskList } from '../helpers/taskListHelpers';
-
 export const addTask = async (req: express.Request, res: express.Response) => {
     try {
         const currentuserId = get(req, 'identity._id');
@@ -51,8 +49,7 @@ export const updateTask = async (
     try {
         const userId = get(req, 'identity._id') as string;
         const { taskId } = req.params;
-        const { task_name, due_date, is_important, importantTaskListId } =
-            req.body;
+        const { task_name, due_date, is_important, is_completed } = req.body;
 
         const taskToUpdate = await TaskModel.findById(taskId);
         if (!taskToUpdate)
@@ -76,23 +73,18 @@ export const updateTask = async (
                 .end();
         }
 
-        if (!task_name || !due_date)
+        if (!task_name)
             return res
                 .status(400)
                 .json({ message: 'ERROR: Provide required values!' })
                 .end();
 
         taskToUpdate.task_name = task_name;
-        taskToUpdate.due_date = due_date;
-        if (is_important) {
-            if (!importantTaskListId)
-                return res
-                    .status(400)
-                    .json({ message: 'ERROR: Provide important task list id!' })
-                    .end();
-            const importantTaskList = await getTaskList(importantTaskListId);
-            taskToUpdate.task_list_id = importantTaskList._id;
-        }
+        if (due_date) taskToUpdate.due_date = due_date;
+        if ('is_completed' in req.body)
+            taskToUpdate.is_completed = is_completed;
+        if ('is_important' in req.body)
+            taskToUpdate.is_important = is_important;
         await taskToUpdate.save();
         return res
             .status(200)
