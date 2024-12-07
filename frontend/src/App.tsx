@@ -57,7 +57,7 @@ const App = () => {
                     {/* <Route path='/kanban' element={<Kanban />} /> */}
                     <Route path='/tasks' element={<Tasks />} />
 
-                    <Route path="/projectList" element={<ProjectList />} />
+                    <Route path="/projects" element={<ProjectList />} />
                     <Route path="/kanban/:projectId" element={<Kanban />} />
                 </Routes>
             </CalendarContextProvider>
