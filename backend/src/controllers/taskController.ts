@@ -1,6 +1,7 @@
 import express from 'express';
 import TaskModel from '../models/taskModel';
 import { get } from 'lodash';
+import { updateTaskListUpdatedAt } from '../helpers/taskListHelpers';
 
 export const addTask = async (req: express.Request, res: express.Response) => {
     try {
@@ -85,7 +86,9 @@ export const updateTask = async (
             taskToUpdate.is_completed = is_completed;
         if ('is_important' in req.body)
             taskToUpdate.is_important = is_important;
+        taskToUpdate.updated_at = new Date(Date.now());
         await taskToUpdate.save();
+        await updateTaskListUpdatedAt(taskToUpdate.task_list_id.toString());
         return res
             .status(200)
             .json({ message: 'Task updated successfully!', taskToUpdate })
