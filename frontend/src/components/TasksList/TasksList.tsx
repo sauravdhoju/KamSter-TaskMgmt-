@@ -87,6 +87,13 @@ const TasksList = () => {
         }
     };
 
+    const handleDeleteList = () => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this list?");
+        if (confirmDelete) {
+            setTaskLists(prev => prev.filter((_, index) => index !== selectedTabIndex));
+            showNotification('List deleted!');
+        }
+    }
     const handleAddTaskClick = () => {
         setIsAddTaskVisible(!isAddTaskVisible);
         setIsBackgroundDimmed(!isBackgroundDimmed);
@@ -294,6 +301,11 @@ const TasksList = () => {
                                 <MenuItem onClick={handleRenameList}>
                                     <Icon name="bx-edit" />
                                     <Text>Rename</Text>
+                                </MenuItem>
+
+                                <MenuItem onClick={handleDeleteList}>
+                                    <Icon name="bx-trash" />
+                                    <Text>Delete</Text>
                                 </MenuItem>
                             </MenuList>
                         </Menu>
