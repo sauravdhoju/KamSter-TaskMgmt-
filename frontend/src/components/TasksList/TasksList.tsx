@@ -6,6 +6,10 @@ import {
     FormControl,
     Input,
     Button,
+    Menu,
+    MenuButton,
+    MenuItem,
+    MenuList
 } from '@chakra-ui/react';
 import Icon from '../Icon/Icon';
 import './TasksList.scss';
@@ -50,6 +54,7 @@ const TasksList = () => {
     const [completedVisible, setCompletedVisible] = useState(false);
     const [notification, setNotification] = useState<string | null>(null);
     
+    const [isMoreOptionVisible, setIsMoreOptionVisible] = useState(false);
     const [isAddTaskVisible, setIsAddTaskVisible] = useState(false);
     const [isBackgroundDimmed, setIsBackgroundDimmed] = useState(false);
 
@@ -69,6 +74,18 @@ const TasksList = () => {
         time: string;
         description: string;
     }
+
+    const handleRenameList = () => {
+        const newListName = prompt("Enter new list name:", activeList.name);
+        if (newListName) {
+            setTaskLists(prev =>
+                prev.map((list, index) =>
+                    index === selectedTabIndex ? { ...list, name: newListName } : list
+                )
+            );
+            showNotification(`List renamed to "${newListName}"`);
+        }
+    };
 
     const handleAddTaskClick = () => {
         setIsAddTaskVisible(!isAddTaskVisible);
@@ -250,29 +267,51 @@ const TasksList = () => {
                     </Button>
                 </form>
             )}
-            
+
             {/* Task List */}
             <Box className="task-list">
                 <Flex className="list-header">
                     <Text>{activeList.name}</Text>
 
-                    {/* add task icon */}
-                    <Box
-                        cursor="pointer"
-                        // onClick={() => setIsAddTaskVisible((prev) => !prev)}
-                        onClick={handleAddTaskClick}
+                    <Flex className="list-actions" gap="10px">
+                        {/* add task icon */}
+                        <Box
+                            className="add-task-icon-container"
+                            cursor="pointer"
+                            onClick={handleAddTaskClick}
+                        >
+                            <Icon 
+                                name='bx-plus-circle'
+                                aria-label='Add Task'
+                            />
+                        </Box>
 
-                        className="add-task-icon-container"
-                    >
-                        <Icon 
-                            name='bx-plus-circle'
-                            aria-label='Add Task'
-                        />
-                    </Box>
+                        <Menu>
+                            <MenuButton>
+                                <Icon name="bx-dots-vertical-rounded" />
+                            </MenuButton>
+                            <MenuList>
+                                <MenuItem onClick={handleRenameList}>
+                                    <Icon name="bx-edit" />
+                                    <Text>Rename</Text>
+                                </MenuItem>
+                            </MenuList>
+                        </Menu>
+                    </Flex>
                 </Flex>
                 
                 <div className={`background ${isBackgroundDimmed ? 'dimmed' : ''}`} />
 
+                {isMoreOptionVisible && (
+                    <Box
+                        className="more-options-container"
+                        border="1px solid #ddd"
+                        borderRadius="md"
+                        mt="4"
+                    >
+
+                    </Box>    
+                )}
                 {isAddTaskVisible && (
                     <Box 
                         className="add-task-container"
