@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Box, Flex, Heading, Input, Grid } from '@chakra-ui/react';
+import { Box, Flex, Heading, Input, Grid, Center } from '@chakra-ui/react';
 import Icon from '../../components/Icon/Icon';
 import './Kanban.scss';
 import PageContainer from '../../components/PageContainer/PageContainer';
@@ -172,9 +172,14 @@ const Kanban = () => {
      
     return (
         <PageContainer>
-            <Heading as="h2" size="md" mb={4}>
-                Kanban Board for Project {projectId}
-            </Heading>
+            <Flex 
+                justifyContent="center" 
+                alignItems="center" 
+            >
+                <Heading as="h2" size="md" mb={4}>
+                    Kanban Board for Project {projectId}
+                </Heading>
+            </Flex>
             <Flex className='kanban-board'>
                 {columns.map((column) => (
                     <Grid
