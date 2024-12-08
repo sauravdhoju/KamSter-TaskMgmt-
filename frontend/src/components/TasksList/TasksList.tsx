@@ -18,12 +18,26 @@ const initialTaskLists = [
     },
     {
         name: 'My Lists',
-        tasks: [{ task: 'Hanging', completed: false, favorite: false }],
+        tasks: [{ 
+            task: 'Hanging', 
+            completed: false, 
+            favorite: false, 
+            description: '',
+            date: '',
+            time: '',
+        }],
         type: 'ordinary',
     },
     {
         name: 'Grocery',
-        tasks: [{ task: 'Potato', completed: false, favorite: false }],
+        tasks: [{ 
+            task: 'Potato', 
+            completed: false, 
+            favorite: false, 
+            description: '',
+            date: '',
+            time: '', 
+        }],
         type: 'ordinary',
     },
 ];
@@ -44,8 +58,6 @@ const TasksList = () => {
     const [taskTime, setTaskTime] = useState('');
     const [taskDescription, setTaskDescription] = useState('');
 
-
-
     const activeList = taskLists[selectedTabIndex] || { name: '', tasks: [] };
     const completedCount = activeList.tasks.filter((task) => task.completed).length;
     
@@ -53,7 +65,7 @@ const TasksList = () => {
         task: string;
         favorite: boolean;
         completed: boolean;
-        date: Date;
+        date: string;
         time: string;
         description: string;
     }
@@ -147,8 +159,9 @@ const TasksList = () => {
             task: newTask,
             completed: false,
             favorite: false,
-            date: taskDate || null,
-            time: taskTime || null,
+            date: taskDate || '',
+            time: taskTime || '',
+            description: taskDescription,
         };
         
         setTaskLists((prev) =>
@@ -237,33 +250,7 @@ const TasksList = () => {
                     </Button>
                 </form>
             )}
-
-            {/* Task Input Form
-            <form onSubmit={handleNewTaskSubmit} className="new-task-form">
-                <Flex gap="10px" alignItems="center">
-                    <Input
-                        placeholder="Add a new task"
-                        value={newTask}
-                        onChange={(e) => setNewTask(e.target.value)}
-                    />
-
-                    <Input
-                        type="date"
-                        value={taskDate}
-                        onChange={(e) => setTaskDate(e.target.value)}
-                        placeholder="Select Date"
-                    />
-
-                    <Input
-                        type="time"
-                        value={taskTime}
-                        onChange={(e) => setTaskTime(e.target.value)}
-                        placeholder="Select Time"
-                    />
-                    <Button type="submit">Add</Button>
-                </Flex>
-            </form> */}
-
+            
             {/* Task List */}
             <Box className="task-list">
                 <Flex className="list-header">
