@@ -231,7 +231,7 @@ const TasksList = () => {
     
 
     return (
-        <Box className="tasks-list" width="100%">
+        <Box className="tasks-list" width="100%" cursor="pointer">
             {notification && <Box className="notification">{notification}</Box>}
 
             {/* Tab Header */}
@@ -432,6 +432,7 @@ const TasksList = () => {
                 <Flex
                     onClick={() => setCompletedVisible((prev) => !prev)}
                     justifyContent="space-between"
+                    cursor="pointer"
                 >
                     <Text>Completed ({completedCount})</Text>
                     <Icon name={completedVisible ? 'bxs-chevron-down' : 'bxs-chevron-right'} />
