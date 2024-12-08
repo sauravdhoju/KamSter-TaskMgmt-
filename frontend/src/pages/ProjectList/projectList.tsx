@@ -36,7 +36,7 @@ const ProjectList = () => {
                 </Heading>
 
                 {/* Display projects */}
-                <Box  display="grid" gridTemplateColumns={{ base: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }} gap={6}>
+                <Box  display="grid" gridTemplateColumns={{ base: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' }} gap={6}>
                     {projects.length > 0 ? (
                         projects.map((project) => (
                             <Box
@@ -57,7 +57,7 @@ const ProjectList = () => {
                             </Box>
                         ))
                     ) : (
-                        <Box gridColumn="span 3" textAlign="center" color="gray.500" fontSize="lg">
+                        <Box gridColumn="span 4" textAlign="center" color="gray.500" fontSize="lg">
                             No projects yet! Click "Add New Project" to get started.
                         </Box>
                     )}
