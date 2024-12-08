@@ -7,9 +7,14 @@ import { useState } from 'react';
 import PageContainer from '../../components/PageContainer/PageContainer';
 import './projectList.scss';
 
+type Project = {
+    id: string;
+    name: string;
+    description?: string; // optional
+  };
 
 const ProjectList = () => {
-    const [projects, setProjects] = useState([]);
+    const [projects, setProjects] = useState<Project[]>([]);
     const [newProjectName, setNewProjectName] = useState('');
     const [newProjectDescription, setNewProjectDescription] = useState('');
     const { isOpen, onOpen, onClose } = useDisclosure();
