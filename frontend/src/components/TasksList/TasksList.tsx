@@ -163,6 +163,7 @@ const TasksList = () => {
                 return list;
             })
         );
+        showNotification("Task added to favorites")
     };
 
     const removeFromFavorites = (task: Task) => {
@@ -183,6 +184,7 @@ const TasksList = () => {
                 return list;
             })
         );
+        showNotification('Task removed from favorites')
     };
 
     const handleNewListSubmit = (e: React.FormEvent<HTMLFormElement>) => {
