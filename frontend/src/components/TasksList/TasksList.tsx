@@ -48,6 +48,15 @@ const TasksList = () => {
 
     const activeList = taskLists[selectedTabIndex] || { name: '', tasks: [] };
     const completedCount = activeList.tasks.filter((task) => task.completed).length;
+    
+    interface Task{
+        task: string;
+        favorite: boolean;
+        completed: boolean;
+        date: Date;
+        time: string;
+        description: string;
+    }
 
     const handleAddTaskClick = () => {
         setIsAddTaskVisible(!isAddTaskVisible);
@@ -81,7 +90,8 @@ const TasksList = () => {
         setTimeout(() => setNotification(null), 3000);
     };
 
-    const addToFavorites = (task, sourceListIndex) => {
+
+    const addToFavorites = (task: Task, sourceListIndex: number) => {
         setTaskLists((prev) =>
             prev.map((list, index) => {
                 if (list.type === 'default') {
@@ -98,7 +108,7 @@ const TasksList = () => {
         );
     };
 
-    const removeFromFavorites = (task) => {
+    const removeFromFavorites = (task: Task) => {
         setTaskLists((prev) =>
             prev.map((list) => {
                 if (list.type === 'default') {
@@ -144,7 +154,7 @@ const TasksList = () => {
         setTaskLists((prev) =>
             prev.map((list, index) =>
                 index === selectedTabIndex
-                    ? { ...list, tasks: [...list.tasks, { task: newTask, completed: false, favorite: false }] }
+                    ? { ...list, tasks: [...list.tasks, newTaskObj] }
                     : list
             )
         );
@@ -269,6 +279,7 @@ const TasksList = () => {
                     >
                         <Icon 
                             name='bx-plus-circle'
+                            aria-label='Add Task'
                         />
                     </Box>
                 </Flex>
