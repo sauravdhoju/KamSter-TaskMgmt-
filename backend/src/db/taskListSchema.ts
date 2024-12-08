@@ -7,6 +7,7 @@ const TaskListSchema = new mongoose.Schema({
     user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     created_at: { type: Date, default: Date.now },
     updated_at: { type: Date, default: Date.now },
+    isInitialList: { type: Boolean, default: false },
 });
 
 export default TaskListSchema;
