@@ -5,7 +5,11 @@ const ProjectSchema = new mongoose.Schema({
     description: { type: String, default: null },
     created_at: { type: Date, default: Date.now },
     updated_at: { type: Date, default: Date.now },
-    admin_id: { type: mongoose.Schema.Types.ObjectId, required: true },
+    admin_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    },
 });
 
 export default ProjectSchema;
