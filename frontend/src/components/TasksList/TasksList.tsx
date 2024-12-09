@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
     Box,
     Flex,
@@ -13,61 +13,9 @@ import {
 } from '@chakra-ui/react';
 import Icon from '../Icon/Icon';
 import './TasksList.scss';
-
-const initialTaskLists = [
-    {
-        name: 'Favorite',
-        tasks: [],
-        type: 'default',
-    },
-    {
-        name: 'My Lists',
-        tasks: [{ 
-            task: 'Hanging', 
-            completed: false, 
-            favorite: false, 
-            description: '',
-            date: '',
-            time: '',
-        }],
-        type: 'ordinary',
-    },
-    {
-        name: 'Grocery',
-        tasks: [{ 
-            task: 'Potato', 
-            completed: false, 
-            favorite: false, 
-            description: '',
-            date: '',
-            time: '', 
-        }],
-        type: 'ordinary',
-    },
-];
+import { useBackendAPIContext } from '../../contexts/BackendAPIContext/BackendAPIContext';
 
 const TasksList = () => {
-    const [taskLists, setTaskLists] = useState(initialTaskLists);
-    const [selectedTabIndex, setSelectedTabIndex] = useState(0);
-    const [newListVisible, setNewListVisible] = useState(false);
-    const [newListName, setNewListName] = useState('');
-    const [completedVisible, setCompletedVisible] = useState(false);
-    const [notification, setNotification] = useState<string | null>(null);
-    
-    // const [isMoreOptionVisible, setIsMoreOptionVisible] = useState(false);
-    const [isAddTaskVisible, setIsAddTaskVisible] = useState(false);
-    const [isBackgroundDimmed, setIsBackgroundDimmed] = useState(false);
-
-    const [newTask, setNewTask] = useState('');
-    const [taskDate, setTaskDate] = useState('');
-    const [taskTime, setTaskTime] = useState('');
-    const [taskDescription, setTaskDescription] = useState('');
-
-    const activeList = taskLists[selectedTabIndex] || { name: '', tasks: [] };
-    const completedCount = activeList.tasks.filter((task) => task.completed).length;
-    
-    // const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-    
     interface Task{
         task: string;
         favorite: boolean;
@@ -76,6 +24,64 @@ const TasksList = () => {
         time: string;
         description: string;
     }
+
+    interface TaskList{
+        name: string;
+        tasks: Task[];
+        type: 'default' | 'ordinary';
+    }
+
+    const [taskLists, setTaskLists] = useState<TaskList[]>([
+        {name: 'Favorite', tasks: [], type: 'default'},
+        {name: 'My Lists', tasks: [], type: 'default'},
+    ]);
+
+    const [selectedTabIndex, setSelectedTabIndex] = useState(0);
+    const [newListVisible, setNewListVisible] = useState(false);
+    const [newListName, setNewListName] = useState('');
+    const [completedVisible, setCompletedVisible] = useState(false);
+    const [notification, setNotification] = useState<string | null>(null);
+    
+    const [isAddTaskVisible, setIsAddTaskVisible] = useState(false);
+    const [isBackgroundDimmed, setIsBackgroundDimmed] = useState(false);
+
+    const [newTask, setNewTask] = useState('');
+    const [taskDate, setTaskDate] = useState('');
+    const [taskTime, setTaskTime] = useState('');
+    const [taskDescription, setTaskDescription] = useState('');
+
+    const activeList =
+    taskLists?.[selectedTabIndex] ?? { name: '', tasks: [] };
+
+    const completedCount = activeList.tasks.filter((task) => task.completed).length;
+    const {client} = useBackendAPIContext();
+
+    useEffect(() => {
+        const fetchTaskLists = async () => {
+            try {
+                const response = await client.get('/task-lists/get');
+
+                // Format fetched lists to match expected structure
+                const fetchedLists = response.data.taskLists.map((list: any) => ({
+                    name: list.task_list_name,
+                    tasks: [],
+                    type: 'ordinary',
+                }));
+                setTaskLists((prev) => {
+                    const uniqueLists = fetchedLists.filter(
+                        (list:TaskList) => !prev.some((existingList) => existingList.name === list.name)
+                    );
+                    return [...prev, ...uniqueLists];
+                });
+                
+            } catch (error) {
+                console.error('Error fetching task lists:', error);
+                showNotification('Failed to load task lists.');
+            }
+        };
+
+        fetchTaskLists();
+    }, [client]);
 
     const handleRenameList = () => {
         const newListName = prompt("Enter new list name:", activeList.name);
@@ -110,6 +116,7 @@ const TasksList = () => {
         setTaskTime('');
         setTaskDescription('');
     }
+    
     const deleteTask = (taskIndex: number) => {
         setTaskLists((prev) =>
             prev.map((list, index) =>
@@ -123,11 +130,11 @@ const TasksList = () => {
         );
         showNotification('Task deleted!');
     }
+    
     const showNotification = (message: string) => {
         setNotification(message);
         setTimeout(() => setNotification(null), 3000);
     };
-
 
     const addToFavorites = (task: Task, sourceListIndex: number) => {
         setTaskLists((prev) =>
@@ -171,19 +178,23 @@ const TasksList = () => {
     const handleNewListSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!newListName.trim()) return;
-        const newList = { name: newListName, tasks: [], type: 'ordinary' };
-        setTaskLists((prev) => [...prev, newList]);
+        setTaskLists((prev) => [
+            ...prev,
+            { name: newListName.trim(), tasks: [], type: 'ordinary' },
+        ]);
+        
         setNewListName('');
         setNewListVisible(false);
-        setSelectedTabIndex(taskLists.length);
+        setSelectedTabIndex(taskLists.length); // Set to the newly created list index
         showNotification('New list created!');
     };
+    
 
     const handleNewTaskSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!newTask.trim()) return;
 
-        const newTaskObj = {
+        const newTaskObj: Task = {
             task: newTask,
             completed: false,
             favorite: false,
@@ -199,10 +210,11 @@ const TasksList = () => {
                     : list
             )
         );
+
         setNewTask('');
         setTaskDate('');
         setTaskTime('');
-        // console.log('Task added:', {taskDescription,taskDate, taskTime, newTask});
+        setTaskDescription('');
         showNotification('Task added!');
     };
 
@@ -245,13 +257,14 @@ const TasksList = () => {
                         onClick={() => {
                             setSelectedTabIndex(index); 
                             setNewListVisible(false); // Reset the form visibility
-                        }}
-                        
+                        }}   
                     >
-                        {list.type === 'default' ? (
-                            <Icon name="bxs-star" className="important-icon" />
+                        {list.name === 'My Lists' ? (
+                            <Text>My List</Text> // Display "My List" for the My Lists tab
+                        ) : list.name === 'Favorite' ? (
+                            <Icon name="bxs-star" className="important-icon" /> 
                         ) : (
-                            <Text>{list.name}</Text>
+                            <Text>{list.name}</Text> // Display fetched tab names for other tabs
                         )}
                     </Box>
                 ))}
@@ -366,6 +379,7 @@ const TasksList = () => {
                         </form>
                     </Box>
                 )}
+                
                 <Box as="ul" >
                     {activeList.tasks
                         .map((task, index) => ({ task, index }))
@@ -394,8 +408,6 @@ const TasksList = () => {
                                         </Text>
                                     )}
                                 </Flex>
-
-                                {/* <Text ml="10px">{task.task}</Text> */}
                                 
                                 <Flex ml="auto" gap="10px" alignItems="center">
                                     <Box
