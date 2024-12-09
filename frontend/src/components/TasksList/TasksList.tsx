@@ -60,8 +60,6 @@ const TasksList = () => {
         const fetchTaskLists = async () => {
             try {
                 const response = await client.get('/task-lists/get');
-
-                // Format fetched lists to match expected structure
                 const fetchedLists = response.data.taskLists.map((list: any) => ({
                     name: list.task_list_name,
                     tasks: [],
@@ -73,13 +71,11 @@ const TasksList = () => {
                     );
                     return [...prev, ...uniqueLists];
                 });
-                
             } catch (error) {
                 console.error('Error fetching task lists:', error);
                 showNotification('Failed to load task lists.');
             }
         };
-
         fetchTaskLists();
     }, [client]);
 
@@ -379,7 +375,7 @@ const TasksList = () => {
                         </form>
                     </Box>
                 )}
-                
+
                 <Box as="ul" >
                     {activeList.tasks
                         .map((task, index) => ({ task, index }))
