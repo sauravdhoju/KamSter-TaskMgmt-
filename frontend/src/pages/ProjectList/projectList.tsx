@@ -1,10 +1,12 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
     Box, Heading, Button, Textarea, Input, Modal, ModalOverlay, ModalContent, 
-    ModalHeader, ModalCloseButton, ModalBody, ModalFooter, useDisclosure, Text 
+    ModalHeader, ModalCloseButton, ModalBody, ModalFooter, useDisclosure, Text, Flex
 } from '@chakra-ui/react';
-import { useState } from 'react';
+
 import PageContainer from '../../components/PageContainer/PageContainer';
+import Icon from '../../components/Icon/Icon';
 import './projectList.scss';
 
 type Project = {
@@ -18,6 +20,7 @@ const ProjectList = () => {
     const [newProjectName, setNewProjectName] = useState('');
     const [newProjectDescription, setNewProjectDescription] = useState('');
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const navigate = useNavigate();
 
     const addProject = () => {
         if (newProjectName.trim()) {
@@ -31,6 +34,16 @@ const ProjectList = () => {
             setNewProjectDescription('');
             onClose();
         }
+    };
+    
+    const deleteProject = (id: string) => {
+        setProjects((prevProjects) =>
+            prevProjects.filter((project) => project.id !== id)
+        );
+    };
+
+    const handleDoubleClick = (projectName: string) => {
+        navigate(`/kanban/${projectName}`);
     };
 
     return (
@@ -49,13 +62,22 @@ const ProjectList = () => {
                                 p={4} 
                                 bg="white" 
                                 borderRadius="lg" 
-                                boxShadow="md"                             
+                                boxShadow="md"   
+                                onDoubleClick={() => handleDoubleClick(project.name)} // Navigate on double-click
+                          
                             >
-                                <Link to={`/kanban/${project.name}`}>
+                                <Flex justifyContent="space-between" alignItems="center">
                                     <Heading as="h2" size="md" color="black.600" mb={2}>
                                         {project.name}
                                     </Heading>
-                                </Link>
+                                    <Box
+                                    as="button"
+                                        className="delete-board"
+                                        onClick={() => deleteProject(project.id)} // Delete project */}
+                                    >
+                                      <Icon name="bx-trash" /> 
+                                    </Box>
+                                </Flex>
                                 <Text fontSize="sm" color="gray.700">
                                     {project.description || "No description provided."}
                                 </Text>
