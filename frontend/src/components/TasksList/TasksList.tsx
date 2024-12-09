@@ -10,13 +10,6 @@ import {
     MenuButton,
     MenuItem,
     MenuList,
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalCloseButton,
-    ModalBody,
-    ModalFooter,
 } from '@chakra-ui/react';
 import Icon from '../Icon/Icon';
 import './TasksList.scss';
@@ -73,8 +66,7 @@ const TasksList = () => {
     const activeList = taskLists[selectedTabIndex] || { name: '', tasks: [] };
     const completedCount = activeList.tasks.filter((task) => task.completed).length;
     
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+    // const [selectedTask, setSelectedTask] = useState<Task | null>(null);
     
     interface Task{
         task: string;
@@ -84,17 +76,6 @@ const TasksList = () => {
         time: string;
         description: string;
     }
-
-    const openTaskDetails = (task: Task) => {
-        console.log("Opening");
-        setSelectedTask(task);
-        setIsModalOpen(true);
-    };
-
-    const closeModal = () => {
-        setIsModalOpen(false);
-        setSelectedTask(null);
-    };
 
     const handleRenameList = () => {
         const newListName = prompt("Enter new list name:", activeList.name);
@@ -394,11 +375,6 @@ const TasksList = () => {
                                 as="li" 
                                 key={index} 
                                 alignItems="center"
-                                onClick={() => {
-                                    // console.log("Clicked me");
-                                    openTaskDetails(task)
-                                }} 
-                                cursor="pointer"
                             >
                                 <Box onClick={() => 
                                     toggleTaskCompletion(index)} 
@@ -448,28 +424,6 @@ const TasksList = () => {
                             </Flex>
                         ))}
                 </Box>
-                {/* <Modal isOpen={isModalOpen} onClose={closeModal}>
-                <ModalOverlay />
-                <ModalContent>
-                    <ModalHeader>Task Details</ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>
-                        {selectedTask && (
-                            <Box>
-                                <Text><strong>Task:</strong> {selectedTask.task}</Text>
-                                <Text><strong>Description:</strong> {selectedTask.description || 'No description'}</Text>
-                                <Text><strong>Date:</strong> {selectedTask.date || 'N/A'}</Text>
-                                <Text><strong>Time:</strong> {selectedTask.time || 'N/A'}</Text>
-                                <Text><strong>Favorite:</strong> {selectedTask.favorite ? 'Yes' : 'No'}</Text>
-                                <Text><strong>Completed:</strong> {selectedTask.completed ? 'Yes' : 'No'}</Text>
-                            </Box>
-                        )}
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button colorScheme="blue" onClick={closeModal}>Close</Button>
-                    </ModalFooter>
-                </ModalContent>
-                </Modal> */}
             </Box>
 
             <Box className="completed-tasks">
