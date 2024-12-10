@@ -19,7 +19,9 @@ const ProjectList = () => {
     const [projects, setProjects] = useState<Project[]>([]);
     const [newProjectName, setNewProjectName] = useState('');
     const [newProjectDescription, setNewProjectDescription] = useState('');
+    const [editingProject, setEditingProject] = useState<Project | null>(null);
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
     const navigate = useNavigate();
 
     const addProject = () => {
@@ -33,6 +35,18 @@ const ProjectList = () => {
             setNewProjectName('');
             setNewProjectDescription('');
             onClose();
+        }
+    };
+
+    const editProject = () => {
+        if (editingProject && editingProject.name.trim()) {
+            setProjects((prevProjects) =>
+                prevProjects.map((project) =>
+                    project.id === editingProject.id ? editingProject : project
+                )
+            );
+            setEditingProject(null);
+            onEditClose();
         }
     };
     
@@ -64,12 +78,24 @@ const ProjectList = () => {
                                 borderRadius="lg" 
                                 boxShadow="md"   
                                 onDoubleClick={() => handleDoubleClick(project.name)} // Navigate on double-click
-                          
                             >
                                 <Flex justifyContent="space-between" alignItems="center">
                                     <Heading as="h2" size="md" color="black.600" mb={2}>
                                         {project.name}
                                     </Heading>
+                                    <Flex gap={2}>
+                                        <Box
+                                            as="button"
+                                            className="edit-board"
+                                            onClick={() => {
+                                                setEditingProject(project);
+                                                onEditOpen();
+                                            }}
+                                        >
+                                        <Box fontSize="30px">
+                                            <Icon name="bx-edit" />
+                                        </Box>
+                                        </Box>
                                     <Box
                                     as="button"
                                         className="delete-board"
@@ -77,6 +103,7 @@ const ProjectList = () => {
                                     >
                                       <Icon name="bx-trash" /> 
                                     </Box>
+                                    </Flex>
                                 </Flex>
                                 <Text fontSize="sm" color="gray.700">
                                     {project.description || "No description provided."}
@@ -128,6 +155,47 @@ const ProjectList = () => {
                         </ModalFooter>
                     </ModalContent>
                 </Modal>
+                
+                {/* Modal for editing a project */}
+                {editingProject && (
+                    <Modal isOpen={isEditOpen} onClose={onEditClose} isCentered>
+                        <ModalOverlay />
+                        <ModalContent>
+                            <ModalHeader>Edit Project</ModalHeader>
+                            <ModalCloseButton />
+                            <ModalBody>
+                                <Input
+                                    placeholder="Project Name"
+                                    value={editingProject.name}
+                                    onChange={(e) =>
+                                        setEditingProject({ ...editingProject, name: e.target.value })
+                                    }
+                                    mb={4}
+                                    size="lg"
+                                />
+                                <Textarea
+                                    placeholder="Project Description (optional)"
+                                    value={editingProject.description || ''}
+                                    onChange={(e) =>
+                                        setEditingProject({
+                                            ...editingProject,
+                                            description: e.target.value,
+                                        })
+                                    }
+                                    size="lg"
+                                />
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button colorScheme="white" bg="black" mr={3} onClick={editProject}>
+                                    Save Changes
+                                </Button>
+                                <Button variant="ghost" onClick={onEditClose}>
+                                    Cancel
+                                </Button>
+                            </ModalFooter>
+                        </ModalContent>
+                    </Modal>
+                )}
             </Box>
         </PageContainer>
     );
