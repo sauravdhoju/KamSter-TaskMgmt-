@@ -1,6 +1,10 @@
 import express from 'express';
 
-import { sendCollaborationEmail } from '../controllers/projectCollaborationControllers';
+import {
+    sendCollaborationEmail,
+    handleInvitationResponse,
+    deleteCollaborationInvitation,
+} from '../controllers/projectCollaborationControllers';
 import { isAuthenticated, isProjectOwner } from '../middlewares';
 export default (router: express.Router) => {
     router.post(
@@ -8,5 +12,12 @@ export default (router: express.Router) => {
         isAuthenticated,
         isProjectOwner,
         sendCollaborationEmail
+    );
+    router.patch('/api/project-collaboration/invite', handleInvitationResponse);
+    router.delete(
+        '/api/project-collaboration/invite/delete/:projectId/:collabId',
+        isAuthenticated,
+        isProjectOwner,
+        deleteCollaborationInvitation
     );
 };

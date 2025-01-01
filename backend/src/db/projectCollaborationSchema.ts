@@ -11,6 +11,10 @@ const ProjectCollaborationSchema = new mongoose.Schema({
         ref: 'Project',
         required: true,
     },
+    collabStatus: {
+        type: String,
+        default: 'pending',
+    },
 });
 
 export default ProjectCollaborationSchema;

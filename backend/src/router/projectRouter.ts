@@ -18,7 +18,7 @@ export default (router: express.Router) => {
     );
     router.get('/api/project/get', isAuthenticated, getProjects);
     router.delete(
-        '/api/project/delete/:projectId',
+        '/api/project/delete/:projectId/:collabId',
         isAuthenticated,
         isProjectOwner,
         deleteProject
