@@ -26,14 +26,15 @@ const TasksList = () => {
     }
 
     interface TaskList{
+        id:string;
         name: string;
         tasks: Task[];
         type: 'default' | 'ordinary';
     }
 
     const [taskLists, setTaskLists] = useState<TaskList[]>([
-        {name: 'Favorite', tasks: [], type: 'default'},
-        {name: 'My Lists', tasks: [], type: 'default'},
+        {id: 'favorites', name: 'Favorite', tasks: [], type: 'default'},
+        {id:  'mylists', name: 'My Lists', tasks: [], type: 'default'},
     ]);
 
     const [selectedTabIndex, setSelectedTabIndex] = useState(0);
@@ -50,17 +51,25 @@ const TasksList = () => {
     const [taskTime, setTaskTime] = useState('');
     const [taskDescription, setTaskDescription] = useState('');
 
-    const activeList =
-    taskLists?.[selectedTabIndex] ?? { name: '', tasks: [] };
+    const activeList = taskLists?.[selectedTabIndex] ?? { name: '', tasks: [] };
 
     const completedCount = activeList.tasks.filter((task) => task.completed).length;
     const {client} = useBackendAPIContext();
 
     useEffect(() => {
         const fetchTaskLists = async () => {
+            // const token = localStorage.getItem('authToken');
+
+            // if (!token){
+            //     showNotification('You are not logged in.');
+            //     return;
+            // }
+
             try {
                 const response = await client.get('/task-lists/get');
+                // console.log('Response: ', response);
                 const fetchedLists = response.data.taskLists.map((list: any) => ({
+                    id: list._id,
                     name: list.task_list_name,
                     tasks: [],
                     type: 'ordinary',
@@ -72,7 +81,7 @@ const TasksList = () => {
                     return [...prev, ...uniqueLists];
                 });
             } catch (error) {
-                console.error('Error fetching task lists:', error);
+                // console.error('Error fetching task lists:', error);
                 showNotification('Failed to load task lists.');
             }
         };
@@ -91,11 +100,26 @@ const TasksList = () => {
         }
     };
 
-    const handleDeleteList = () => {
+    const handleDeleteList = async () => {
         const confirmDelete = window.confirm("Are you sure you want to delete this list?");
         if (confirmDelete) {
-            setTaskLists(prev => prev.filter((_, index) => index !== selectedTabIndex));
-            showNotification('List deleted!');
+            try {
+                const currentList = taskLists[selectedTabIndex];
+
+                if (currentList.type === 'default'){
+                    showNotification('Cannot delete default lists');
+                    return;
+                }
+                
+                await client.delete(`/task-lists/delete/${currentList.id}`);
+                setTaskLists(prev => prev.filter((_, index) => index !== selectedTabIndex));
+                showNotification('List deleted!');
+                setSelectedTabIndex(0);
+            }
+            catch (error) {
+                console.error ('Error deleteing list:', error);
+                showNotification('Failed to delete list. Please try again.');
+            }
         }
     }
     const handleAddTaskClick = () => {
