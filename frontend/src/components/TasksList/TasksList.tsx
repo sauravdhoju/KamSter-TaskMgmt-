@@ -122,6 +122,8 @@ const TasksList = () => {
             }
         }
     }
+
+    
     const handleAddTaskClick = () => {
         setIsAddTaskVisible(!isAddTaskVisible);
         setIsBackgroundDimmed(!isBackgroundDimmed);
@@ -195,17 +197,40 @@ const TasksList = () => {
         showNotification('Task removed from favorites')
     };
 
+    // const handleNewListSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    //     e.preventDefault();
+    //     if (!newListName.trim()) return;
+    //     setTaskLists((prev) => [
+    //         ...prev,
+    //         { name: newListName.trim(), tasks: [], type: 'ordinary' },
+    //     ]);
+        
+    //     setNewListName('');
+    //     setNewListVisible(false);
+    //     setSelectedTabIndex(taskLists.length); // Set to the newly created list index
+    //     showNotification('New list created!');
+    // };
+
     const handleNewListSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!newListName.trim()) return;
+    
+        // Generate a unique ID for the new list
+        const newListId = `list-${Date.now()}`; // Simple unique ID generation
+    
         setTaskLists((prev) => [
             ...prev,
-            { name: newListName.trim(), tasks: [], type: 'ordinary' },
+            {
+                id: newListId,      // Add the required id property
+                name: newListName.trim(),
+                tasks: [],
+                type: 'ordinary' as const // Type assertion to match the union type
+            }
         ]);
         
         setNewListName('');
         setNewListVisible(false);
-        setSelectedTabIndex(taskLists.length); // Set to the newly created list index
+        setSelectedTabIndex(taskLists.length);
         showNotification('New list created!');
     };
     
