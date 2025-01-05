@@ -58,13 +58,6 @@ const TasksList = () => {
 
     useEffect(() => {
         const fetchTaskLists = async () => {
-            // const token = localStorage.getItem('authToken');
-
-            // if (!token){
-            //     showNotification('You are not logged in.');
-            //     return;
-            // }
-
             try {
                 const response = await client.get('/task-lists/get');
                 // console.log('Response: ', response);
@@ -211,27 +204,32 @@ const TasksList = () => {
     //     showNotification('New list created!');
     // };
 
-    const handleNewListSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleNewListSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!newListName.trim()) return;
     
-        // Generate a unique ID for the new list
-        const newListId = `list-${Date.now()}`; // Simple unique ID generation
-    
-        setTaskLists((prev) => [
-            ...prev,
-            {
-                id: newListId,      // Add the required id property
+        try {
+            const response = await client.post('/task-lists/create',{
+                task_list_name: newListName.trim()
+            });
+
+            const newList = {
+                id: response.data._id,
                 name: newListName.trim(),
                 tasks: [],
-                type: 'ordinary' as const // Type assertion to match the union type
-            }
-        ]);
-        
-        setNewListName('');
-        setNewListVisible(false);
-        setSelectedTabIndex(taskLists.length);
-        showNotification('New list created!');
+                type: 'ordinary' as const
+            };
+
+            setTaskLists((prev) => [...prev,newList]);
+            
+            setNewListName('');
+            setNewListVisible(false);
+            setSelectedTabIndex(taskLists.length);
+            showNotification('New list created!');
+        } catch (error) {
+            console.error('Error creating task List: ', error);
+            showNotification('Failed to create new list. Please try again.');
+        }
     };
     
 
