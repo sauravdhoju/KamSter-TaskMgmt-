@@ -111,34 +111,6 @@ const TasksList = () => {
         }
     };
 
-    // const handleRenameList = async () => {
-    //     const newListName = prompt("Enter new list name:", activeList.name);
-    //     if (newListName) {
-    //         try {
-    //             const currentList = taskLists[selectedTabIndex];
-
-    //             if (currentList.type === 'default'){
-    //                 showNotification('Cannot rename default lists');
-    //                 return;
-    //             }
-
-    //             await client.put(`/api/task-lists/rename/${currentList.id}`, {
-    //                 task_list_name: newListName
-    //             });
-                
-    //             setTaskLists(prev =>
-    //                 prev.map((list, index) =>
-    //                     index === selectedTabIndex ? { ...list, name: newListName } : list
-    //                 )
-    //             );
-    //             showNotification(`List renamed to "${newListName}"`);
-    //         } catch (error) {
-    //             console.error('Error renaming list:', error);
-    //             showNotification('Failed to rename list. Please try again.')
-    //         }
-    //     }
-    // };
-
     const handleDeleteList = async () => {
         const confirmDelete = window.confirm("Are you sure you want to delete this list?");
         if (confirmDelete) {
