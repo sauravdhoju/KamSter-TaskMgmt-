@@ -1,6 +1,7 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
+import { get } from 'lodash';
 
 import {
     secret,
@@ -17,6 +18,7 @@ import {
     updateProjectCollabStatus,
     deleteProjectCollab,
     getProjectCollabById,
+    getCollaboratingProjectsByUserId,
 } from '../helpers/projectCollaborationHelpers';
 
 export const sendCollaborationEmail = async (
@@ -161,13 +163,57 @@ export const handleInvitationResponse = async (
                 .end();
         }
 
+        const projectAdminId = collabProject.admin_id.toString();
+        console.log(projectAdminId);
+        const projectAdmin = await getUserById(projectAdminId);
+        if (!projectAdmin)
+            return res
+                .status(404)
+                .json({ message: 'Project Admin not found!' })
+                .end();
+
+        const projectAdminEmail = projectAdmin.email;
+
+        // send email
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true,
+            auth: {
+                user: email_user,
+                pass: email_password,
+            },
+        });
+
+        const mailOptions: {
+            from: string;
+            to: string;
+            subject: string;
+            html?: string;
+        } = {
+            from: email_user,
+            to: projectAdminEmail,
+            subject: 'Project Invitation Response',
+        };
         if (action === 'accept') {
+            mailOptions.html = `
+            <p>Your invitation to the user <strong>${collabUser.username}</strong> for the project: <strong>${collabProject.name}</strong></p>
+            <p>Has been accepted!</p>
+            `;
             const updatedProjectCollab = await updateProjectCollabStatus(
                 collabId,
                 {
                     collabStatus: 'accepted',
                 }
             );
+            await transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    console.error('Error sending email: ', error);
+                } else {
+                    console.log('Email sent: ', info.response);
+                }
+            });
             return res
                 .status(200)
                 .json({
@@ -177,6 +223,17 @@ export const handleInvitationResponse = async (
                 .end();
         }
         const deletedProjectCollab = await deleteProjectCollab(collabId);
+        mailOptions.html = `
+            <p>Your invitation to the user <strong>${collabUser.username}</strong> for the project: <strong>${collabProject.name}</strong></p>
+            <p>Has been declined!</p>
+            `;
+        await transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error('Error sending email: ', error);
+            } else {
+                console.log('Email sent: ', info.response);
+            }
+        });
         return res
             .status(200)
             .json({
@@ -222,5 +279,42 @@ export const deleteCollaborationInvitation = async (
         return res
             .status(400)
             .json({ message: 'Something went wrong!', error });
+    }
+};
+
+export const getCollaboratingProjects = async (
+    req: express.Request,
+    res: express.Response
+) => {
+    try {
+        const userId = get(req, 'identity._id') as string;
+        if (!userId)
+            return res
+                .status(403)
+                .json({ message: 'You cannot perform this action!' })
+                .end();
+
+        const collaboratingProjects = await getCollaboratingProjectsByUserId(
+            userId
+        );
+
+        if (!collaboratingProjects)
+            return res
+                .status(404)
+                .json({ message: 'No collaborations found!' })
+                .end();
+
+        return res
+            .status(200)
+            .json({
+                message: 'Collaborations retrieved successfully!',
+                collaboratingProjects,
+            })
+            .end();
+    } catch (error) {
+        return res
+            .status(400)
+            .json({ message: 'Cannot get collaborating projects!', error })
+            .end();
     }
 };

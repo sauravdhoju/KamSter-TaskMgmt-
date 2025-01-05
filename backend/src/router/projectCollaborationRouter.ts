@@ -4,6 +4,7 @@ import {
     sendCollaborationEmail,
     handleInvitationResponse,
     deleteCollaborationInvitation,
+    getCollaboratingProjects,
 } from '../controllers/projectCollaborationControllers';
 import { isAuthenticated, isProjectOwner } from '../middlewares';
 export default (router: express.Router) => {
@@ -19,5 +20,10 @@ export default (router: express.Router) => {
         isAuthenticated,
         isProjectOwner,
         deleteCollaborationInvitation
+    );
+    router.get(
+        '/api/project-collaboration',
+        isAuthenticated,
+        getCollaboratingProjects
     );
 };

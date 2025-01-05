@@ -37,3 +37,6 @@ export const deleteProjectCollab = (id: string) => {
         throw new Error('Failed to delete project collbaoration.');
     }
 };
+
+export const getCollaboratingProjectsByUserId = (userId: string) =>
+    ProjectCollaborationModel.find({ user_id: userId });
