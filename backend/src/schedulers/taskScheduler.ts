@@ -2,7 +2,7 @@ import cron from 'node-cron';
 import nodemailer from 'nodemailer';
 import TaskModel from '../models/taskModel';
 
-import { email_user, email_password } from '../envconfig';
+import { email_user, email_password, frontend_url } from '../envconfig';
 import { getUserById } from '../helpers/userHelpers';
 
 // configure nodemailer to send email
@@ -38,6 +38,7 @@ export const startTaskScheduler = () => {
                     html: `
             <p>The task <strong>${task.task_name}</strong> is due.</p>
             <p>Please take action.</p>
+            <a href='${frontend_url}/api/task/mark-complete/${task._id.toString()}' target="_blank" style="color: green; font-weight: bold;">Mark Complete</a>
             `,
                 };
 
