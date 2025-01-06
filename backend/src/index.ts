@@ -10,6 +10,8 @@ import { mongo_uri, port } from './envconfig';
 
 import router from './router/index';
 
+import { startTaskScheduler } from './schedulers/taskScheduler';
+
 const app = express();
 
 // app.use(
@@ -34,6 +36,9 @@ app.use(bodyParser.json());
 app.use('/', router());
 
 const server = http.createServer(app);
+
+// scheduler to check task deadlines and send emails accordingly
+startTaskScheduler();
 
 server.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
