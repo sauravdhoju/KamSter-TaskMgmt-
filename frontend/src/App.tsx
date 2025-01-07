@@ -16,6 +16,7 @@ import Tasks from './pages/Tasks/Tasks';
 
 import AcceptInvite from './pages/CollabInvitationHandlePage/AcceptInvite';
 import DeclineInvite from './pages/CollabInvitationHandlePage/DeclineInvite';
+import MarkTaskComplete from './pages/MarkTaskComplete/MarkTaskComplete';
 
 // import Sidebar from './pages/Sidebar/Sidebar';
 // import Calender from './pages/Calender/Calender';
@@ -70,6 +71,11 @@ const App = () => {
                     <Route
                         path='/api/project-collaboration/invitations/decline'
                         element={<DeclineInvite />}
+                    />
+
+                    <Route
+                        path='/api/task/mark-complete/:taskId'
+                        element={<MarkTaskComplete />}
                     />
 
                 </Routes>
