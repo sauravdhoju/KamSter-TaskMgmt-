@@ -14,6 +14,9 @@ import Calendar from './pages/Calendar/Calendar';
 import Pomodoro from './pages/Pomodoro/Pomodoro';
 import Tasks from './pages/Tasks/Tasks';
 
+import AcceptInvite from './pages/CollabInvitationHandlePage/AcceptInvite';
+import DeclineInvite from './pages/CollabInvitationHandlePage/DeclineInvite';
+
 // import Sidebar from './pages/Sidebar/Sidebar';
 // import Calender from './pages/Calender/Calender';
 import ProjectList from './pages/ProjectList/projectList';
@@ -59,6 +62,16 @@ const App = () => {
 
                     <Route path="/projects" element={<ProjectList />} />
                     <Route path="/kanban/:projectId" element={<Kanban />} />
+
+                    <Route
+                        path='/api/project-collaboration/invitations/accept'
+                        element={<AcceptInvite />}
+                    />
+                    <Route
+                        path='/api/project-collaboration/invitations/decline'
+                        element={<DeclineInvite />}
+                    />
+
                 </Routes>
             </CalendarContextProvider>
         </Box>
