@@ -54,6 +54,7 @@ const TasksList = () => {
     const activeList = taskLists?.[selectedTabIndex] ?? { name: '', tasks: [] };
 
     const completedCount = activeList.tasks.filter((task) => task.completed).length;
+    
     const {client} = useBackendAPIContext();
 
     useEffect(() => {
