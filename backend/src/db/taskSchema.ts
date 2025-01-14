@@ -10,6 +10,7 @@ const TaskSchema = new mongoose.Schema({
     is_completed: { type: Boolean, default: false },
     is_important: { type: Boolean, default: false },
     description: { type: String, default: null },
+    email_sent: { type: Boolean, default: false },
 
     task_list_id: {
         type: Schema.Types.ObjectId,
