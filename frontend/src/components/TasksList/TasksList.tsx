@@ -60,30 +60,60 @@ const TasksList = () => {
     const [selectedTaskDetails, setSelectedTaskDetails] = useState<Task | null>(null);
     const [isTaskDetailsVisible, setTaskDetailsVisible] = useState(false);
 
+
     useEffect(() => {
         const fetchTaskLists = async () => {
             try {
                 const response = await client.get('/task-lists/get');
-                // console.log('Response: ', response);
                 const fetchedLists = response.data.taskLists.map((list: any) => ({
                     id: list._id,
                     name: list.task_list_name,
-                    tasks: [],
+                    tasks: [], // Placeholder, we'll fetch tasks separately
                     type: 'ordinary',
                 }));
+    
+                // Set the task lists first
                 setTaskLists((prev) => {
                     const uniqueLists = fetchedLists.filter(
-                        (list:TaskList) => !prev.some((existingList) => existingList.name === list.name)
+                        (list: TaskList) => !prev.some((existingList) => existingList.name === list.name)
                     );
                     return [...prev, ...uniqueLists];
                 });
+    
+                // Fetch tasks for each list
+                for (const list of fetchedLists) {
+                    try {
+                        const tasksResponse = await client.get(`/task-lists/tasks/${list.id}`);
+                        const tasks = tasksResponse.data.tasks.map((task: any) => ({
+                            task: task.task_name,
+                            favorite: task.favorite,
+                            completed: task.completed,
+                            date: task.date,
+                            time: task.time,
+                            description: task.description,
+                        }));
+                        
+                        // Update the tasks in the respective list
+                        setTaskLists((prev) =>
+                            prev.map((taskList) =>
+                                taskList.id === list.id ? { ...taskList, tasks } : taskList
+                            )
+                        );
+                    } catch (error) {
+                        console.error(`Error fetching tasks for list ${list.id}:`, error);
+                        showNotification(`Failed to fetch tasks for list "${list.name}".`);
+                        
+                    }
+                }
             } catch (error) {
-                // console.error('Error fetching task lists:', error);
+                console.error('Error fetching task lists:', error);
                 showNotification('Failed to load task lists.');
             }
         };
+    
         fetchTaskLists();
     }, [client]);
+    
 
 
     const handleRenameList = async () => {
