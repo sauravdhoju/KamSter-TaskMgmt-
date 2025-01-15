@@ -57,6 +57,9 @@ const TasksList = () => {
     
     const {client} = useBackendAPIContext();
 
+    const [selectedTaskDetails, setSelectedTaskDetails] = useState<Task | null>(null);
+    const [isTaskDetailsVisible, setTaskDetailsVisible] = useState(false);
+
     useEffect(() => {
         const fetchTaskLists = async () => {
             try {
@@ -170,6 +173,20 @@ const TasksList = () => {
         setTimeout(() => setNotification(null), 3000);
     };
 
+    const fetchTaskDetails = async (taskId: string) => {
+        try {
+            const response = await client.get(`/task-lists/tasks/${taskId}`);
+            const taskDetails = response.data;
+            setSelectedTaskDetails(taskDetails);
+            setTaskDetailsVisible(true);
+            
+            showNotification("Task Details Fetched");
+        } catch (error) {
+            console.error('Error fetching task details:', error);
+            showNotification('Failed to fetch task details. Please try again.');
+        }
+
+    }
     const addToFavorites = (task: Task, sourceListIndex: number) => {
         setTaskLists((prev) =>
             prev.map((list, index) => {
@@ -252,34 +269,71 @@ const TasksList = () => {
     };
     
 
-    const handleNewTaskSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleNewTaskSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!newTask.trim()) return;
-
-        const newTaskObj: Task = {
-            task: newTask,
-            completed: false,
-            favorite: false,
-            date: taskDate || '',
-            time: taskTime || '',
-            description: taskDescription,
+    
+        // Get the selected task list
+        const selectedTaskList = taskLists[selectedTabIndex];
+        if (!selectedTaskList) {
+            showNotification('Error: Selected task list not found!');
+            return;
+        }
+        
+        const task_list_id = taskLists[selectedTabIndex]?.id; // Get the selected task list ID
+        const task_name = newTask;
+        
+        console.log('Task List ID:', task_list_id); // Log the task_list_id
+        console.log('Task Name:', task_name); // Optional: Log the task name for debugging
+        
+        if (!task_list_id) {
+            showNotification('Invalid task list selected.');
+            return;
+        }
+    
+        const requestBody = {
+            task_list_id,
+            task_name,
         };
         
-        setTaskLists((prev) =>
-            prev.map((list, index) =>
-                index === selectedTabIndex
-                    ? { ...list, tasks: [...list.tasks, newTaskObj] }
-                    : list
-            )
-        );
-
-        setNewTask('');
-        setTaskDate('');
-        setTaskTime('');
-        setTaskDescription('');
-        showNotification('Task added!');
+        try {
+            // Send task to the backend API
+            const response = await client.post('/task/add', requestBody);
+            if (response.status === 200) {
+                const newTaskObj: Task = {
+                    task: newTask,
+                    completed: false,
+                    favorite: false,
+                    date: taskDate || '',
+                    time: taskTime || '',
+                    description: taskDescription,
+                };
+    
+                // Update local state with the new task
+                setTaskLists((prev) =>
+                    prev.map((list, index) =>
+                        index === selectedTabIndex
+                            ? { ...list, tasks: [...list.tasks, newTaskObj] }
+                            : list
+                    )
+                );
+    
+                // Clear form fields
+                setNewTask('');
+                setTaskDate('');
+                setTaskTime('');
+                setTaskDescription('');
+    
+                showNotification('Task added successfully!');
+            } else {
+                throw new Error('Failed to add task.');
+            }
+        } catch (error) {
+            console.error('Error adding task:', error);
+            showNotification('Failed to add task. Please try again.');
+        }
     };
-
+    
     const toggleNewListForm = () => setNewListVisible((prev) => !prev);
 
     const toggleTaskCompletion = (taskIndex: number) => {
