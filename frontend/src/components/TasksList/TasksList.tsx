@@ -17,6 +17,7 @@ import { useBackendAPIContext } from '../../contexts/BackendAPIContext/BackendAP
 
 const TasksList = () => {
     interface Task{
+        id: string;
         task: string;
         favorite: boolean;
         completed: boolean;
@@ -57,63 +58,98 @@ const TasksList = () => {
     
     const {client} = useBackendAPIContext();
 
-    const [selectedTaskDetails, setSelectedTaskDetails] = useState<Task | null>(null);
-    const [isTaskDetailsVisible, setTaskDetailsVisible] = useState(false);
+useEffect(() => {
+    const fetchTaskLists = async () => {
+        try {
+            const response = await client.get('/task-lists/get');
+            const fetchedLists = response.data.taskLists.map((list: any) => ({
+                id: list._id,
+                name: list.task_list_name,
+                tasks: [], // Placeholder, we'll fetch tasks separately
+                type: 'ordinary',
+            }));
 
+            // Ensure the "Favorites" tab and "My Lists" tab are always at the top
+            const favoritesList = {
+                id: 'favorites',
+                name: <Icon name="bxs-star" className="important-icon" />,  // Star icon for Favorites
+                tasks: [],
+                type: 'default',
+            };
 
-    useEffect(() => {
-        const fetchTaskLists = async () => {
-            try {
-                const response = await client.get('/task-lists/get');
-                const fetchedLists = response.data.taskLists.map((list: any) => ({
-                    id: list._id,
-                    name: list.task_list_name,
-                    tasks: [], // Placeholder, we'll fetch tasks separately
-                    type: 'ordinary',
-                }));
-    
-                // Set the task lists first
-                setTaskLists((prev) => {
-                    const uniqueLists = fetchedLists.filter(
-                        (list: TaskList) => !prev.some((existingList) => existingList.name === list.name)
-                    );
-                    return [...prev, ...uniqueLists];
-                });
-    
-                // Fetch tasks for each list
-                for (const list of fetchedLists) {
-                    try {
-                        const tasksResponse = await client.get(`/task-lists/tasks/${list.id}`);
-                        const tasks = tasksResponse.data.tasks.map((task: any) => ({
-                            task: task.task_name,
-                            favorite: task.favorite,
-                            completed: task.completed,
-                            date: task.date,
-                            time: task.time,
-                            description: task.description,
-                        }));
-                        
-                        // Update the tasks in the respective list
-                        setTaskLists((prev) =>
-                            prev.map((taskList) =>
-                                taskList.id === list.id ? { ...taskList, tasks } : taskList
-                            )
-                        );
-                    } catch (error) {
-                        console.error(`Error fetching tasks for list ${list.id}:`, error);
-                        showNotification(`Failed to fetch tasks for list "${list.name}".`);
-                        
-                    }
+            const myList = {
+                id: 'mylists',
+                name: 'My Lists',  // My Lists tab, can hold all tasks added to it
+                tasks: [],  // This will hold tasks added specifically to "My Lists"
+                type: 'default',
+            };
+
+            // Add both the "Favorites" and "My Lists" tabs before the fetched lists
+            setTaskLists([favoritesList, myList, ...fetchedLists]);
+
+            // Fetch tasks for each list
+            for (const list of fetchedLists) {
+                try {
+                    const tasksResponse = await client.get(`/task-lists/tasks/${list.id}`);
+                    const tasks = tasksResponse.data.tasks.map((task: any) => ({
+                        id: task._id,
+                        task: task.task_name,
+                        favorite: task.is_important,
+                        completed: task.is_completed,
+                        date: task.date,
+                        time: task.time,
+                        description: task.description,
+                    }));
+
+                    setTaskLists((prev) => {
+                        return prev.map((taskList) => {
+                            if (taskList.id === 'favorites') {
+                                // Add only favorite tasks to the "Favorites" tab
+                                return {
+                                    ...taskList,
+                                    tasks: [
+                                        ...taskList.tasks.filter(
+                                            (existingTask) =>
+                                                !tasks.some((task: Task) => task.id === existingTask.id)
+                                        ), // Avoid duplicates
+                                        ...tasks.filter((task: Task) => task.favorite),  // Only important tasks
+                                    ],
+                                };
+                            } else if (taskList.id === 'mylists') {
+                                // Add tasks to the "My Lists" tab, even if they are not important
+                                return {
+                                    ...taskList,
+                                    tasks: [
+                                        ...taskList.tasks.filter(
+                                            (existingTask) =>
+                                                !tasks.some((task: Task) => task.id === existingTask.id)
+                                        ), // Avoid duplicates
+                                        ...tasks,  // All tasks (important and not)
+                                    ],
+                                };
+                            } else if (taskList.id === list.id) {
+                                // Add non-favorite tasks to their respective lists
+                                return {
+                                    ...taskList,
+                                    tasks: tasks.filter((task: Task) => !task.favorite), // Non-favorite tasks
+                                };
+                            }
+                            return taskList;
+                        });
+                    });
+                } catch (error) {
+                    console.error(`Error fetching tasks for list ${list.id}:`, error);
+                    showNotification(`Failed to fetch tasks for list "${list.name}".`);
                 }
-            } catch (error) {
-                console.error('Error fetching task lists:', error);
-                showNotification('Failed to load task lists.');
             }
-        };
-    
-        fetchTaskLists();
-    }, [client]);
-    
+        } catch (error) {
+            console.error('Error fetching task lists:', error);
+            showNotification('Failed to load task lists.');
+        }
+    };
+
+    fetchTaskLists();
+}, [client]);
 
 
     const handleRenameList = async () => {
@@ -184,110 +220,155 @@ const TasksList = () => {
         setTaskDescription('');
     }
     
-    const deleteTask = (taskIndex: number) => {
+    const deleteTask = (taskId: string) => {
+        if (!activeList) return;
+    
         setTaskLists((prev) =>
-            prev.map((list, index) =>
-                index === selectedTabIndex
-                    ? {
-                          ...list,
-                          tasks: list.tasks.filter((_, i) => i !== taskIndex),
-                      }
+            prev.map((list) =>
+                list.id === activeList.id
+                    ? { ...list, tasks: list.tasks.filter((task) => task.id !== taskId) }
                     : list
             )
         );
-        showNotification('Task deleted!');
-    }
+    
+        showNotification('Task deleted successfully!');
+    };
+    
     
     const showNotification = (message: string) => {
         setNotification(message);
         setTimeout(() => setNotification(null), 3000);
     };
 
-    const fetchTaskDetails = async (taskId: string) => {
+    //Addto favorites function
+    const handleUpdateTaskImportant = async (taskId: string) => {
         try {
-            const response = await client.get(`/task-lists/tasks/${taskId}`);
-            const taskDetails = response.data;
-            setSelectedTaskDetails(taskDetails);
-            setTaskDetailsVisible(true);
-            
-            showNotification("Task Details Fetched");
+            const updatedTaskList = taskLists[selectedTabIndex];
+            const taskToUpdate = updatedTaskList?.tasks.find((task) => task.id === taskId);
+    
+            if (!taskToUpdate) {
+                showNotification('Error: Task not found!');
+                return;
+            }
+    
+            // Prepare request payload
+            const requestBody = {
+                task_name: taskToUpdate.task,
+                is_important: !taskToUpdate.favorite,
+                is_completed: taskToUpdate.completed,
+            };
+    
+            const response = await client.patch(`/task/update/${taskId}`, requestBody);
+    
+            if (response.status === 200) {
+                const updatedTask = response.data.taskToUpdate;
+                const isNowFavorite = updatedTask.is_important;
+    
+                setTaskLists((prev) =>
+                    prev.map((list, index) => {
+                        if (index === 0 && isNowFavorite) {
+                            // Add task to the "Favorites" tab (assumed to be index 0)
+                            return {
+                                ...list,
+                                tasks: [...list.tasks, { ...taskToUpdate, favorite: true }],
+                            };
+                        } else if (index === selectedTabIndex) {
+                            // Remove task from the current list if it's favorited
+                            return {
+                                ...list,
+                                tasks: list.tasks.filter((task) => task.id !== taskId),
+                            };
+                        }
+                        return list;
+                    })
+                );
+    
+                showNotification(isNowFavorite ? 'Task added to Favorites!' : 'Task removed from Favorites!');
+            } else {
+                showNotification('Failed to update task. Please try again.');
+            }
         } catch (error) {
-            console.error('Error fetching task details:', error);
-            showNotification('Failed to fetch task details. Please try again.');
+            console.error('Error updating task:', error);
+            showNotification('Failed to update task. Please try again.');
         }
-
-    }
-    const addToFavorites = (task: Task, sourceListIndex: number) => {
-        setTaskLists((prev) =>
-            prev.map((list, index) => {
-                if (list.type === 'default') {
-                    return { ...list, tasks: [...list.tasks, { ...task, favorite: true }] };
-                }
-                if (index === sourceListIndex) {
-                    return {
-                        ...list,
-                        tasks: list.tasks.filter((t) => t.task !== task.task),
-                    };
-                }
-                return list;
-            })
-        );
-        showNotification("Task added to favorites")
     };
-
-    const removeFromFavorites = (task: Task) => {
-        setTaskLists((prev) =>
-            prev.map((list) => {
-                if (list.type === 'default') {
-                    return {
-                        ...list,
-                        tasks: list.tasks.filter((t) => t.task !== task.task),
-                    };
-                }
-                if (list.type === 'ordinary') {
-                    return {
-                        ...list,
-                        tasks: [...list.tasks, { ...task, favorite: false }],
-                    };
-                }
-                return list;
-            })
-        );
-        showNotification('Task removed from favorites')
+    
+    const handleRemoveTaskFromFavorites = async (taskId: string) => {
+        try {
+            const updatedTaskList = taskLists[selectedTabIndex];
+            const taskToUpdate = updatedTaskList?.tasks.find((task) => task.id === taskId);
+    
+            if (!taskToUpdate) {
+                showNotification('Error: Task not found!');
+                return;
+            }
+    
+            // Prepare request payload
+            const requestBody = {
+                task_name: taskToUpdate.task,
+                is_important: false,  // Set as false to remove from favorites
+                is_completed: taskToUpdate.completed,
+            };
+    
+            const response = await client.patch(`/task/update/${taskId}`, requestBody);
+    
+            if (response.status === 200) {
+                const updatedTask = response.data.taskToUpdate;
+                const isNowFavorite = updatedTask.is_important;
+    
+                setTaskLists((prev) =>
+                    prev.map((list, index) => {
+                        if (index === 0 && !isNowFavorite) {
+                            // Remove task from "Favorites" tab if it is no longer a favorite
+                            return {
+                                ...list,
+                                tasks: list.tasks.filter((task) => task.id !== taskId),
+                            };
+                        } else if (index === selectedTabIndex) {
+                            // Add task back to its original list if it's no longer favorited
+                            return {
+                                ...list,
+                                tasks: [
+                                    ...list.tasks,
+                                    { ...taskToUpdate, favorite: false },
+                                ],
+                            };
+                        }
+                        return list;
+                    })
+                );
+    
+                showNotification(isNowFavorite ? 'Task added to Favorites!' : 'Task removed from Favorites!');
+            } else {
+                showNotification('Failed to update task. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error updating task:', error);
+            showNotification('Failed to update task. Please try again.');
+        }
     };
-
-    // const handleNewListSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    //     e.preventDefault();
-    //     if (!newListName.trim()) return;
-    //     setTaskLists((prev) => [
-    //         ...prev,
-    //         { name: newListName.trim(), tasks: [], type: 'ordinary' },
-    //     ]);
-        
-    //     setNewListName('');
-    //     setNewListVisible(false);
-    //     setSelectedTabIndex(taskLists.length); // Set to the newly created list index
-    //     showNotification('New list created!');
-    // };
-
+    
     const handleNewListSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!newListName.trim()) return;
     
         try {
-            const response = await client.post('/task-lists/create',{
-                task_list_name: newListName.trim()
+            const response = await client.post('/task-lists/create', {
+                task_list_name: newListName.trim(),
             });
-
+    
+            // Access the createdTaskList from the response
             const newList = {
-                id: response.data._id,
+                id: response.data.createdTaskList._id, // Use the correct _id here
                 name: newListName.trim(),
                 tasks: [],
-                type: 'ordinary' as const
+                type: 'ordinary' as const,
             };
-
-            setTaskLists((prev) => [...prev,newList]);
-            
+    
+            console.log('New List:', newList); // Check the newly created list
+    
+            setTaskLists((prev) => [...prev, newList]);
+    
             setNewListName('');
             setNewListVisible(false);
             setSelectedTabIndex(taskLists.length);
@@ -297,7 +378,6 @@ const TasksList = () => {
             showNotification('Failed to create new list. Please try again.');
         }
     };
-    
 
     const handleNewTaskSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -309,40 +389,40 @@ const TasksList = () => {
             showNotification('Error: Selected task list not found!');
             return;
         }
-        
-        const task_list_id = taskLists[selectedTabIndex]?.id; // Get the selected task list ID
+    
+        const task_list_id = selectedTaskList.id; // Get the selected task list ID
         const task_name = newTask;
-        
-        console.log('Task List ID:', task_list_id); // Log the task_list_id
-        console.log('Task Name:', task_name); // Optional: Log the task name for debugging
-        
-        if (!task_list_id) {
-            showNotification('Invalid task list selected.');
-            return;
-        }
     
         const requestBody = {
             task_list_id,
             task_name,
         };
-        
+        console.log('Request Payload:', requestBody);
+    
         try {
-            // Send task to the backend API
             const response = await client.post('/task/add', requestBody);
-            if (response.status === 200) {
+            console.log('Backend Response:', response);
+    
+            if (response.status === 200 && response.data?.addedTask) {
+                const addedTask = response.data.addedTask; // Extract the added task
+    
+                // Map _id to id and adjust other fields
                 const newTaskObj: Task = {
-                    task: newTask,
-                    completed: false,
-                    favorite: false,
-                    date: taskDate || '',
-                    time: taskTime || '',
-                    description: taskDescription,
+                    id: addedTask._id, // Correctly map _id to id
+                    task: addedTask.task_name,
+                    completed: addedTask.is_completed || false,
+                    favorite: addedTask.is_important || false,
+                    date: addedTask.due_date || '',
+                    time: addedTask.created_at || '', // Adjust time logic as needed
+                    description: addedTask.description || '',
                 };
+    
+                console.log(newTaskObj);
     
                 // Update local state with the new task
                 setTaskLists((prev) =>
-                    prev.map((list, index) =>
-                        index === selectedTabIndex
+                    prev.map((list) =>
+                        list.id === task_list_id
                             ? { ...list, tasks: [...list.tasks, newTaskObj] }
                             : list
                     )
@@ -356,7 +436,8 @@ const TasksList = () => {
     
                 showNotification('Task added successfully!');
             } else {
-                throw new Error('Failed to add task.');
+                console.error('Unexpected response format:', response.data);
+                throw new Error('Failed to retrieve task details from the response.');
             }
         } catch (error) {
             console.error('Error adding task:', error);
@@ -366,21 +447,25 @@ const TasksList = () => {
     
     const toggleNewListForm = () => setNewListVisible((prev) => !prev);
 
-    const toggleTaskCompletion = (taskIndex: number) => {
-        const task = taskLists[selectedTabIndex].tasks[taskIndex];
+    const toggleTaskCompletion = (taskId: string) => {
+        const taskIndex = activeList?.tasks.findIndex((task) => task.id === taskId);
+        if (taskIndex === undefined || taskIndex < 0) {
+            showNotification('Error: Task not found.');
+            return;
+        }
+    
+        const task = activeList.tasks[taskIndex];
         const message = task.completed
             ? `Task "${task.task}" marked as incomplete.`
             : `Task "${task.task}" marked as completed.`;
     
         setTaskLists((prev) =>
-            prev.map((list, listIndex) =>
-                listIndex === selectedTabIndex
+            prev.map((list) =>
+                list.id === activeList.id
                     ? {
                           ...list,
-                          tasks: list.tasks.map((task, index) =>
-                              index === taskIndex
-                                  ? { ...task, completed: !task.completed }
-                                  : task
+                          tasks: list.tasks.map((t) =>
+                              t.id === taskId ? { ...t, completed: !t.completed } : t
                           ),
                       }
                     : list
@@ -389,6 +474,7 @@ const TasksList = () => {
     
         showNotification(message);
     };
+    
 
     return (
         <Box className="tasks-list" width="100%" cursor="pointer">
@@ -396,24 +482,27 @@ const TasksList = () => {
 
             {/* Tab Header */}
             <Flex className="tabs-container" borderBottom="1px solid #ddd" gap="20px">
-                {taskLists.map((list, index) => (
-                    <Box
-                        key={index}
-                        className={`tasks-tab ${index === selectedTabIndex ? 'selected' : ''}`}
-                        onClick={() => {
-                            setSelectedTabIndex(index); 
-                            setNewListVisible(false); // Reset the form visibility
-                        }}   
-                    >
-                        {list.name === 'My Lists' ? (
-                            <Text>My List</Text> // Display "My List" for the My Lists tab
-                        ) : list.name === 'Favorite' ? (
-                            <Icon name="bxs-star" className="important-icon" /> 
-                        ) : (
-                            <Text>{list.name}</Text> // Display fetched tab names for other tabs
-                        )}
-                    </Box>
-                ))}
+            {taskLists.map((list) => (
+                <Box
+                    key={list.id}
+                    className={`tasks-tab ${list.id === taskLists[selectedTabIndex]?.id ? 'selected' : ''}`}
+                    onClick={() => {
+                        const selectedIndex = taskLists.findIndex((item) => item.id === list.id);
+                        console.log(list.id);
+                        setSelectedTabIndex(selectedIndex); 
+                        setNewListVisible(false); // Reset the form visibility
+                    }}
+                >
+                    {list.name === 'My Lists' ? (
+                        <Text>My List</Text> // Display "My List" for the My Lists tab
+                    ) : list.name === 'Favorite' ? (
+                        <Icon name="bxs-star" className="important-icon" /> 
+                    ) : (
+                        <Text>{list.name}</Text> // Display fetched tab names for other tabs
+                    )}
+                </Box>
+            ))}
+
                 <Box className="tasks-tab new-list-btn" onClick={toggleNewListForm}>
                     <Icon name="bx-plus" />
                     <Text>New List</Text>
@@ -526,26 +615,19 @@ const TasksList = () => {
                     </Box>
                 )}
 
-                <Box as="ul" >
+                <Box as="ul">
                     {activeList.tasks
                         .map((task, index) => ({ task, index }))
                         .filter(({ task }) => !task.completed)
                         .map(({ task, index }) => (
-                            <Flex 
-                                as="li" 
-                                key={index} 
-                                alignItems="center"
-                            >
-                                <Box onClick={() => 
-                                    toggleTaskCompletion(index)} 
-                                    cursor="pointer"
-                                >
+                            <Flex as="li" key={index} alignItems="center">
+                                <Box onClick={() => toggleTaskCompletion(index)} cursor="pointer">
                                     <Icon
                                         name={task.completed ? 'bxs-circle' : 'bx-circle'}
                                         className="task-circle-icon"
                                     />
                                 </Box>
-                                
+
                                 <Flex direction='column' ml="10px">
                                     <Text>{task.task}</Text>
                                     {task.date && (
@@ -554,7 +636,7 @@ const TasksList = () => {
                                         </Text>
                                     )}
                                 </Flex>
-                                
+
                                 <Flex ml="auto" gap="10px" alignItems="center">
                                     <Box
                                         ml="auto"
@@ -563,18 +645,18 @@ const TasksList = () => {
                                     >
                                         <Icon name="bx-trash" className="favorite-icon" />
                                     </Box>
-                                    
+
                                     <Box
                                         ml="auto"
                                         onClick={() =>
                                             task.favorite
-                                                ? removeFromFavorites(task)
-                                                : addToFavorites(task, selectedTabIndex)
+                                                ? handleRemoveTaskFromFavorites(task.id)
+                                                : handleUpdateTaskImportant(task.id) // Pass task.id here
                                         }
                                         cursor={'pointer'}
                                     >
                                         <Icon
-                                            name={task.favorite ? 'bxs-star' : 'bx-star'}
+                                            name={task.favorite ? 'bxs-star' : 'bx-star'} // Render filled star if favorite is true
                                             className="favorite-icon"
                                         />
                                     </Box>
@@ -582,6 +664,7 @@ const TasksList = () => {
                             </Flex>
                         ))}
                 </Box>
+
             </Box>
 
             <Box className="completed-tasks">
