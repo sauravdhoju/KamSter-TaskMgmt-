@@ -784,12 +784,12 @@ useEffect(() => {
                 {completedVisible && (
                     <Box as="ul">
                         {activeList.tasks
-                            .map((task, index) => ({ task, index }))
+                            .map((task) => ({ task }))
                             .filter(({ task }) => task.completed)
-                            .map(({ task, index }) => (
+                            .map(({ task }) => (
                                 <Flex 
                                     as="li" 
-                                    key={index} 
+                                    key={task.id} 
                                     alignItems="center"
                                     >
                                     <Icon name="bx-check-circle" className="completed-icon" />
@@ -797,7 +797,7 @@ useEffect(() => {
                                         ml="10px"
                                         textDecoration="line-through"
                                         color="gray.500"
-                                        onClick={() => toggleTaskCompletion(index)}
+                                        onClick={() => toggleTaskCompletion(task.id)}
                                         cursor="pointer"
                                     >
                                         {task.task}
