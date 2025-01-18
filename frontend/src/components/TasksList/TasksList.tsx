@@ -53,9 +53,7 @@ const TasksList = () => {
     const [taskDescription, setTaskDescription] = useState('');
 
     const activeList = taskLists?.[selectedTabIndex] ?? { name: '', tasks: [] };
-
     const completedCount = activeList.tasks.filter((task) => task.completed).length;
-    
     const {client} = useBackendAPIContext();
 
 useEffect(() => {
@@ -240,7 +238,6 @@ useEffect(() => {
         setTimeout(() => setNotification(null), 3000);
     };
 
-    //Addto favorites function
     const handleUpdateTaskImportant = async (taskId: string) => {
         try {
             const updatedTaskList = taskLists[selectedTabIndex];
@@ -448,32 +445,105 @@ useEffect(() => {
     const toggleNewListForm = () => setNewListVisible((prev) => !prev);
 
     const toggleTaskCompletion = (taskId: string) => {
-        const taskIndex = activeList?.tasks.findIndex((task) => task.id === taskId);
-        if (taskIndex === undefined || taskIndex < 0) {
+        console.log('Toggling task completion for taskId:', taskId);
+    
+        let taskToUpdate;
+        let listIndex = -1;
+    
+        // Search through all lists to find the task and its list index
+        for (let i = 0; i < taskLists.length; i++) {
+            const list = taskLists[i];
+            console.log('Checking list:', list.id);
+    
+            const task = list.tasks.find((t) => {
+                console.log(`Comparing task.id: ${t.id} with taskId: ${taskId}`);  // Log task comparison
+                return t.id === taskId;
+            });
+    
+            if (task) {
+                taskToUpdate = task;
+                listIndex = i;
+                break;
+            }
+        }
+    
+        if (!taskToUpdate) {
+            console.error('Error: Task not found in any list.');
             showNotification('Error: Task not found.');
             return;
         }
     
-        const task = activeList.tasks[taskIndex];
-        const message = task.completed
-            ? `Task "${task.task}" marked as incomplete.`
-            : `Task "${task.task}" marked as completed.`;
+        console.log('Found task:', taskToUpdate);
+    
+        const updatedTask = {
+            ...taskToUpdate,
+            completed: !taskToUpdate.completed,
+        };
     
         setTaskLists((prev) =>
-            prev.map((list) =>
-                list.id === activeList.id
+            prev.map((list, index) =>
+                index === listIndex
                     ? {
                           ...list,
                           tasks: list.tasks.map((t) =>
-                              t.id === taskId ? { ...t, completed: !t.completed } : t
+                              t.id === taskId ? { ...t, completed: updatedTask.completed } : t
                           ),
                       }
                     : list
             )
         );
     
-        showNotification(message);
+        // Send the update request to the backend
+        client
+            .patch(`/task/update/${taskId}`, {
+                task_name: updatedTask.task,
+                is_important: updatedTask.favorite,
+                is_completed: updatedTask.completed,
+            })
+            .then((response) => {
+                if (response.status === 200) {
+                    const message = updatedTask.completed
+                        ? `Task "${updatedTask.task}" marked as completed.`
+                        : `Task "${updatedTask.task}" marked as incomplete.`;
+    
+                    showNotification(message);
+                } else {
+                    // In case backend fails, revert the optimistic update
+                    setTaskLists((prev) =>
+                        prev.map((list, index) =>
+                            index === listIndex
+                                ? {
+                                      ...list,
+                                      tasks: list.tasks.map((t) =>
+                                          t.id === taskId ? { ...t, completed: !updatedTask.completed } : t
+                                      ),
+                                  }
+                                : list
+                        )
+                    );
+                    showNotification('Failed to update task. Please try again.');
+                }
+            })
+            .catch((error) => {
+                console.error('Error updating task completion:', error);
+                // In case of error, revert the optimistic update
+                setTaskLists((prev) =>
+                    prev.map((list, index) =>
+                        index === listIndex
+                            ? {
+                                  ...list,
+                                  tasks: list.tasks.map((t) =>
+                                      t.id === taskId ? { ...t, completed: !updatedTask.completed } : t
+                                  ),
+                              }
+                            : list
+                    )
+                );
+                showNotification('Failed to update task. Please try again.');
+            });
     };
+    
+    
     
 
     return (
@@ -617,11 +687,11 @@ useEffect(() => {
 
                 <Box as="ul">
                     {activeList.tasks
-                        .map((task, index) => ({ task, index }))
+                        .map((task) => ({ task }))
                         .filter(({ task }) => !task.completed)
-                        .map(({ task, index }) => (
-                            <Flex as="li" key={index} alignItems="center">
-                                <Box onClick={() => toggleTaskCompletion(index)} cursor="pointer">
+                        .map(({ task }) => (
+                            <Flex as="li" key={task.id} alignItems="center">
+                                <Box onClick={() => toggleTaskCompletion(task.id)} cursor="pointer">
                                     <Icon
                                         name={task.completed ? 'bxs-circle' : 'bx-circle'}
                                         className="task-circle-icon"
