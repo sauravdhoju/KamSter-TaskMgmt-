@@ -218,8 +218,15 @@ useEffect(() => {
         setTaskDescription('');
     }
     
-    const deleteTask = (taskId: string) => {
+    const deleteTask = async (taskId: string) => {
         if (!activeList) return;
+    
+        const taskToDelete = activeList.tasks.find((task) => task.id === taskId);
+        
+        if (!taskToDelete) {
+            showNotification('Task not found.');
+            return;
+        }
     
         setTaskLists((prev) =>
             prev.map((list) =>
@@ -229,8 +236,36 @@ useEffect(() => {
             )
         );
     
-        showNotification('Task deleted successfully!');
+        try {
+            const response = await client.delete(`/task/delete/${taskId}`);
+    
+            if (response.status === 200) {
+                showNotification('Task deleted successfully!');
+            } else {
+                setTaskLists((prev) =>
+                    prev.map((list) =>
+                        list.id === activeList.id
+                            ? { ...list, tasks: [...list.tasks, taskToDelete] }
+                            : list
+                    )
+                );
+                showNotification('Failed to delete task. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error deleting task:', error);
+    
+            // Restore the task in case of an error
+            setTaskLists((prev) =>
+                prev.map((list) =>
+                    list.id === activeList.id
+                        ? { ...list, tasks: [...list.tasks, taskToDelete] }
+                        : list
+                )
+            );
+            showNotification('Failed to delete task. Please try again.');
+        }
     };
+    
     
     
     const showNotification = (message: string) => {
@@ -710,7 +745,7 @@ useEffect(() => {
                                 <Flex ml="auto" gap="10px" alignItems="center">
                                     <Box
                                         ml="auto"
-                                        onClick={() => deleteTask(index)}
+                                        onClick={() => deleteTask(task.id)}
                                         cursor={'pointer'}
                                     >
                                         <Icon name="bx-trash" className="favorite-icon" />
