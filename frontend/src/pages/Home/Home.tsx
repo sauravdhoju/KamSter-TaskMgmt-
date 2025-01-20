@@ -6,9 +6,10 @@ import MonthGrid from '../../components/MonthGrid/MonthGrid';
 import './Home.scss';
 import PageContainer from '../../components/PageContainer/PageContainer';
 import { lastDayOfMonth } from 'date-fns';
-import axios from 'axios';
+import { useBackendAPIContext } from '../../contexts/BackendAPIContext/BackendAPIContext';
 
 const Home: React.FC = () => {
+    const { client } = useBackendAPIContext();
     const { currentViewDate } = useCalendarContext();
     const months3L: (
         | 'Jan'
@@ -24,9 +25,21 @@ const Home: React.FC = () => {
         | 'Nov'
         | 'Dec'
     )[] = [
-        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
     ];
 
+    const [taskLists, setTaskLists] = useState([]);
     const [taskCounts, setTaskCounts] = useState({
         totalTasks: 0,
         ongoingTasks: 0,
@@ -34,62 +47,42 @@ const Home: React.FC = () => {
         overdueTasks: 0,
     });
 
+    const fetchTaskLists = async () => {
+        try {
+            client.get('/task-lists/get').then((res) => {
+                setTaskLists(res.data.taskLists);
+            }); // Update with your endpoint for task lists
+        } catch (error) {
+            console.error(error);
+        }
+    };
+    const fetchTasks = async (id: string) => {
+        try {
+            client.get(`task-lists/tasks/${id}/`).then((res) => {
+                setTaskCounts((prev) => {
+                    return {
+                        ...prev,
+                        totalTasks: prev.totalTasks + res.data.tasks.length,
+                    };
+                });
+            }); // Update with your endpoint for task lists
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     // Fetch task lists and then tasks from each list
     useEffect(() => {
-        const fetchTaskData = async () => {
-            try {
-                // Step 1: Fetch all task lists
-                const taskListsResponse = await axios.get('/task-lists/get'); // Update with your endpoint for task lists
-                if (taskListsResponse.status === 200) {
-                    const taskLists = taskListsResponse.data; // Assuming it returns an array of task lists
-                    const today = new Date();
-                    let total = 0;
-                    let ongoing = 0;
-                    let completed = 0;
-                    let overdue = 0;
-
-                    // Step 2: For each task list, fetch tasks
-                    for (const list of taskLists) {
-                        const tasksResponse = await axios.get(`/task-lists/tasks/${list.id}`); // Update with your endpoint for tasks in a list
-                        if (tasksResponse.status === 200) {
-                            const tasks = tasksResponse.data; // Assuming it returns an array of tasks for the list
-
-                            tasks.forEach((task) => {
-                                // Total tasks count
-                                total += 1;
-
-                                // Ongoing tasks (scheduled for today)
-                                if (new Date(task.date).toDateString() === today.toDateString()) {
-                                    ongoing += 1;
-                                }
-
-                                // Completed tasks
-                                if (task.is_completed) {
-                                    completed += 1;
-                                }
-
-                                // Overdue tasks (tasks due before today and not completed)
-                                if (new Date(task.date) < today && !task.is_completed) {
-                                    overdue += 1;
-                                }
-                            });
-                        }
-                    }
-
-                    setTaskCounts({
-                        totalTasks: total,
-                        ongoingTasks: ongoing,
-                        completedTasks: completed,
-                        overdueTasks: overdue,
-                    });
-                }
-            } catch (error) {
-                console.error('Error fetching task data:', error);
-            }
-        };
-
-        fetchTaskData();
+        fetchTaskLists();
     }, []);
+
+    useEffect(() => {
+        if (taskLists.length > 0) {
+            taskLists.map(async (taskList: { _id: string }) => {
+                fetchTasks(taskList._id);
+            });
+        }
+    }, taskLists);
 
     return (
         <PageContainer>
@@ -162,7 +155,9 @@ const Home: React.FC = () => {
                                     )
                                 }
                                 monthName={months3L[currentViewDate.getMonth()]}
-                                numberOfDays={lastDayOfMonth(currentViewDate).getDate()}
+                                numberOfDays={lastDayOfMonth(
+                                    currentViewDate
+                                ).getDate()}
                             />
                         </Box>
                     </div>
