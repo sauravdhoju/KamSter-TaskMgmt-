@@ -51,38 +51,60 @@ const Home: React.FC = () => {
         try {
             client.get('/task-lists/get').then((res) => {
                 setTaskLists(res.data.taskLists);
-            }); // Update with your endpoint for task lists
-        } catch (error) {
-            console.error(error);
-        }
-    };
-    const fetchTasks = async (id: string) => {
-        try {
-            client.get(`task-lists/tasks/${id}/`).then((res) => {
-                setTaskCounts((prev) => {
-                    return {
-                        ...prev,
-                        totalTasks: prev.totalTasks + res.data.tasks.length,
-                    };
-                });
-            }); // Update with your endpoint for task lists
+                console.log(res.data.taskLists);
+            });
         } catch (error) {
             console.error(error);
         }
     };
 
-    // Fetch task lists and then tasks from each list
+    interface Task {
+        is_completed: boolean;
+        due_date: string; 
+    }
+
+    const fetchTasks = async (id: string) => {
+        try {
+            client.get(`task-lists/tasks/${id}/`).then((res) => {
+                const tasks: Task[] = res.data.tasks;
+                const currentDate = new Date();
+
+                const ongoingTasks = tasks.filter((task) => !task.is_completed).length;
+                const completedTasks = tasks.filter((task) => task.is_completed).length;
+                const totalTasks = tasks.length;
+
+                const overdueTasks = tasks.filter(
+                    (task) =>
+                        !task.is_completed &&
+                        new Date(task.due_date) < currentDate
+                ).length;
+
+                setTaskCounts((prev) => ({
+                    ...prev,
+                    totalTasks: prev.totalTasks + totalTasks,
+                    ongoingTasks: prev.ongoingTasks + ongoingTasks,
+                    completedTasks: prev.completedTasks + completedTasks,
+                    overdueTasks: prev.overdueTasks + overdueTasks, 
+                }));
+
+                console.log(res.data.tasks);
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     useEffect(() => {
         fetchTaskLists();
     }, []);
 
     useEffect(() => {
         if (taskLists.length > 0) {
-            taskLists.map(async (taskList: { _id: string }) => {
+            taskLists.forEach(async (taskList: { _id: string }) => {
                 fetchTasks(taskList._id);
             });
         }
-    }, taskLists);
+    }, [taskLists.length]);
 
     return (
         <PageContainer>
@@ -122,7 +144,7 @@ const Home: React.FC = () => {
                             <h3>{taskCounts.totalTasks}</h3>
                         </div>
                         <div className='task-item'>
-                            <p>Ongoing Tasks</p>
+                            <p>Incomplete Tasks</p>
                             <h3>{taskCounts.ongoingTasks}</h3>
                         </div>
                         <div className='task-item'>
