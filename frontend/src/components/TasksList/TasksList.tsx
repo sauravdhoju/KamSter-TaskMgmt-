@@ -21,7 +21,7 @@ const TasksList = () => {
         task: string;
         favorite: boolean;
         completed: boolean;
-        date: string;
+        due_date: string;
         time: string;
         description: string;
     }
@@ -418,7 +418,7 @@ const TasksList = () => {
                     task: addedTask.task_name,
                     completed: addedTask.is_completed || false,
                     favorite: addedTask.is_important || false,
-                    date: addedTask.due_date || '',
+                    due_date: addedTask.due_date || '',
                     time: addedTask.created_at || '', // Adjust time logic as needed
                     description: addedTask.description || '',
                 };
@@ -682,59 +682,68 @@ const TasksList = () => {
                             </Flex>
                         </form>
                     </Box>
-                )}
+                )}<Box as="ul">
+                {activeList.tasks
+                    .map((task) => ({ task }))
+                    .filter(({ task }) => !task.completed)
+                    .map(({ task }) => (
+                        <Flex as="li" key={task.id} alignItems="center">
+                            <Box onClick={() => toggleTaskCompletion(task.id)} cursor="pointer">
+                                <Icon
+                                    name={task.completed ? 'bxs-circle' : 'bx-circle'}
+                                    className="task-circle-icon"
+                                />
+                            </Box>
+            
+                            <Flex direction='column' ml="10px">
+                                <Text>{task.task}</Text>
+                                {task.due_date && !isNaN(new Date(task.due_date).getTime()) && (
+                                    <Text fontSize="sm" color="gray.500">
+                                        Due Date: {new Date(task.due_date).toLocaleDateString()}
+                                    </Text>
+                                )}
 
-                <Box as="ul">
-                    {activeList.tasks
-                        .map((task) => ({ task }))
-                        .filter(({ task }) => !task.completed)
-                        .map(({ task }) => (
-                            <Flex as="li" key={task.id} alignItems="center">
-                                <Box onClick={() => toggleTaskCompletion(task.id)} cursor="pointer">
+            
+                                {/* Limit description to 100 characters */}
+                                {task.description && (
+                                    <Text fontSize="sm" color="gray.500">
+                                        Description: {task.description.length > 100 
+                                            ? `${task.description.slice(0, 100)}...`
+                                            : task.description}
+                                    </Text>
+                                )}
+                            </Flex>
+            
+                            <Flex ml="auto" gap="10px" alignItems="center">
+                                <Box
+                                    ml="auto"
+                                    onClick={() => deleteTask(task.id)}
+                                    cursor={'pointer'}
+                                >
+                                    <Icon name="bx-trash" className="favorite-icon" />
+                                </Box>
+            
+                                <Box
+                                    ml="auto"
+                                    onClick={() =>
+                                        task.favorite
+                                            ? handleRemoveTaskFromFavorites(task.id)
+                                            : handleUpdateTaskImportant(task.id)
+                                    }
+                                    cursor={'pointer'}
+                                >
                                     <Icon
-                                        name={task.completed ? 'bxs-circle' : 'bx-circle'}
-                                        className="task-circle-icon"
+                                        name={task.favorite ? 'bxs-star' : 'bx-star'}
+                                        className="favorite-icon"
                                     />
                                 </Box>
-
-                                <Flex direction='column' ml="10px">
-                                    <Text>{task.task}</Text>
-                                    {task.date && (
-                                        <Text fontSize="sm" color="gray.500">
-                                            Date: {task.date} {task.time && `Time: ${task.time}`}
-                                        </Text>
-                                    )}
-                                </Flex>
-
-                                <Flex ml="auto" gap="10px" alignItems="center">
-                                    <Box
-                                        ml="auto"
-                                        onClick={() => deleteTask(task.id)}
-                                        cursor={'pointer'}
-                                    >
-                                        <Icon name="bx-trash" className="favorite-icon" />
-                                    </Box>
-
-                                    <Box
-                                        ml="auto"
-                                        onClick={() =>
-                                            task.favorite
-                                                ? handleRemoveTaskFromFavorites(task.id)
-                                                : handleUpdateTaskImportant(task.id) // Pass task.id here
-                                        }
-                                        cursor={'pointer'}
-                                    >
-                                        <Icon
-                                            name={task.favorite ? 'bxs-star' : 'bx-star'} // Render filled star if favorite is true
-                                            className="favorite-icon"
-                                        />
-                                    </Box>
-                                </Flex>
                             </Flex>
-                        ))}
-                </Box>
-
+                        </Flex>
+                    ))}
             </Box>
+            
+            </Box>
+
 
             <Box className="completed-tasks">
                 <Flex
