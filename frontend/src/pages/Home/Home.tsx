@@ -51,7 +51,6 @@ const Home: React.FC = () => {
         try {
             client.get('/task-lists/get').then((res) => {
                 setTaskLists(res.data.taskLists);
-                console.log(res.data.taskLists);
             });
         } catch (error) {
             console.error(error);
@@ -87,11 +86,14 @@ const Home: React.FC = () => {
                     overdueTasks: prev.overdueTasks + overdueTasks, 
                 }));
 
-                console.log(res.data.tasks);
             });
         } catch (error) {
             console.error(error);
         }
+    };
+
+    const handleAddTaskClick = () => {
+        console.log('Add Task Clicked');
     };
 
     useEffect(() => {
@@ -133,7 +135,12 @@ const Home: React.FC = () => {
                                 <button className='schedule-btn'>
                                     Today's Schedule
                                 </button>
-                                <button className='add-btn'>Add Task</button>
+                                <button 
+                                    className='add-btn'
+                                    onClick={handleAddTaskClick}
+                                >
+                                    Add Task
+                                </button>
                             </Box>
                         </Box>
                     </Box>
