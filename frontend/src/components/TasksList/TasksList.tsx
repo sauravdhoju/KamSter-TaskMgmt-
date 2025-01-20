@@ -55,8 +55,6 @@ const TasksList = () => {
     const activeList = taskLists?.[selectedTabIndex] ?? { name: '', tasks: [] };
     const completedCount = activeList.tasks.filter((task) => task.completed).length;
     const {client} = useBackendAPIContext();
-
-useEffect(() => {
     const fetchTaskLists = async () => {
         try {
             const response = await client.get('/task-lists/get');
@@ -146,9 +144,6 @@ useEffect(() => {
         }
     };
 
-    fetchTaskLists();
-}, [client]);
-
 
     const handleRenameList = async () => {
         const newListName = prompt("Enter new list name:", activeList.name);
@@ -202,7 +197,6 @@ useEffect(() => {
         }
     }
 
-    
     const handleAddTaskClick = () => {
         setIsAddTaskVisible(!isAddTaskVisible);
         setIsBackgroundDimmed(!isBackgroundDimmed);
@@ -265,8 +259,6 @@ useEffect(() => {
             showNotification('Failed to delete task. Please try again.');
         }
     };
-    
-    
     
     const showNotification = (message: string) => {
         setNotification(message);
@@ -347,29 +339,7 @@ useEffect(() => {
             if (response.status === 200) {
                 const updatedTask = response.data.taskToUpdate;
                 const isNowFavorite = updatedTask.is_important;
-    
-                setTaskLists((prev) =>
-                    prev.map((list, index) => {
-                        if (index === 0 && !isNowFavorite) {
-                            // Remove task from "Favorites" tab if it is no longer a favorite
-                            return {
-                                ...list,
-                                tasks: list.tasks.filter((task) => task.id !== taskId),
-                            };
-                        } else if (index === selectedTabIndex) {
-                            // Add task back to its original list if it's no longer favorited
-                            return {
-                                ...list,
-                                tasks: [
-                                    ...list.tasks,
-                                    { ...taskToUpdate, favorite: false },
-                                ],
-                            };
-                        }
-                        return list;
-                    })
-                );
-    
+                fetchTaskLists();
                 showNotification(isNowFavorite ? 'Task added to Favorites!' : 'Task removed from Favorites!');
             } else {
                 showNotification('Failed to update task. Please try again.');
@@ -424,10 +394,14 @@ useEffect(() => {
     
         const task_list_id = selectedTaskList.id; // Get the selected task list ID
         const task_name = newTask;
+        const due_date = taskDate;
+        const description = taskDescription;
     
         const requestBody = {
             task_list_id,
             task_name,
+            due_date,
+            description,
         };
         console.log('Request Payload:', requestBody);
     
@@ -514,19 +488,7 @@ useEffect(() => {
             ...taskToUpdate,
             completed: !taskToUpdate.completed,
         };
-    
-        setTaskLists((prev) =>
-            prev.map((list, index) =>
-                index === listIndex
-                    ? {
-                          ...list,
-                          tasks: list.tasks.map((t) =>
-                              t.id === taskId ? { ...t, completed: updatedTask.completed } : t
-                          ),
-                      }
-                    : list
-            )
-        );
+        fetchTaskLists();
     
         // Send the update request to the backend
         client
@@ -578,8 +540,10 @@ useEffect(() => {
             });
     };
     
+    useEffect(() => {
     
-    
+        fetchTaskLists();
+    }, [client]);
 
     return (
         <Box className="tasks-list" width="100%" cursor="pointer">

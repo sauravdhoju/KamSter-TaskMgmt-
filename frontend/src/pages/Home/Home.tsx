@@ -1,12 +1,12 @@
+import React, { useEffect, useState } from 'react';
 import { Image, Box } from '@chakra-ui/react';
-
 import { useCalendarContext } from '../../contexts/CalendarContext/CalendarContext';
-
 import TasksList from '../../components/TasksList/TasksList';
 import MonthGrid from '../../components/MonthGrid/MonthGrid';
 import './Home.scss';
 import PageContainer from '../../components/PageContainer/PageContainer';
 import { lastDayOfMonth } from 'date-fns';
+import axios from 'axios';
 
 const Home: React.FC = () => {
     const { currentViewDate } = useCalendarContext();
@@ -24,24 +24,72 @@ const Home: React.FC = () => {
         | 'Nov'
         | 'Dec'
     )[] = [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec',
+        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
     ];
 
-    const totalTasks = 32;
-    const ongoingTasks = 32;
-    const completedTasks = 32;
-    const overdueTasks = 32;
+    const [taskCounts, setTaskCounts] = useState({
+        totalTasks: 0,
+        ongoingTasks: 0,
+        completedTasks: 0,
+        overdueTasks: 0,
+    });
+
+    // Fetch task lists and then tasks from each list
+    useEffect(() => {
+        const fetchTaskData = async () => {
+            try {
+                // Step 1: Fetch all task lists
+                const taskListsResponse = await axios.get('/task-lists/get'); // Update with your endpoint for task lists
+                if (taskListsResponse.status === 200) {
+                    const taskLists = taskListsResponse.data; // Assuming it returns an array of task lists
+                    const today = new Date();
+                    let total = 0;
+                    let ongoing = 0;
+                    let completed = 0;
+                    let overdue = 0;
+
+                    // Step 2: For each task list, fetch tasks
+                    for (const list of taskLists) {
+                        const tasksResponse = await axios.get(`/task-lists/tasks/${list.id}`); // Update with your endpoint for tasks in a list
+                        if (tasksResponse.status === 200) {
+                            const tasks = tasksResponse.data; // Assuming it returns an array of tasks for the list
+
+                            tasks.forEach((task) => {
+                                // Total tasks count
+                                total += 1;
+
+                                // Ongoing tasks (scheduled for today)
+                                if (new Date(task.date).toDateString() === today.toDateString()) {
+                                    ongoing += 1;
+                                }
+
+                                // Completed tasks
+                                if (task.is_completed) {
+                                    completed += 1;
+                                }
+
+                                // Overdue tasks (tasks due before today and not completed)
+                                if (new Date(task.date) < today && !task.is_completed) {
+                                    overdue += 1;
+                                }
+                            });
+                        }
+                    }
+
+                    setTaskCounts({
+                        totalTasks: total,
+                        ongoingTasks: ongoing,
+                        completedTasks: completed,
+                        overdueTasks: overdue,
+                    });
+                }
+            } catch (error) {
+                console.error('Error fetching task data:', error);
+            }
+        };
+
+        fetchTaskData();
+    }, []);
 
     return (
         <PageContainer>
@@ -78,31 +126,23 @@ const Home: React.FC = () => {
                     <div className='task-status-container'>
                         <div className='task-item'>
                             <p>Total Tasks</p>
-                            {/* <p className="all-label">All</p> */}
-                            <h3>{totalTasks}</h3>
-                            {/* <span className="percent-change">10% ↑</span> */}
+                            <h3>{taskCounts.totalTasks}</h3>
                         </div>
                         <div className='task-item'>
                             <p>Ongoing Tasks</p>
-                            {/* <p className="all-label">All</p> */}
-                            <h3>{ongoingTasks}</h3>
+                            <h3>{taskCounts.ongoingTasks}</h3>
                         </div>
                         <div className='task-item'>
                             <p>Completed Tasks</p>
-                            {/* <p className="all-label">All</p> */}
-                            <h3>{completedTasks}</h3>
+                            <h3>{taskCounts.completedTasks}</h3>
                         </div>
                         <div className='task-item'>
                             <p>Overdue Tasks</p>
-                            {/* <p className="all-label">All</p> */}
-                            <h3>{overdueTasks}</h3>
+                            <h3>{taskCounts.overdueTasks}</h3>
                         </div>
                     </div>
 
                     <div className='future-container'>
-                        {/* <div className='upcoming-tasks'>
-                            <h3>Upcoming Tasks: </h3>
-                        </div> */}
                         <Box
                             bgColor={'#fff'}
                             padding={'10px'}
@@ -113,26 +153,6 @@ const Home: React.FC = () => {
                         </Box>
 
                         <Box className='calendar'>
-                            {/* <h4>
-                                {currentDate.toLocaleString('default', {
-                                    month: 'long',
-                                    year: 'numeric',
-                                })}
-                            </h4>
-                            <div className='calendar-grid'>
-                                <div className='day'>Sun</div>
-                                <div className='day'>Mon</div>
-                                <div className='day'>Tue</div>
-                                <div className='day'>Wed</div>
-                                <div className='day'>Thu</div>
-                                <div className='day'>Fri</div>
-                                <div className='day'>Sat</div>
-                                {[...Array(31)].map((_, i) => (
-                                    <div key={i} className='date'>
-                                        {i + 1}
-                                    </div>
-                                ))}
-                            </div> */}
                             <MonthGrid
                                 associatedDate={
                                     new Date(
@@ -142,9 +162,7 @@ const Home: React.FC = () => {
                                     )
                                 }
                                 monthName={months3L[currentViewDate.getMonth()]}
-                                numberOfDays={lastDayOfMonth(
-                                    currentViewDate
-                                ).getDate()}
+                                numberOfDays={lastDayOfMonth(currentViewDate).getDate()}
                             />
                         </Box>
                     </div>
