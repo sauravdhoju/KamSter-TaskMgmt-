@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './Sidebar.scss';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { Box, Flex, Image } from '@chakra-ui/react';
 import Icon from '../Icon/Icon';
+import { useBackendAPIContext } from '../../contexts/BackendAPIContext/BackendAPIContext';
 
 type SidebarTypes = {
     isSideBarOpen: boolean;
@@ -13,12 +14,26 @@ type SidebarTypes = {
 const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }: SidebarTypes) => {
     const navigate = useNavigate();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [userEmail, setUserEmail] = useState<string | null>(null);
+    const { client } = useBackendAPIContext();
+
 
     const toggleSidebar = () => {
         setIsSideBarOpen(!isSideBarOpen);
     };
 
-    const userEmail = 'jinaa@gmail.com';
+    // Fetch User Email
+    const fetchUserEmail = async () => {
+        try {
+            const response = await client.get('/user'); // Adjust API base URL as needed
+            const email = response.data?.user?.email;
+            if (email) setUserEmail(email);
+        } catch (error) {
+            console.error('Error fetching user email:', error);
+        }
+    };
+
+    // const userEmail = 'jinaa@gmail.com';
     const isUserLoggedIn = true;
 
     const sidebarLinks = [
@@ -43,6 +58,10 @@ const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }: SidebarTypes) => {
             icon: 'bx-chalkboard',
         },
     ];
+
+    useEffect(() => {
+        fetchUserEmail();
+    }, []);
 
     return (
         <Box className={`sidebar ${isSideBarOpen ? 'open' : 'collapsed'}`}>
@@ -93,7 +112,7 @@ const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }: SidebarTypes) => {
                         isSideBarOpen ? '' : 'bar-item-collapsed'
                     }`}
                 >
-                    {userEmail}
+                    {userEmail || 'Loading...'}
                 </p>
             </Flex>
 
