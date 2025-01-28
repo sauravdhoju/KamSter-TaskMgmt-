@@ -1,14 +1,15 @@
+import React, { useEffect, useState } from 'react';
 import { Image, Box } from '@chakra-ui/react';
-
 import { useCalendarContext } from '../../contexts/CalendarContext/CalendarContext';
-
 import TasksList from '../../components/TasksList/TasksList';
 import MonthGrid from '../../components/MonthGrid/MonthGrid';
 import './Home.scss';
 import PageContainer from '../../components/PageContainer/PageContainer';
 import { lastDayOfMonth } from 'date-fns';
+import { useBackendAPIContext } from '../../contexts/BackendAPIContext/BackendAPIContext';
 
 const Home: React.FC = () => {
+    const { client } = useBackendAPIContext();
     const { currentViewDate } = useCalendarContext();
     const months3L: (
         | 'Jan'
@@ -38,10 +39,74 @@ const Home: React.FC = () => {
         'Dec',
     ];
 
-    const totalTasks = 32;
-    const ongoingTasks = 32;
-    const completedTasks = 32;
-    const overdueTasks = 32;
+    const [taskLists, setTaskLists] = useState([]);
+    const [taskCounts, setTaskCounts] = useState({
+        totalTasks: 0,
+        ongoingTasks: 0,
+        completedTasks: 0,
+        overdueTasks: 0,
+    });
+
+    const fetchTaskLists = async () => {
+        try {
+            client.get('/task-lists/get').then((res) => {
+                setTaskLists(res.data.taskLists);
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    interface Task {
+        is_completed: boolean;
+        due_date: string; 
+    }
+
+    const fetchTasks = async (id: string) => {
+        try {
+            client.get(`task-lists/tasks/${id}/`).then((res) => {
+                const tasks: Task[] = res.data.tasks;
+                const currentDate = new Date();
+
+                const ongoingTasks = tasks.filter((task) => !task.is_completed).length;
+                const completedTasks = tasks.filter((task) => task.is_completed).length;
+                const totalTasks = tasks.length;
+
+                const overdueTasks = tasks.filter(
+                    (task) =>
+                        !task.is_completed &&
+                        new Date(task.due_date) < currentDate
+                ).length;
+
+                setTaskCounts((prev) => ({
+                    ...prev,
+                    totalTasks: prev.totalTasks + totalTasks,
+                    ongoingTasks: prev.ongoingTasks + ongoingTasks,
+                    completedTasks: prev.completedTasks + completedTasks,
+                    overdueTasks: prev.overdueTasks + overdueTasks, 
+                }));
+
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleAddTaskClick = () => {
+        console.log('Add Task Clicked');
+    };
+
+    useEffect(() => {
+        fetchTaskLists();
+    }, []);
+
+    useEffect(() => {
+        if (taskLists.length > 0) {
+            taskLists.forEach(async (taskList: { _id: string }) => {
+                fetchTasks(taskList._id);
+            });
+        }
+    }, [taskLists.length]);
 
     return (
         <PageContainer>
@@ -70,7 +135,12 @@ const Home: React.FC = () => {
                                 <button className='schedule-btn'>
                                     Today's Schedule
                                 </button>
-                                <button className='add-btn'>Add Task</button>
+                                <button 
+                                    className='add-btn'
+                                    onClick={handleAddTaskClick}
+                                >
+                                    Add Task
+                                </button>
                             </Box>
                         </Box>
                     </Box>
@@ -78,31 +148,23 @@ const Home: React.FC = () => {
                     <div className='task-status-container'>
                         <div className='task-item'>
                             <p>Total Tasks</p>
-                            {/* <p className="all-label">All</p> */}
-                            <h3>{totalTasks}</h3>
-                            {/* <span className="percent-change">10% ↑</span> */}
+                            <h3>{taskCounts.totalTasks}</h3>
                         </div>
                         <div className='task-item'>
-                            <p>Ongoing Tasks</p>
-                            {/* <p className="all-label">All</p> */}
-                            <h3>{ongoingTasks}</h3>
+                            <p>Incomplete Tasks</p>
+                            <h3>{taskCounts.ongoingTasks}</h3>
                         </div>
                         <div className='task-item'>
                             <p>Completed Tasks</p>
-                            {/* <p className="all-label">All</p> */}
-                            <h3>{completedTasks}</h3>
+                            <h3>{taskCounts.completedTasks}</h3>
                         </div>
                         <div className='task-item'>
                             <p>Overdue Tasks</p>
-                            {/* <p className="all-label">All</p> */}
-                            <h3>{overdueTasks}</h3>
+                            <h3>{taskCounts.overdueTasks}</h3>
                         </div>
                     </div>
 
                     <div className='future-container'>
-                        {/* <div className='upcoming-tasks'>
-                            <h3>Upcoming Tasks: </h3>
-                        </div> */}
                         <Box
                             bgColor={'#fff'}
                             padding={'10px'}
@@ -113,26 +175,6 @@ const Home: React.FC = () => {
                         </Box>
 
                         <Box className='calendar'>
-                            {/* <h4>
-                                {currentDate.toLocaleString('default', {
-                                    month: 'long',
-                                    year: 'numeric',
-                                })}
-                            </h4>
-                            <div className='calendar-grid'>
-                                <div className='day'>Sun</div>
-                                <div className='day'>Mon</div>
-                                <div className='day'>Tue</div>
-                                <div className='day'>Wed</div>
-                                <div className='day'>Thu</div>
-                                <div className='day'>Fri</div>
-                                <div className='day'>Sat</div>
-                                {[...Array(31)].map((_, i) => (
-                                    <div key={i} className='date'>
-                                        {i + 1}
-                                    </div>
-                                ))}
-                            </div> */}
                             <MonthGrid
                                 associatedDate={
                                     new Date(
