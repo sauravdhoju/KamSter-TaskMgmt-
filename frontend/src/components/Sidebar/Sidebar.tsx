@@ -5,6 +5,16 @@ import { useState } from 'react';
 import { Box, Flex, Image } from '@chakra-ui/react';
 import Icon from '../Icon/Icon';
 import { useBackendAPIContext } from '../../contexts/BackendAPIContext/BackendAPIContext';
+import { useUserContext } from '../../contexts/UserContext/UserContext';
+
+type TaskList = {
+    _id: string;
+    task_list_name: string;
+    user_id: string;
+    isInitialList: boolean;
+    created_at: Date;
+    updated_at: Date;
+};
 
 type SidebarTypes = {
     isSideBarOpen: boolean;
@@ -14,23 +24,12 @@ type SidebarTypes = {
 const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }: SidebarTypes) => {
     const navigate = useNavigate();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [userEmail, setUserEmail] = useState<string | null>(null);
     const { client } = useBackendAPIContext();
-
+    const { user } = useUserContext();
+    const [taskListNames, setTaskListNames] = useState<string[]>([]);
 
     const toggleSidebar = () => {
         setIsSideBarOpen(!isSideBarOpen);
-    };
-
-    // Fetch User Email
-    const fetchUserEmail = async () => {
-        try {
-            const response = await client.get('/user'); // Adjust API base URL as needed
-            const email = response.data?.user?.email;
-            if (email) setUserEmail(email);
-        } catch (error) {
-            console.error('Error fetching user email:', error);
-        }
     };
 
     // const userEmail = 'jinaa@gmail.com';
@@ -59,8 +58,23 @@ const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }: SidebarTypes) => {
         },
     ];
 
+    const fetchTaskLists = async () => {
+        try {
+            const response = await client.get('/task-lists/get');
+            const data = await response.data;
+            if (!data) throw new Error("Didn't get any data");
+            const taskLists: TaskList[] = data.taskLists;
+            const taskListNames: string[] = taskLists.map(
+                (taskList) => taskList.task_list_name
+            );
+            setTaskListNames(taskListNames);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     useEffect(() => {
-        fetchUserEmail();
+        fetchTaskLists();
     }, []);
 
     return (
@@ -112,7 +126,7 @@ const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }: SidebarTypes) => {
                         isSideBarOpen ? '' : 'bar-item-collapsed'
                     }`}
                 >
-                    {userEmail || 'Loading...'}
+                    {user?.email || 'Loading...'}
                 </p>
             </Flex>
 
@@ -163,7 +177,7 @@ const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }: SidebarTypes) => {
                         onClick={() =>
                             isSideBarOpen
                                 ? setIsDropdownOpen(!isDropdownOpen)
-                                : navigate('/my-lists')
+                                : navigate('/tasks')
                         } // Toggle dropdown
                     >
                         <Flex alignItems='center'>
@@ -182,48 +196,18 @@ const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }: SidebarTypes) => {
 
                     {isDropdownOpen && (
                         <Box className='dropdown-list'>
-                            <Link to='/list1'>
-                                <Icon
-                                    name='bx-checkbox-checked'
-                                    className='sidebar-icon'
-                                />
-                                <span>List 1</span>
-                            </Link>
-                            <Link to='/list2'>
-                                <Icon
-                                    name='bx-checkbox-checked'
-                                    className='sidebar-icon'
-                                />
-                                <span>List 2</span>
-                            </Link>
-                            <Link to='/list3'>
-                                <Icon
-                                    name='bx-checkbox-checked'
-                                    className='sidebar-icon'
-                                />
-                                <span>List 3</span>
-                            </Link>
-                            <Link to='/list4'>
-                                <Icon
-                                    name='bx-checkbox-checked'
-                                    className='sidebar-icon'
-                                />
-                                <span>List 4</span>
-                            </Link>
-                            <Link to='/list5'>
-                                <Icon
-                                    name='bx-checkbox-checked'
-                                    className='sidebar-icon'
-                                />
-                                <span>List 5</span>
-                            </Link>
-                            <Link to='/list6'>
-                                <Icon
-                                    name='bx-checkbox-checked'
-                                    className='sidebar-icon'
-                                />
-                                <span>List 6</span>
-                            </Link>
+                            {taskListNames.map((taskListName, index) => (
+                                <Link
+                                    to={`/tasks?task-list-name=${taskListName}`}
+                                    key={index}
+                                >
+                                    <Icon
+                                        name='bx-checkbox-checked'
+                                        className='sidebar-icon'
+                                    />
+                                    <span>{taskListName}</span>
+                                </Link>
+                            ))}
                         </Box>
                     )}
                 </Box>
