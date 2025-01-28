@@ -9,6 +9,7 @@ import {
 } from '@chakra-ui/react';
 import Icon from '../Icon/Icon';
 import './HeaderGreet.scss';
+import { useBackendAPIContext } from '../../contexts/BackendAPIContext/BackendAPIContext';
 
 const days = [
     'Sunday',
@@ -35,6 +36,19 @@ const months = [
 ];
 
 const HeaderGreet = () => {
+    const { client } = useBackendAPIContext();
+
+    const [userName, setUserName] = useState('');
+
+    const fetchUserName = async () => {
+        try {
+            const response = await client.get('/user');
+            setUserName(response.data.user.username); // Set the username
+        } catch (error) {
+            console.error('Error fetching username:', error);
+        }
+    };
+
     const [currentTime, setCurrentTime] = useState(new Date());
     const getTimeString = () => {
         let hours = currentTime.getHours();
@@ -79,6 +93,8 @@ const HeaderGreet = () => {
     };
 
     useEffect(() => {
+        fetchUserName();
+
         const interval = setInterval(() => {
             setCurrentTime(new Date());
             setTimeString(getTimeString());
@@ -133,7 +149,7 @@ const HeaderGreet = () => {
                             gap={'5px'}
                             className='greet-header'
                         >
-                            {currentGreet}, Saurav!!
+                            {currentGreet}, {userName}!!
                         </Heading>
                         <Text fontWeight={300} fontSize={'16px'}>
                             It's {dateString}
