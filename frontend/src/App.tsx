@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import { Box } from '@chakra-ui/react';
 
 import CalendarContextProvider from './contexts/CalendarContext/CalendarContext';
+import TaskProvider from './contexts/TaskContext/TaskContext';
 import { useUserContext } from './contexts/UserContext/UserContext';
 
 import Home from './pages/Home/Home';
@@ -49,30 +50,32 @@ const App = () => {
 
     return (
         <Box className='app'>
-            <CalendarContextProvider>
-                <Routes>
-                    <Route path='/' element={<Home />} />
-                    <Route path='/login' element={<Login />} />
-                    <Route path='/register' element={<Register />} />
-                    <Route path='/my-account' element={<MyAccount />} />
-                    <Route path='/calendar' element={<Calendar />} />
-                    <Route path='/pomodoro' element={<Pomodoro />} />
-                    <Route path='/kanban' element={<Kanban />} />
-                    <Route path='/tasks' element={<Tasks />} />
-                    <Route
-                        path='/api/project-collaboration/invitations/accept'
-                        element={<AcceptInvite />}
-                    />
-                    <Route
-                        path='/api/project-collaboration/invitations/decline'
-                        element={<DeclineInvite />}
-                    />
-                    <Route
-                        path='/api/task/mark-complete/:taskId'
-                        element={<MarkTaskComplete />}
-                    />
-                </Routes>
-            </CalendarContextProvider>
+            <TaskProvider>
+                <CalendarContextProvider>
+                    <Routes>
+                        <Route path='/' element={<Home />} />
+                        <Route path='/login' element={<Login />} />
+                        <Route path='/register' element={<Register />} />
+                        <Route path='/my-account' element={<MyAccount />} />
+                        <Route path='/calendar' element={<Calendar />} />
+                        <Route path='/pomodoro' element={<Pomodoro />} />
+                        <Route path='/kanban' element={<Kanban />} />
+                        <Route path='/tasks' element={<Tasks />} />
+                        <Route
+                            path='/api/project-collaboration/invitations/accept'
+                            element={<AcceptInvite />}
+                        />
+                        <Route
+                            path='/api/project-collaboration/invitations/decline'
+                            element={<DeclineInvite />}
+                        />
+                        <Route
+                            path='/api/task/mark-complete/:taskId'
+                            element={<MarkTaskComplete />}
+                        />
+                    </Routes>
+                </CalendarContextProvider>
+            </TaskProvider>
         </Box>
     );
 };
