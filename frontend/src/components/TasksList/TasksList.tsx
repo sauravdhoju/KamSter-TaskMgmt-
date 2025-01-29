@@ -330,7 +330,22 @@ const TasksList = () => {
 
         const task_list_id = selectedTaskList.id; // Get the selected task list ID
         const task_name = newTask;
-        const due_date = taskDate;
+        const [hours, minutes] = taskTime.split(':').map(Number);
+        const due_time = new Date();
+        due_time.setHours(hours, minutes, 0, 0);
+        console.log(due_time);
+
+        console.log(taskDate, taskTime);
+
+        const due_date = new Date(taskDate);
+        due_date.setHours(
+            due_time.getHours(),
+            due_time.getMinutes(),
+            due_time.getSeconds(),
+            due_time.getMilliseconds()
+        );
+        console.log(due_date);
+
         const description = taskDescription;
 
         const requestBody = {
