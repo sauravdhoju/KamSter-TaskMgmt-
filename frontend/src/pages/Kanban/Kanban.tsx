@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { Box, Flex, Heading, Input, Grid } from '@chakra-ui/react';
 import Icon from '../../components/Icon/Icon';
 import './Kanban.scss';
@@ -20,6 +21,8 @@ const Kanban = () => {
     const [taskInputs, setTaskInputs] = useState<Record<string, string>>({});
     const [editingColumn, setEditingColumn] = useState<string | null>(null); // Track column being renamed
     const [renameInput, setRenameInput] = useState<string>(''); // Input for renaming
+
+    const { projectId } = useParams<{ projectId: string }>();
     const [draggedTask, setDraggedTask] = useState<string | null>(null); //for drag and drop
 
     //editing task -- to track which task is being edited and the current edit input.
@@ -169,6 +172,14 @@ const Kanban = () => {
      
     return (
         <PageContainer>
+            <Flex 
+                justifyContent="center" 
+                alignItems="center" 
+            >
+                <Heading as="h2" size="md" mb={4}>
+                    Kanban Board for Project "{projectId}"
+                </Heading>
+            </Flex>
             <Flex className='kanban-board'>
                 {columns.map((column) => (
                     <Grid

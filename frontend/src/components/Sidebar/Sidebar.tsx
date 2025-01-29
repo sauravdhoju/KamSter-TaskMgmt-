@@ -49,8 +49,8 @@ const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }: SidebarTypes) => {
             icon: 'bx-calendar',
         },
         {
-            name: 'kanban',
-            icon: 'bx-grid',
+            name: 'projects',
+            icon: 'bx-list-ol',
         },
         {
             name: 'pomodoro',
