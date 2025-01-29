@@ -78,13 +78,21 @@ export const updateTask = async (
                 .end();
         }
 
-        if (!task_name)
+        if (
+            !task_name &&
+            !due_date &&
+            !description &&
+            !('is_completed' in req.body) &&
+            !('is_important' in req.body)
+        ) {
+            console.log('somethings missing');
             return res
                 .status(400)
-                .json({ message: 'ERROR: Provide required values!' })
+                .json({ message: 'Please provide data to update!' })
                 .end();
+        }
 
-        taskToUpdate.task_name = task_name;
+        if (task_name) taskToUpdate.task_name = task_name;
         if (due_date) taskToUpdate.due_date = due_date;
         if (description) taskToUpdate.description = description;
         if ('is_completed' in req.body)
@@ -92,6 +100,7 @@ export const updateTask = async (
         if ('is_important' in req.body)
             taskToUpdate.is_important = is_important;
         taskToUpdate.updated_at = new Date(Date.now());
+
         await taskToUpdate.save();
         await updateTaskListUpdatedAt(taskToUpdate.task_list_id.toString());
         return res

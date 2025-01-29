@@ -110,7 +110,7 @@ const CalendarContextProvider: React.FC<React.PropsWithChildren<{}>> = ({
     // calendar layout view
     const [currentView, setCurrentView] = useState<
         'year' | 'month' | 'week' | 'day'
-    >('day');
+    >('week');
     return (
         <CalendarContext.Provider
             value={{

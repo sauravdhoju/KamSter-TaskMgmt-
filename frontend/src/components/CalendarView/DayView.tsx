@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Grid, GridItem, Text } from '@chakra-ui/react';
+import { Grid, GridItem, Text, Box } from '@chakra-ui/react';
 import { isToday } from 'date-fns';
 
 import { useCalendarContext } from '../../contexts/CalendarContext/CalendarContext';
@@ -43,8 +43,36 @@ const DayView = ({ getHours }: DayView) => {
                 maxH={'100%'}
                 overflowY={'scroll'}
             >
-                {getHours('ante')}
-                {getHours('post')}
+                <Grid
+                    width={'100%'}
+                    height={'100%'}
+                    gridTemplateColumns={'max-content 1fr'}
+                    gridTemplateRows={'1fr'}
+                >
+                    <GridItem
+                        className='day-timestamp-container'
+                        bgColor={'#e5e5e5'}
+                        height={'100%'}
+                        maxH={'100%'}
+                    >
+                        {getHours('ante')}
+                        {getHours('post')}
+                    </GridItem>
+                    <GridItem>
+                        <Box
+                            display='grid'
+                            gridTemplateRows={`repeat(24, 50px)`} // Matches time row height
+                            height='100%'
+                        >
+                            {Array.from({ length: 24 }).map((_, rowIndex) => (
+                                <Box
+                                    key={rowIndex}
+                                    borderBottom={'1px solid #0000007f'}
+                                ></Box>
+                            ))}
+                        </Box>
+                    </GridItem>
+                </Grid>
             </GridItem>
         </Grid>
     );

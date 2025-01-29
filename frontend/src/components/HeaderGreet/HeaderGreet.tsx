@@ -9,6 +9,7 @@ import {
 } from '@chakra-ui/react';
 import Icon from '../Icon/Icon';
 import './HeaderGreet.scss';
+import { useUserContext } from '../../contexts/UserContext/UserContext';
 
 const days = [
     'Sunday',
@@ -35,6 +36,8 @@ const months = [
 ];
 
 const HeaderGreet = () => {
+    const { user } = useUserContext();
+
     const [currentTime, setCurrentTime] = useState(new Date());
     const getTimeString = () => {
         let hours = currentTime.getHours();
@@ -133,7 +136,7 @@ const HeaderGreet = () => {
                             gap={'5px'}
                             className='greet-header'
                         >
-                            {currentGreet}, Saurav!!
+                            {currentGreet}, {user?.username}!!
                         </Heading>
                         <Text fontWeight={300} fontSize={'16px'}>
                             It's {dateString}

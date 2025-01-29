@@ -3,6 +3,7 @@ import { get, merge } from 'lodash';
 
 import { getUserBySessionToken } from '../helpers/userHelpers';
 import { getTaskList } from '../helpers/taskListHelpers';
+import { getProjectById } from '../helpers/projectHelpers';
 
 // checks if there is a sessionToken and if it matches with one of the existing user entries
 export const isAuthenticated = async (
@@ -93,6 +94,39 @@ export const isTaskListOwner = async (
                 .json({ message: 'Please provide task list id!' })
                 .end();
         }
+
+        return next();
+    } catch (error) {
+        console.error(error);
+        return res
+            .status(400)
+            .json({ message: 'Something went wrong!', error })
+            .end();
+    }
+};
+
+export const isProjectOwner = async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+) => {
+    try {
+        const currentUserId = get(req, 'identity._id') as string;
+        const { projectId } = req.params;
+        const project = await getProjectById(projectId);
+
+        if (!projectId) {
+            return res
+                .status(400)
+                .json({ message: 'Please provide task list id!' })
+                .end();
+        }
+
+        if (!project.admin_id.equals(currentUserId))
+            return res
+                .status(403)
+                .json({ message: 'You are not authorized!' })
+                .end();
 
         return next();
     } catch (error) {
