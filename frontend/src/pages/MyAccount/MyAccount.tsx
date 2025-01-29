@@ -1,75 +1,108 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'; 
 import {
     Box, Flex, Text, Button, Input, FormControl, FormLabel, Modal, 
     ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, 
     useDisclosure, Image
 } from '@chakra-ui/react';
-import profilePhoto from '../../pages/MyAccount/profile.jpg';
+import profilePhoto from '../../pages/MyAccount/pp.jpg';
 import Icon from '../../components/Icon/Icon';
 import './MyAccount.scss';
 import PageContainer from '../../components/PageContainer/PageContainer';
+import { useUserContext } from '../../contexts/UserContext/UserContext';
+import { useToast } from '@chakra-ui/react';
+import { useBackendAPIContext } from '../../contexts/BackendAPIContext/BackendAPIContext';
 
 const MyAccount = () => {
-    const navigate = useNavigate(); // Navigation hook
-    const [isLoggedIn, setIsLoggedIn] = useState(false); // Track if user is logged in
+    const navigate = useNavigate(); 
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userData, setUserData] = useState({
-        name: "Saurav Dhoju",
-        username: "@sauravdhoju",
-        phone: "9808827451",
-        email: "sauravdhoju12@gmail.com",
-        profilePhoto: profilePhoto,
-    }); 
-
-    // Modal controls
+        name: "",
+        username: "",
+        email: "",
+        profilePhoto: profilePhoto, // Default profile photo
+    });
+    
+    // Modal hooks
     const { isOpen: isEditProfileOpen, onOpen: onOpenEditProfile, onClose: onCloseEditProfile } = useDisclosure();
     const { isOpen: isChangePasswordOpen, onOpen: onOpenChangePassword, onClose: onCloseChangePassword } = useDisclosure();
+    const { user } = useUserContext();
+    const toast = useToast();
+    const { client } = useBackendAPIContext();
 
-    //Profile Photo
-    const [profileImage, setProfileImage] = useState(profilePhoto);
+    const handleDeleteAccount = async () => {
+    
+        if (!user?.id) {
+            toast({
+                title: "Error",
+                description: "User ID not found. Please try again.",
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+            });
+            return;
+        }
+    
+        const confirmDelete = window.confirm("Are you sure you want to delete your account? This action cannot be undone.");
+    
+        if (!confirmDelete) return;
+    
+        try {
+            const response = await client.delete(`/user/${user.id}`);
 
-    // Check login status
+            if (response.status !== 200 && response.status !== 204) {
+                throw new Error("Failed to delete account.");
+            }
+    
+            toast({
+                title: "Account Deleted",
+                description: "Your account has been deleted successfully.",
+                status: "success",
+                duration: 3000,
+                isClosable: true,
+            });
+    
+            window.location.href = "/login";
+        } catch (error) {
+            toast({
+                title: "Error",
+                description: "Error deleting account. Please try again.",
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+            });
+            console.error(error);
+        }
+    };
+
     useEffect(() => {
-        // Placeholder for actual login logic
-        const checkLoginStatus = () => {
-            const loggedIn = true; // Set login status
-            setIsLoggedIn(loggedIn);
-            if (!loggedIn) navigate('/login'); // Redirect if not logged in
-        };
-
-        checkLoginStatus();
+        if (user) {
+            setIsLoggedIn(true);
+            console.log('User:', user);
+        } else {
+            navigate('/login');
+        }
     }, [navigate]);
 
     if (!isLoggedIn) {
         return null; // Show nothing if not logged in
     }
 
-    // Handle input changes for editing user data
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setUserData((prevData) => ({ ...prevData, [name]: value }));
     };
 
-    const handleFileChange = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const imageUrl = URL.createObjectURL(file);
-            setProfileImage(imageUrl);
-            setUserData((prevData) => ({ ...prevData, profilePhoto: imageUrl }));
-        }
-    };
-    
-
     const handleLogout = () => {
+        //handle logout request here
         navigate('/login');
     };
 
     return (
         <PageContainer>
-            <Box className='my-account-page'>
+            <Box className='my-account-page' maxW='600px' mx='auto'>    
                 <Box className='account-container'>
                     <Flex className='heading-row'>
-                        {/* <Icon name='bx-chevron-left' className='icon' /> */}
                         <Text className='profile-heading'>My Account</Text>
                     </Flex>
 
@@ -82,8 +115,8 @@ const MyAccount = () => {
                     </Box>
 
                     <Box className='profile-info'>
-                        <Text className='profile-name'>{userData.name}</Text>
-                        <Text className='profile-user-name'>{userData.username}</Text>
+                        <Text className='profile-name'>{user?.name}</Text>
+                        <Text className='profile-user-name'>{user?.username}</Text>
                     </Box>
                 </Box>
 
@@ -92,19 +125,15 @@ const MyAccount = () => {
                     <Flex direction="column" mt={2} gap={0} className='profile-details'>
                         <Flex className='detail-row'>
                             <Text className='profile-name'>Name:</Text>
-                            <Text>{userData.name}</Text>
+                            <Text>{user?.name}</Text>
                         </Flex>
                         <Flex className='detail-row'>
                             <Text className='profile-username'>Username:</Text>
-                            <Text>{userData.username}</Text>
-                        </Flex>
-                        <Flex className='detail-row'>
-                            <Text className='profile-phone'>Phone:</Text>
-                            <Text>{userData.phone}</Text>
+                            <Text>{user?.username}</Text>
                         </Flex>
                         <Flex className='detail-row'>
                             <Text className='profile-email'>Email:</Text>
-                            <Text>{userData.email}</Text>
+                            <Text>{user?.email}</Text>
                         </Flex>
                     </Flex>
                 </Box>
@@ -120,7 +149,7 @@ const MyAccount = () => {
                             <Text className='setting-change-password'>Change Password</Text>
                             <Icon name='bx-chevron-right'/>
                         </Flex>
-                        <Flex className='setting-row'>
+                        <Flex className='setting-row' onClick={handleDeleteAccount}>
                             <Text className='setting-change-password'>Delete Account</Text>
                             <Icon name='bxs-trash' />
                         </Flex>
@@ -139,23 +168,15 @@ const MyAccount = () => {
                         <ModalBody>
                             <FormControl mb={4}>
                                 <FormLabel>Name</FormLabel>
-                                <Input name="name" value={userData.name} onChange={handleInputChange} placeholder='Enter new name' />
+                                <Input name="name" value={user?.name} onChange={handleInputChange} placeholder='Enter new name' />
                             </FormControl>
                             <FormControl mb={4}>
                                 <FormLabel>Username</FormLabel>
-                                <Input name="username" value={userData.username} onChange={handleInputChange} placeholder='Enter new username' />
-                            </FormControl>
-                            <FormControl mb={4}>
-                                <FormLabel>Phone</FormLabel>
-                                <Input name="phone" value={userData.phone} onChange={handleInputChange} placeholder='Enter new phone' />
+                                <Input name="username" value={user?.username} onChange={handleInputChange} placeholder='Enter new username' />
                             </FormControl>
                             <FormControl mb={4}>
                                 <FormLabel>Email</FormLabel>
-                                <Input name="email" value={userData.email} onChange={handleInputChange} placeholder='Enter new email' />
-                            </FormControl>
-                            <FormControl mb={4}>
-                                <FormLabel>Upload Photo</FormLabel>
-                                <Input type="file" onChange={handleFileChange} />
+                                <Input name="email" value={user?.email} onChange={handleInputChange} placeholder='Enter new email' />
                             </FormControl>
 
                         </ModalBody>
@@ -166,7 +187,6 @@ const MyAccount = () => {
                     </ModalContent>
                 </Modal>
 
-                {/* Change Password Modal */}
                 <Modal isOpen={isChangePasswordOpen} onClose={onCloseChangePassword}>
                     <ModalOverlay />
                     <ModalContent>
