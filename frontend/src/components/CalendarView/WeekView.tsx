@@ -3,6 +3,7 @@ import { Box, Grid, GridItem, Text } from '@chakra-ui/react';
 import { previousSunday, isToday } from 'date-fns';
 
 import { useCalendarContext } from '../../contexts/CalendarContext/CalendarContext';
+import TimeScheduleDisplayBlock from '../TimeScheduleDisplayBlock/TimeScheduleDisplayBlock';
 
 import './WeekView.scss';
 
@@ -85,20 +86,10 @@ const WeekView = ({ getHours }: WeekViewTypes) => {
             </GridItem>
             {weekDates.map((_, index) => {
                 return (
-                    <GridItem key={index} borderLeft={'1px solid #0000007f'}>
-                        <Box
-                            display='grid'
-                            gridTemplateRows={`repeat(24, 50px)`} // Matches time row height
-                            height='100%'
-                        >
-                            {Array.from({ length: 24 }).map((_, rowIndex) => (
-                                <Box
-                                    key={rowIndex}
-                                    borderBottom={'1px solid #0000007f'}
-                                ></Box>
-                            ))}
-                        </Box>
-                    </GridItem>
+                    <TimeScheduleDisplayBlock
+                        key={index}
+                        blockDate={new Date()}
+                    />
                 );
             })}
         </Grid>
