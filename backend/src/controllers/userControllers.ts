@@ -23,7 +23,7 @@ export const getCurrentUser = async (
 
         const userDetails = {
             id: user._id,
-            name: user.name;
+            name: user.name,
             username: user.username,
             email: user.email,
             created_at: user.created_at,
