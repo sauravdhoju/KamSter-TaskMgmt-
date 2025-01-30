@@ -46,6 +46,29 @@ const ProjectList = () => {
     } = useDisclosure();
     const navigate = useNavigate();
 
+    const createDefaultBoards = async (projectID: string) => {
+        try {
+            const defaultBoards = [
+                { board_name: 'To Do' },
+                { board_name: 'Doing' },
+                { board_name: 'Done' },
+            ];
+
+            for (const defaultBoard of defaultBoards) {
+                const response = await client.post(
+                    `/project/board/${projectID}`,
+                    defaultBoard
+                );
+                console.log(
+                    `Board ${defaultBoard.board_name} created: `,
+                    response.data
+                );
+            }
+        } catch (error) {
+            console.error("Couldn't create default boards: ", error);
+        }
+    };
+
     const addProject = async () => {
         try {
             const newProject = {
@@ -55,6 +78,8 @@ const ProjectList = () => {
             const response = await client.post('/project/create', newProject);
             const data = await response.data;
             if (data) {
+                const createdProject = data.createdProject;
+                createDefaultBoards(createdProject._id);
                 fetchProjects();
                 setNewProjectName('');
                 setNewProjectDescription('');
