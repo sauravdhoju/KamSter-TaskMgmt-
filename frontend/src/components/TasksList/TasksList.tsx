@@ -39,18 +39,18 @@ const initialTaskLists = [
         }],
         type: 'ordinary',
     },
-    {
-        name: 'Grocery',
-        tasks: [{ 
-            task: 'Potato', 
-            completed: false, 
-            favorite: false, 
-            description: '',
-            date: '',
-            time: '', 
-        }],
-        type: 'ordinary',
-    },
+    // {
+    //     name: 'Grocery',
+    //     tasks: [{ 
+    //         task: 'Potato', 
+    //         completed: false, 
+    //         favorite: false, 
+    //         description: '',
+    //         date: '',
+    //         time: '', 
+    //     }],
+    //     type: 'ordinary',
+    // },
 ];
 
 const TasksList = () => {
@@ -96,30 +96,12 @@ const TasksList = () => {
         setSelectedTask(null);
     };
 
-    const handleRenameList = () => {
-        const newListName = prompt("Enter new list name:", activeList.name);
-        if (newListName) {
-            setTaskLists(prev =>
-                prev.map((list, index) =>
-                    index === selectedTabIndex ? { ...list, name: newListName } : list
-                )
-            );
-            showNotification(`List renamed to "${newListName}"`);
-        }
-    };
-
-    const handleDeleteList = () => {
-        const confirmDelete = window.confirm("Are you sure you want to delete this list?");
-        if (confirmDelete) {
-            setTaskLists(prev => prev.filter((_, index) => index !== selectedTabIndex));
-            showNotification('List deleted!');
-        }
-    }
     const handleAddTaskClick = () => {
         setIsAddTaskVisible(!isAddTaskVisible);
         setIsBackgroundDimmed(!isBackgroundDimmed);
     };
     
+
     const handleCancelClick = () => {
         setIsAddTaskVisible(false);
         setIsBackgroundDimmed(false);
@@ -129,127 +111,6 @@ const TasksList = () => {
         setTaskTime('');
         setTaskDescription('');
     }
-    const deleteTask = (taskIndex: number) => {
-        setTaskLists((prev) =>
-            prev.map((list, index) =>
-                index === selectedTabIndex
-                    ? {
-                          ...list,
-                          tasks: list.tasks.filter((_, i) => i !== taskIndex),
-                      }
-                    : list
-            )
-        );
-        showNotification('Task deleted!');
-    }
-    const showNotification = (message: string) => {
-        setNotification(message);
-        setTimeout(() => setNotification(null), 3000);
-    };
-
-
-    const addToFavorites = (task: Task, sourceListIndex: number) => {
-        setTaskLists((prev) =>
-            prev.map((list, index) => {
-                if (list.type === 'default') {
-                    return { ...list, tasks: [...list.tasks, { ...task, favorite: true }] };
-                }
-                if (index === sourceListIndex) {
-                    return {
-                        ...list,
-                        tasks: list.tasks.filter((t) => t.task !== task.task),
-                    };
-                }
-                return list;
-            })
-        );
-        showNotification("Task added to favorites")
-    };
-
-    const removeFromFavorites = (task: Task) => {
-        setTaskLists((prev) =>
-            prev.map((list) => {
-                if (list.type === 'default') {
-                    return {
-                        ...list,
-                        tasks: list.tasks.filter((t) => t.task !== task.task),
-                    };
-                }
-                if (list.type === 'ordinary') {
-                    return {
-                        ...list,
-                        tasks: [...list.tasks, { ...task, favorite: false }],
-                    };
-                }
-                return list;
-            })
-        );
-        showNotification('Task removed from favorites')
-    };
-
-    const handleNewListSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (!newListName.trim()) return;
-        const newList = { name: newListName, tasks: [], type: 'ordinary' };
-        setTaskLists((prev) => [...prev, newList]);
-        setNewListName('');
-        setNewListVisible(false);
-        setSelectedTabIndex(taskLists.length);
-        showNotification('New list created!');
-    };
-
-    const handleNewTaskSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (!newTask.trim()) return;
-
-        const newTaskObj = {
-            task: newTask,
-            completed: false,
-            favorite: false,
-            date: taskDate || '',
-            time: taskTime || '',
-            description: taskDescription,
-        };
-        
-        setTaskLists((prev) =>
-            prev.map((list, index) =>
-                index === selectedTabIndex
-                    ? { ...list, tasks: [...list.tasks, newTaskObj] }
-                    : list
-            )
-        );
-        setNewTask('');
-        setTaskDate('');
-        setTaskTime('');
-        // console.log('Task added:', {taskDescription,taskDate, taskTime, newTask});
-        showNotification('Task added!');
-    };
-
-    const toggleNewListForm = () => setNewListVisible((prev) => !prev);
-
-    const toggleTaskCompletion = (taskIndex: number) => {
-        const task = taskLists[selectedTabIndex].tasks[taskIndex];
-        const message = task.completed
-            ? `Task "${task.task}" marked as incomplete.`
-            : `Task "${task.task}" marked as completed.`;
-    
-        setTaskLists((prev) =>
-            prev.map((list, listIndex) =>
-                listIndex === selectedTabIndex
-                    ? {
-                          ...list,
-                          tasks: list.tasks.map((task, index) =>
-                              index === taskIndex
-                                  ? { ...task, completed: !task.completed }
-                                  : task
-                          ),
-                      }
-                    : list
-            )
-        );
-    
-        showNotification(message);
-    };
 
     return (
         <Box className="tasks-list" width="100%" cursor="pointer">
@@ -274,14 +135,14 @@ const TasksList = () => {
                         )}
                     </Box>
                 ))}
-                <Box className="tasks-tab new-list-btn" onClick={toggleNewListForm}>
+                <Box className="tasks-tab new-list-btn" >
                     <Icon name="bx-plus" />
-                    <Text>New List</Text>
+                    <Text >New List</Text>
                 </Box>
             </Flex>
 
             {newListVisible && (
-                <form onSubmit={handleNewListSubmit} className="new-list-form">
+                <form className="new-list-form">
                     <FormControl>
                         <Input
                             placeholder="New List Name"
@@ -319,12 +180,12 @@ const TasksList = () => {
                                 <Icon name="bx-dots-vertical-rounded" />
                             </MenuButton>
                             <MenuList>
-                                <MenuItem onClick={handleRenameList}>
+                                <MenuItem >
                                     <Icon name="bx-edit" />
                                     <Text>Rename</Text>
                                 </MenuItem>
 
-                                <MenuItem onClick={handleDeleteList}>
+                                <MenuItem>
                                     <Icon name="bx-trash" />
                                     <Text>Delete</Text>
                                 </MenuItem>
@@ -342,7 +203,7 @@ const TasksList = () => {
                         borderRadius="md"
                         mt="4"
                     >
-                        <form onSubmit={handleNewTaskSubmit}>
+                        <form >
                             <Flex direction="column" gap="10px">
                                 <FormControl isRequired>
                                     <Input
@@ -380,7 +241,7 @@ const TasksList = () => {
                                 </FormControl>
 
                                 <Button type="submit">Add Task</Button>
-                                <Button type="button" onClick={handleCancelClick}>Cancel</Button>
+                                <Button type="button"  onClick={handleCancelClick}>Cancel</Button>
                             </Flex>
                         </form>
                     </Box>
@@ -400,8 +261,7 @@ const TasksList = () => {
                                 }} 
                                 cursor="pointer"
                             >
-                                <Box onClick={() => 
-                                    toggleTaskCompletion(index)} 
+                                <Box 
                                     cursor="pointer"
                                 >
                                     <Icon
@@ -424,7 +284,6 @@ const TasksList = () => {
                                 <Flex ml="auto" gap="10px" alignItems="center">
                                     <Box
                                         ml="auto"
-                                        onClick={() => deleteTask(index)}
                                         cursor={'pointer'}
                                     >
                                         <Icon name="bx-trash" className="favorite-icon" />
@@ -432,11 +291,6 @@ const TasksList = () => {
                                     
                                     <Box
                                         ml="auto"
-                                        onClick={() =>
-                                            task.favorite
-                                                ? removeFromFavorites(task)
-                                                : addToFavorites(task, selectedTabIndex)
-                                        }
                                         cursor={'pointer'}
                                     >
                                         <Icon
@@ -497,7 +351,6 @@ const TasksList = () => {
                                         ml="10px"
                                         textDecoration="line-through"
                                         color="gray.500"
-                                        onClick={() => toggleTaskCompletion(index)}
                                         cursor="pointer"
                                     >
                                         {task.task}
