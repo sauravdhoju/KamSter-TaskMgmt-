@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+
 import { useSearchParams } from 'react-router-dom';
 import {
     Box,
@@ -15,8 +16,11 @@ import {
 import Icon from '../Icon/Icon';
 import './TasksList.scss';
 import { useBackendAPIContext } from '../../contexts/BackendAPIContext/BackendAPIContext';
-import { useTaskContext, Task } from '../../contexts/TaskContext/TaskContext';
-
+import {
+    useTaskContext,
+    Task,
+    TaskList,
+} from '../../contexts/TaskContext/TaskContext';
 const TasksList = () => {
     const [searchParams] = useSearchParams();
     const {
@@ -26,7 +30,7 @@ const TasksList = () => {
         notification,
         setNotification,
     } = useTaskContext();
-
+    const { allTasks } = useTaskContext();
     const [selectedTabIndex, setSelectedTabIndex] = useState(0);
     const [newListVisible, setNewListVisible] = useState(false);
     const [newListName, setNewListName] = useState('');
@@ -40,7 +44,30 @@ const TasksList = () => {
     const [taskTime, setTaskTime] = useState('');
     const [taskDescription, setTaskDescription] = useState('');
 
-    const activeList = taskLists?.[selectedTabIndex] ?? { name: '', tasks: [] };
+    const favoritesList: TaskList = {
+        id: 'favorites',
+        name: 'Favourite', // Star icon for Favorites
+        tasks: [],
+        type: 'default',
+    };
+
+    const myList: TaskList = {
+        id: 'mylists',
+        name: 'My Lists', // My Lists tab, can hold all tasks added to it
+        tasks: [], // This will hold tasks added specifically to "My Lists"
+        type: 'default',
+    };
+    const [taskListTabs, setTaskListTabs] = useState([
+        favoritesList,
+        myList,
+        ...taskLists,
+    ]);
+    const [activeList, setActiveList] = useState(
+        taskListTabs?.[selectedTabIndex] ?? {
+            name: '',
+            tasks: [],
+        }
+    );
     const completedCount = activeList.tasks.filter(
         (task) => task.completed
     ).length;
@@ -50,7 +77,7 @@ const TasksList = () => {
         const newListName = prompt('Enter new list name:', activeList.name);
         if (newListName) {
             try {
-                const currentList = taskLists[selectedTabIndex];
+                const currentList = taskListTabs[selectedTabIndex];
 
                 if (currentList.type === 'default') {
                     showNotification('Cannot rename default lists');
@@ -83,7 +110,7 @@ const TasksList = () => {
         );
         if (confirmDelete) {
             try {
-                const currentList = taskLists[selectedTabIndex];
+                const currentList = taskListTabs[selectedTabIndex];
 
                 if (currentList.type === 'default') {
                     showNotification('Cannot delete default lists');
@@ -180,7 +207,7 @@ const TasksList = () => {
 
     const handleUpdateTaskImportant = async (taskId: string) => {
         try {
-            const updatedTaskList = taskLists[selectedTabIndex];
+            const updatedTaskList = taskListTabs[selectedTabIndex];
             const taskToUpdate = updatedTaskList?.tasks.find(
                 (task) => task.id === taskId
             );
@@ -246,7 +273,7 @@ const TasksList = () => {
 
     const handleRemoveTaskFromFavorites = async (taskId: string) => {
         try {
-            const updatedTaskList = taskLists[selectedTabIndex];
+            const updatedTaskList = taskListTabs[selectedTabIndex];
             const taskToUpdate = updatedTaskList?.tasks.find(
                 (task) => task.id === taskId
             );
@@ -309,7 +336,7 @@ const TasksList = () => {
 
             setNewListName('');
             setNewListVisible(false);
-            setSelectedTabIndex(taskLists.length);
+            setSelectedTabIndex(taskListTabs.length);
             showNotification('New list created!');
         } catch (error) {
             console.error('Error creating task List: ', error);
@@ -322,7 +349,7 @@ const TasksList = () => {
         if (!newTask.trim()) return;
 
         // Get the selected task list
-        const selectedTaskList = taskLists[selectedTabIndex];
+        const selectedTaskList = taskListTabs[selectedTabIndex];
         if (!selectedTaskList) {
             showNotification('Error: Selected task list not found!');
             return;
@@ -331,20 +358,18 @@ const TasksList = () => {
         const task_list_id = selectedTaskList.id; // Get the selected task list ID
         const task_name = newTask;
         const [hours, minutes] = taskTime.split(':').map(Number);
-        const due_time = new Date();
-        due_time.setHours(hours, minutes, 0, 0);
-        console.log(due_time);
-
-        console.log(taskDate, taskTime);
-
         const due_date = new Date(taskDate);
-        due_date.setHours(
-            due_time.getHours(),
-            due_time.getMinutes(),
-            due_time.getSeconds(),
-            due_time.getMilliseconds()
-        );
-        console.log(due_date);
+        if (taskTime !== '') {
+            const due_time = new Date();
+            due_time.setHours(hours, minutes, 0, 0);
+
+            due_date.setHours(
+                due_time.getHours(),
+                due_time.getMinutes(),
+                due_time.getSeconds(),
+                due_time.getMilliseconds()
+            );
+        }
 
         const description = taskDescription;
 
@@ -413,8 +438,8 @@ const TasksList = () => {
         let listIndex = -1;
 
         // Search through all lists to find the task and its list index
-        for (let i = 0; i < taskLists.length; i++) {
-            const list = taskLists[i];
+        for (let i = 0; i < taskListTabs.length; i++) {
+            const list = taskListTabs[i];
             console.log('Checking list:', list.id);
 
             const task = list.tasks.find((t) => {
@@ -512,13 +537,15 @@ const TasksList = () => {
     useEffect(() => {
         const searchedTaskListName = searchParams.get('task-list-name');
         if (searchedTaskListName) {
-            const taskListIndex = taskLists.findIndex(
+            const taskListIndex = taskListTabs.findIndex(
                 (taskList) => taskList.name === searchedTaskListName
             );
             if (taskListIndex !== -1 && taskListIndex !== selectedTabIndex) {
                 setSelectedTabIndex(taskListIndex);
             }
         }
+        setActiveList(taskListTabs[selectedTabIndex]);
+        setTaskListTabs([favoritesList, myList, ...taskLists]);
     }, [taskLists, searchParams, selectedTabIndex]);
 
     return (
@@ -531,16 +558,16 @@ const TasksList = () => {
                 borderBottom='1px solid #ddd'
                 gap='20px'
             >
-                {taskLists.map((list) => (
+                {taskListTabs.map((list) => (
                     <Box
                         key={list.id}
                         className={`tasks-tab ${
-                            list.id === taskLists[selectedTabIndex]?.id
+                            list.id === taskListTabs[selectedTabIndex]?.id
                                 ? 'selected'
                                 : ''
                         }`}
                         onClick={() => {
-                            const selectedIndex = taskLists.findIndex(
+                            const selectedIndex = taskListTabs.findIndex(
                                 (item) => item.id === list.id
                             );
                             console.log(list.id);
@@ -550,7 +577,7 @@ const TasksList = () => {
                     >
                         {list.name === 'My Lists' ? (
                             <Text>My List</Text> // Display "My List" for the My Lists tab
-                        ) : list.name === 'Favorite' ? (
+                        ) : list.name === 'Favourite' ? (
                             <Icon name='bxs-star' className='important-icon' />
                         ) : (
                             <Text>{list.name}</Text> // Display fetched tab names for other tabs
@@ -687,95 +714,216 @@ const TasksList = () => {
                     </Box>
                 )}
                 <Box as='ul'>
-                    {activeList.tasks
-                        .map((task) => ({ task }))
-                        .filter(({ task }) => !task.completed)
-                        .map(({ task }) => (
-                            <Flex as='li' key={task.id} alignItems='center'>
-                                <Box
-                                    onClick={() =>
-                                        toggleTaskCompletion(task.id)
-                                    }
-                                    cursor='pointer'
-                                >
-                                    <Icon
-                                        name={
-                                            task.completed
-                                                ? 'bxs-circle'
-                                                : 'bx-circle'
-                                        }
-                                        className='task-circle-icon'
-                                    />
-                                </Box>
+                    {activeList.name === 'Favourite'
+                        ? allTasks
+                              .filter((task) => task.favorite)
+                              .map((task) => ({ task }))
+                              .filter(({ task }) => !task.completed)
+                              .map(({ task }) => (
+                                  <Flex
+                                      as='li'
+                                      key={task.id}
+                                      alignItems='center'
+                                  >
+                                      <Box
+                                          onClick={() =>
+                                              toggleTaskCompletion(task.id)
+                                          }
+                                          cursor='pointer'
+                                      >
+                                          <Icon
+                                              name={
+                                                  task.completed
+                                                      ? 'bxs-circle'
+                                                      : 'bx-circle'
+                                              }
+                                              className='task-circle-icon'
+                                          />
+                                      </Box>
 
-                                <Flex direction='column' ml='10px'>
-                                    <Text>{task.task}</Text>
-                                    {task.due_date &&
-                                        !isNaN(
-                                            new Date(task.due_date).getTime()
-                                        ) && (
-                                            <Text
-                                                fontSize='sm'
-                                                color='gray.500'
-                                            >
-                                                Due Date:{' '}
-                                                {new Date(
-                                                    task.due_date
-                                                ).toLocaleDateString()}
-                                            </Text>
-                                        )}
+                                      <Flex direction='column' ml='10px'>
+                                          <Text>{task.task}</Text>
+                                          {task.due_date &&
+                                              !isNaN(
+                                                  new Date(
+                                                      task.due_date
+                                                  ).getTime()
+                                              ) && (
+                                                  <Text
+                                                      fontSize='sm'
+                                                      color='gray.500'
+                                                  >
+                                                      Due Date:{' '}
+                                                      {new Date(
+                                                          task.due_date
+                                                      ).toLocaleDateString()}
+                                                  </Text>
+                                              )}
 
-                                    {/* Limit description to 100 characters */}
-                                    {task.description && (
-                                        <Text fontSize='sm' color='gray.500'>
-                                            Description:{' '}
-                                            {task.description.length > 100
-                                                ? `${task.description.slice(
-                                                      0,
-                                                      100
-                                                  )}...`
-                                                : task.description}
-                                        </Text>
-                                    )}
-                                </Flex>
+                                          {/* Limit description to 100 characters */}
+                                          {task.description && (
+                                              <Text
+                                                  fontSize='sm'
+                                                  color='gray.500'
+                                              >
+                                                  Description:{' '}
+                                                  {task.description.length > 100
+                                                      ? `${task.description.slice(
+                                                            0,
+                                                            100
+                                                        )}...`
+                                                      : task.description}
+                                              </Text>
+                                          )}
+                                      </Flex>
 
-                                <Flex ml='auto' gap='10px' alignItems='center'>
-                                    <Box
-                                        ml='auto'
-                                        onClick={() => deleteTask(task.id)}
-                                        cursor={'pointer'}
-                                    >
-                                        <Icon
-                                            name='bx-trash'
-                                            className='favorite-icon'
-                                        />
-                                    </Box>
+                                      <Flex
+                                          ml='auto'
+                                          gap='10px'
+                                          alignItems='center'
+                                      >
+                                          <Box
+                                              ml='auto'
+                                              onClick={() =>
+                                                  deleteTask(task.id)
+                                              }
+                                              cursor={'pointer'}
+                                          >
+                                              <Icon
+                                                  name='bx-trash'
+                                                  className='favorite-icon'
+                                              />
+                                          </Box>
 
-                                    <Box
-                                        ml='auto'
-                                        onClick={() =>
-                                            task.favorite
-                                                ? handleRemoveTaskFromFavorites(
-                                                      task.id
-                                                  )
-                                                : handleUpdateTaskImportant(
-                                                      task.id
-                                                  )
-                                        }
-                                        cursor={'pointer'}
-                                    >
-                                        <Icon
-                                            name={
-                                                task.favorite
-                                                    ? 'bxs-star'
-                                                    : 'bx-star'
-                                            }
-                                            className='favorite-icon'
-                                        />
-                                    </Box>
-                                </Flex>
-                            </Flex>
-                        ))}
+                                          <Box
+                                              ml='auto'
+                                              onClick={() =>
+                                                  task.favorite
+                                                      ? handleRemoveTaskFromFavorites(
+                                                            task.id
+                                                        )
+                                                      : handleUpdateTaskImportant(
+                                                            task.id
+                                                        )
+                                              }
+                                              cursor={'pointer'}
+                                          >
+                                              <Icon
+                                                  name={
+                                                      task.favorite
+                                                          ? 'bxs-star'
+                                                          : 'bx-star'
+                                                  }
+                                                  className='favorite-icon'
+                                              />
+                                          </Box>
+                                      </Flex>
+                                  </Flex>
+                              ))
+                        : activeList.tasks
+                              .map((task) => ({ task }))
+                              .filter(({ task }) => !task.completed)
+                              .map(({ task }) => (
+                                  <Flex
+                                      as='li'
+                                      key={task.id}
+                                      alignItems='center'
+                                  >
+                                      <Box
+                                          onClick={() =>
+                                              toggleTaskCompletion(task.id)
+                                          }
+                                          cursor='pointer'
+                                      >
+                                          <Icon
+                                              name={
+                                                  task.completed
+                                                      ? 'bxs-circle'
+                                                      : 'bx-circle'
+                                              }
+                                              className='task-circle-icon'
+                                          />
+                                      </Box>
+
+                                      <Flex direction='column' ml='10px'>
+                                          <Text>{task.task}</Text>
+                                          {task.due_date &&
+                                              !isNaN(
+                                                  new Date(
+                                                      task.due_date
+                                                  ).getTime()
+                                              ) && (
+                                                  <Text
+                                                      fontSize='sm'
+                                                      color='gray.500'
+                                                  >
+                                                      Due Date:{' '}
+                                                      {new Date(
+                                                          task.due_date
+                                                      ).toLocaleDateString()}
+                                                  </Text>
+                                              )}
+
+                                          {/* Limit description to 100 characters */}
+                                          {task.description && (
+                                              <Text
+                                                  fontSize='sm'
+                                                  color='gray.500'
+                                              >
+                                                  Description:{' '}
+                                                  {task.description.length > 100
+                                                      ? `${task.description.slice(
+                                                            0,
+                                                            100
+                                                        )}...`
+                                                      : task.description}
+                                              </Text>
+                                          )}
+                                      </Flex>
+
+                                      <Flex
+                                          ml='auto'
+                                          gap='10px'
+                                          alignItems='center'
+                                      >
+                                          <Box
+                                              ml='auto'
+                                              onClick={() =>
+                                                  deleteTask(task.id)
+                                              }
+                                              cursor={'pointer'}
+                                          >
+                                              <Icon
+                                                  name='bx-trash'
+                                                  className='favorite-icon'
+                                              />
+                                          </Box>
+
+                                          <Box
+                                              ml='auto'
+                                              onClick={() =>
+                                                  task.favorite
+                                                      ? handleRemoveTaskFromFavorites(
+                                                            task.id
+                                                        )
+                                                      : handleUpdateTaskImportant(
+                                                            task.id
+                                                        )
+                                              }
+                                              cursor={'pointer'}
+                                          >
+                                              <Icon
+                                                  name={
+                                                      task.favorite
+                                                          ? 'bxs-star'
+                                                          : 'bx-star'
+                                                  }
+                                                  className='favorite-icon'
+                                              />
+                                          </Box>
+                                      </Flex>
+                                  </Flex>
+                              ))}
                 </Box>
             </Box>
 
