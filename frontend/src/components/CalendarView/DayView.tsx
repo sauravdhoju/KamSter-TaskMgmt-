@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Grid, GridItem, Text, Box } from '@chakra-ui/react';
+import { Grid, GridItem, Text } from '@chakra-ui/react';
 import { isToday } from 'date-fns';
 
 import { useCalendarContext } from '../../contexts/CalendarContext/CalendarContext';
@@ -59,7 +59,9 @@ const DayView = ({ getHours }: DayView) => {
                         {getHours('ante')}
                         {getHours('post')}
                     </GridItem>
-                    <TimeScheduleDisplayBlock blockDate={currentViewDate} />
+                    <TimeScheduleDisplayBlock
+                        blockDate={new Date(currentViewDate)}
+                    />
                 </Grid>
             </GridItem>
         </Grid>
