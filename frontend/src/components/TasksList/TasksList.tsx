@@ -96,6 +96,10 @@ const TasksList = () => {
         setSelectedTask(null);
     };
 
+
+    const toggleNewListForm = () => setNewListVisible((prev) => !prev);
+
+
     const handleAddTaskClick = () => {
         setIsAddTaskVisible(!isAddTaskVisible);
         setIsBackgroundDimmed(!isBackgroundDimmed);
@@ -135,9 +139,9 @@ const TasksList = () => {
                         )}
                     </Box>
                 ))}
-                <Box className="tasks-tab new-list-btn" >
+                <Box className="tasks-tab new-list-btn" onClick={toggleNewListForm}>
                     <Icon name="bx-plus" />
-                    <Text >New List</Text>
+                    <Text>New List</Text>
                 </Box>
             </Flex>
 
