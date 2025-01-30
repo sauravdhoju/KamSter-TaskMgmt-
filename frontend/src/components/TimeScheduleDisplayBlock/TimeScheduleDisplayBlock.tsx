@@ -13,7 +13,7 @@ type TimeScheduleDisplayBlockTypes = {
 const TimeScheduleDisplayBlock = ({
     blockDate,
 }: TimeScheduleDisplayBlockTypes) => {
-    const { taskLists } = useTaskContext();
+    const { taskLists, allTasks } = useTaskContext();
     const [dayTasks, setDayTasks] = useState<Task[]>([]);
 
     useEffect(() => {
@@ -22,7 +22,16 @@ const TimeScheduleDisplayBlock = ({
             .flat()
             .filter((task) => isSameDay(new Date(task.due_date), blockDate));
         setDayTasks(tasks);
-        console.log(tasks);
+        // console.log(tasks);
+        console.log(allTasks);
+
+        console.log(
+            allTasks.filter((task) => {
+                console.log(task.due_date);
+
+                isSameDay(new Date(task.due_date), blockDate);
+            })
+        );
     }, [taskLists]);
 
     return (
