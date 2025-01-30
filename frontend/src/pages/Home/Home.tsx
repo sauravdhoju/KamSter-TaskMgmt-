@@ -9,10 +9,12 @@ import PageContainer from '../../components/PageContainer/PageContainer';
 import { lastDayOfMonth } from 'date-fns';
 import { useBackendAPIContext } from '../../contexts/BackendAPIContext/BackendAPIContext';
 import { useUserContext } from '../../contexts/UserContext/UserContext';
+import { useTaskContext } from '../../contexts/TaskContext/TaskContext';
 
 const Home: React.FC = () => {
     const { client } = useBackendAPIContext();
     const { user } = useUserContext();
+    const { taskLists } = useTaskContext();
     const navigate = useNavigate();
     const { currentViewDate } = useCalendarContext();
     const months3L: (
@@ -43,7 +45,6 @@ const Home: React.FC = () => {
         'Dec',
     ];
 
-    const [taskLists, setTaskLists] = useState([]);
     const [taskCounts, setTaskCounts] = useState({
         totalTasks: 0,
         ongoingTasks: 0,
@@ -51,52 +52,31 @@ const Home: React.FC = () => {
         overdueTasks: 0,
     });
 
-    const fetchTaskLists = async () => {
-        try {
-            client.get('/task-lists/get').then((res) => {
-                setTaskLists(res.data.taskLists);
-            });
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
     interface Task {
         is_completed: boolean;
         due_date: string;
     }
 
-    const fetchTasks = async (id: string) => {
-        try {
-            client.get(`task-lists/tasks/${id}/`).then((res) => {
-                const tasks: Task[] = res.data.tasks;
-                const currentDate = new Date();
+    const countTasks = () => {
+        const tasks = taskLists.map((taskList) => taskList.tasks).flat();
+        const currentDate = new Date();
 
-                const ongoingTasks = tasks.filter(
-                    (task) => !task.is_completed
-                ).length;
-                const completedTasks = tasks.filter(
-                    (task) => task.is_completed
-                ).length;
-                const totalTasks = tasks.length;
+        const ongoingTasks = tasks.filter((task) => !task.completed).length;
+        const completedTasks = tasks.filter((task) => task.completed).length;
+        const totalTasks = tasks.length;
 
-                const overdueTasks = tasks.filter(
-                    (task) =>
-                        !task.is_completed &&
-                        new Date(task.due_date) < currentDate
-                ).length;
+        const overdueTasks = tasks.filter(
+            (task) => !task.completed && new Date(task.due_date) < currentDate
+        ).length;
 
-                setTaskCounts((prev) => ({
-                    ...prev,
-                    totalTasks: prev.totalTasks + totalTasks,
-                    ongoingTasks: prev.ongoingTasks + ongoingTasks,
-                    completedTasks: prev.completedTasks + completedTasks,
-                    overdueTasks: prev.overdueTasks + overdueTasks,
-                }));
-            });
-        } catch (error) {
-            console.error(error);
-        }
+        setTaskCounts((prev) => ({
+            ...prev,
+            totalTasks: totalTasks,
+            ongoingTasks: ongoingTasks,
+            completedTasks: completedTasks,
+            overdueTasks: overdueTasks,
+        }));
+        console.log(tasks);
     };
 
     const handleAddTaskClick = () => {
@@ -105,16 +85,10 @@ const Home: React.FC = () => {
 
     useEffect(() => {
         if (!user) navigate('/login');
-        fetchTaskLists();
-    }, []);
-
-    useEffect(() => {
         if (taskLists.length > 0) {
-            taskLists.forEach(async (taskList: { _id: string }) => {
-                fetchTasks(taskList._id);
-            });
+            countTasks();
         }
-    }, [taskLists.length]);
+    }, [taskLists]);
 
     return (
         <>

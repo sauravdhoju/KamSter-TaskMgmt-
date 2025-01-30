@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
-import { GridItem, Box } from '@chakra-ui/react';
+import { Link as ReactRouterLink } from 'react-router-dom';
+import { GridItem, Box, Link as ChakraLink } from '@chakra-ui/react';
 import { isSameDay } from 'date-fns';
 import { useTaskContext, Task } from '../../contexts/TaskContext/TaskContext';
+
+import TaskBlock from './TaskBlock';
 
 type TimeScheduleDisplayBlockTypes = {
     blockDate: Date;
@@ -14,12 +17,11 @@ const TimeScheduleDisplayBlock = ({
     const [dayTasks, setDayTasks] = useState<Task[]>([]);
 
     useEffect(() => {
-        console.log(taskLists.map((taskList) => taskList.tasks).flat());
-
         const tasks = taskLists
             .map((taskList) => taskList.tasks)
             .flat()
             .filter((task) => isSameDay(new Date(task.due_date), blockDate));
+        setDayTasks(tasks);
         console.log(tasks);
     }, [taskLists]);
 
@@ -27,6 +29,7 @@ const TimeScheduleDisplayBlock = ({
         <GridItem borderLeft={'1px solid #0000007f'}>
             <Box
                 display='grid'
+                position={'relative'}
                 gridTemplateRows={`repeat(24, 50px)`} // Matches time row height
                 height='100%'
             >
@@ -36,6 +39,9 @@ const TimeScheduleDisplayBlock = ({
                         borderBottom={'1px solid #0000007f'}
                     ></Box>
                 ))}
+                {dayTasks.map((dayTask, index) => {
+                    return <TaskBlock dayTask={dayTask} key={index} />;
+                })}
             </Box>
         </GridItem>
     );

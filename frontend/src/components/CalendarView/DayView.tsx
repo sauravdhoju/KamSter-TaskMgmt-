@@ -3,6 +3,7 @@ import { Grid, GridItem, Text, Box } from '@chakra-ui/react';
 import { isToday } from 'date-fns';
 
 import { useCalendarContext } from '../../contexts/CalendarContext/CalendarContext';
+import TimeScheduleDisplayBlock from '../TimeScheduleDisplayBlock/TimeScheduleDisplayBlock';
 
 import './DayView.scss';
 type DayView = {
@@ -58,20 +59,7 @@ const DayView = ({ getHours }: DayView) => {
                         {getHours('ante')}
                         {getHours('post')}
                     </GridItem>
-                    <GridItem>
-                        <Box
-                            display='grid'
-                            gridTemplateRows={`repeat(24, 50px)`} // Matches time row height
-                            height='100%'
-                        >
-                            {Array.from({ length: 24 }).map((_, rowIndex) => (
-                                <Box
-                                    key={rowIndex}
-                                    borderBottom={'1px solid #0000007f'}
-                                ></Box>
-                            ))}
-                        </Box>
-                    </GridItem>
+                    <TimeScheduleDisplayBlock blockDate={currentViewDate} />
                 </Grid>
             </GridItem>
         </Grid>

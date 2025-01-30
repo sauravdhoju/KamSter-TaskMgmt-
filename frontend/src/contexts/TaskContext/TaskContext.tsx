@@ -1,5 +1,4 @@
 import { useState, createContext, useContext, useEffect } from 'react';
-import Icon from '../../components/Icon/Icon';
 import { useBackendAPIContext } from '../BackendAPIContext/BackendAPIContext';
 
 type TaskContextType = {
@@ -12,6 +11,7 @@ type TaskContextType = {
     setNotification: React.Dispatch<
         React.SetStateAction<TaskContextType['notification']>
     >;
+    allTasks: Task[];
 };
 export type Task = {
     id: string;
@@ -39,6 +39,7 @@ const TaskProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
         { id: 'mylists', name: 'My Lists', tasks: [], type: 'default' },
     ]);
     const [notification, setNotification] = useState<string | null>(null);
+    const allTasks = taskLists.map((taskList) => taskList.tasks).flat();
     const showNotification = (message: string) => {
         setNotification(message);
         setTimeout(() => setNotification(null), 3000);
@@ -53,23 +54,8 @@ const TaskProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
                 type: 'ordinary',
             }));
 
-            // Ensure the "Favorites" tab and "My Lists" tab are always at the top
-            const favoritesList = {
-                id: 'favorites',
-                name: <Icon name='bxs-star' className='important-icon' />, // Star icon for Favorites
-                tasks: [],
-                type: 'default',
-            };
-
-            const myList = {
-                id: 'mylists',
-                name: 'My Lists', // My Lists tab, can hold all tasks added to it
-                tasks: [], // This will hold tasks added specifically to "My Lists"
-                type: 'default',
-            };
-
             // Add both the "Favorites" and "My Lists" tabs before the fetched lists
-            setTaskLists([favoritesList, myList, ...fetchedLists]);
+            setTaskLists([...fetchedLists]);
 
             // Fetch tasks for each list
             for (const list of fetchedLists) {
@@ -163,6 +149,7 @@ const TaskProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
                 setTaskLists,
                 notification,
                 setNotification,
+                allTasks,
             }}
         >
             {children}
