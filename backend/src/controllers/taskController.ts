@@ -132,7 +132,7 @@ export const deleteTask = async (
             return res.status(404).json({ message: 'Task not found' }).end();
         return res
             .status(200)
-            .json({ message: 'Task deleted successfully!', deleteTask })
+            .json({ message: 'Task deleted successfully!', deletedTask })
             .end();
     } catch (error) {
         console.error(error);

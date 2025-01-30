@@ -21,10 +21,17 @@ import {
 import Icon from '../Icon/Icon';
 import './TasksList.scss';
 import { useTaskContext } from '../../contexts/TaskContext/TaskContext';
+import { useBackendAPIContext } from '../../contexts/BackendAPIContext/BackendAPIContext';
 
 const TasksList = () => {
-    const { taskLists, allTasks, setNotification, notification } =
-        useTaskContext();
+    const {
+        taskLists,
+        allTasks,
+        fetchTaskLists,
+        setNotification,
+        notification,
+    } = useTaskContext();
+    const { client } = useBackendAPIContext();
     const [tabs, setTabs] = useState([
         'importants',
         ...taskLists.map((taskList) => taskList.task_list_name),
@@ -74,6 +81,8 @@ const TasksList = () => {
         setSelectedTask(null);
     };
 
+    const toggleNewListForm = () => setNewListVisible((prev) => !prev);
+
     const handleAddTaskClick = () => {
         setIsAddTaskVisible(!isAddTaskVisible);
         setIsBackgroundDimmed(!isBackgroundDimmed);
@@ -87,6 +96,23 @@ const TasksList = () => {
         setTaskDate('');
         setTaskTime('');
         setTaskDescription('');
+    };
+
+    const deleteTask = async (taskId: string) => {
+        try {
+            const res = await client.delete(`/task/delete/${taskId}`);
+            const deletedTask = await res.data.deletedTask;
+            if (deletedTask) {
+                fetchTaskLists();
+                // taskLists
+                //     .find(
+                //         (taskList) => taskList._id === deletedTask.task_list_id
+                //     )
+                //     ?.tasks.filter((task) => task._id !== taskId);
+            } else throw new Error("Couldn't delete task!");
+        } catch (error) {
+            console.error("Couldn't delete task: ", error);
+        }
     };
 
     return (
@@ -117,7 +143,10 @@ const TasksList = () => {
                         )}
                     </Box>
                 ))}
-                <Box className='tasks-tab new-list-btn'>
+                <Box
+                    className='tasks-tab new-list-btn'
+                    onClick={toggleNewListForm}
+                >
                     <Icon name='bx-plus' />
                     <Text>New List</Text>
                 </Box>
@@ -289,7 +318,11 @@ const TasksList = () => {
                                 {/* <Text ml="10px">{task.task}</Text> */}
 
                                 <Flex ml='auto' gap='10px' alignItems='center'>
-                                    <Box ml='auto' cursor={'pointer'}>
+                                    <Box
+                                        ml='auto'
+                                        cursor={'pointer'}
+                                        onClick={() => deleteTask(task._id)}
+                                    >
                                         <Icon
                                             name='bx-trash'
                                             className='favorite-icon'
