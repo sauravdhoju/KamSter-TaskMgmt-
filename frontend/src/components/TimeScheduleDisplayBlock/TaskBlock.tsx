@@ -18,11 +18,11 @@ const TaskBlock = ({ dayTask }: TaskBlockType) => {
             display={'inline-block'}
             position={'absolute'}
             minHeight={'25px'}
-            width={'80%'}
+            width={'90%'}
             top={`${positionFromTop}%`}
             bgColor={'yellow'}
         >
-            {dayTask.task}
+            {dayTask.task_name}
         </ChakraLink>
     );
 };

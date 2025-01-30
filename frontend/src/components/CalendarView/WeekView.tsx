@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box, Grid, GridItem, Text } from '@chakra-ui/react';
+import { Grid, GridItem, Text } from '@chakra-ui/react';
 import { previousSunday, isToday } from 'date-fns';
 
 import { useCalendarContext } from '../../contexts/CalendarContext/CalendarContext';
@@ -84,11 +84,11 @@ const WeekView = ({ getHours }: WeekViewTypes) => {
                 {getHours('ante')}
                 {getHours('post')}
             </GridItem>
-            {weekDates.map((_, index) => {
+            {weekDates.map((date, index) => {
                 return (
                     <TimeScheduleDisplayBlock
                         key={index}
-                        blockDate={new Date()}
+                        blockDate={new Date(date)}
                     />
                 );
             })}

@@ -46,16 +46,40 @@ const ProjectList = () => {
     } = useDisclosure();
     const navigate = useNavigate();
 
+    const createDefaultBoards = async (projectID: string) => {
+        try {
+            const defaultBoards = [
+                { board_name: 'To Do' },
+                { board_name: 'Doing' },
+                { board_name: 'Done' },
+            ];
+
+            for (const defaultBoard of defaultBoards) {
+                const response = await client.post(
+                    `/project/board/${projectID}`,
+                    defaultBoard
+                );
+                console.log(
+                    `Board ${defaultBoard.board_name} created: `,
+                    response.data
+                );
+            }
+        } catch (error) {
+            console.error("Couldn't create default boards: ", error);
+        }
+    };
+
     const addProject = async () => {
         try {
             const newProject = {
-                id: (projects.length + 1).toString(),
                 name: newProjectName,
                 description: newProjectDescription,
             };
             const response = await client.post('/project/create', newProject);
             const data = await response.data;
             if (data) {
+                const createdProject = data.createdProject;
+                createDefaultBoards(createdProject._id);
                 fetchProjects();
                 setNewProjectName('');
                 setNewProjectDescription('');
@@ -70,17 +94,22 @@ const ProjectList = () => {
         try {
             if (editingProject && editingProject.name.trim()) {
                 const response = await client.patch(
-                    '/project/update',
-                    editingProject
+                    `/project/update/${editingProject._id}`,
+                    {
+                        name: editingProject?.name,
+                        description: editingProject?.description,
+                    }
                 );
-                const editingProject = response.data;
-                setProjects((prevProjects) =>
-                    prevProjects.map((project) =>
-                        project.id === editingProject.id
-                            ? editingProject
-                            : project
-                    )
-                );
+                const editedProject = await response.data.updatedProject;
+                if (editedProject) {
+                    setProjects((prevProjects) =>
+                        prevProjects.map((project) =>
+                            project._id === editedProject._id
+                                ? editedProject
+                                : project
+                        )
+                    );
+                }
                 setEditingProject(null);
                 onEditClose();
             }
@@ -89,10 +118,20 @@ const ProjectList = () => {
         }
     };
 
-    const deleteProject = (id: string) => {
-        setProjects((prevProjects) =>
-            prevProjects.filter((project) => project.id !== id)
-        );
+    const deleteProject = async (id: string) => {
+        try {
+            console.log(id);
+
+            const res = await client.delete(`/project/delete/${id}`);
+            const deletedProject = res.data.deletedProject;
+            if (deletedProject) {
+                setProjects((prev) => {
+                    return prev.filter((project) => project._id !== id);
+                });
+            } else throw new Error('No project to delete!');
+        } catch (error) {
+            console.error('Failed to delete project:', error);
+        }
     };
 
     const handleDoubleClick = (projectName: string) => {
@@ -134,7 +173,7 @@ const ProjectList = () => {
                     {projects.length > 0 ? (
                         projects.map((project) => (
                             <Box
-                                key={project.id}
+                                key={project._id}
                                 p={4}
                                 bg='white'
                                 borderRadius='lg'
@@ -172,7 +211,7 @@ const ProjectList = () => {
                                             as='button'
                                             className='delete-board'
                                             onClick={() =>
-                                                deleteProject(project.id)
+                                                deleteProject(project._id)
                                             } // Delete project */}
                                         >
                                             <Icon name='bx-trash' />

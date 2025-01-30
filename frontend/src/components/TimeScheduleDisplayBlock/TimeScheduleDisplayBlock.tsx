@@ -13,17 +13,20 @@ type TimeScheduleDisplayBlockTypes = {
 const TimeScheduleDisplayBlock = ({
     blockDate,
 }: TimeScheduleDisplayBlockTypes) => {
-    const { taskLists } = useTaskContext();
+    const { allTasks } = useTaskContext();
     const [dayTasks, setDayTasks] = useState<Task[]>([]);
 
     useEffect(() => {
-        const tasks = taskLists
-            .map((taskList) => taskList.tasks)
-            .flat()
-            .filter((task) => isSameDay(new Date(task.due_date), blockDate));
-        setDayTasks(tasks);
+        const tasks = allTasks.filter((task) => {
+            return (
+                isSameDay(new Date(task.due_date), blockDate) &&
+                !task.is_completed
+            );
+        });
         console.log(tasks);
-    }, [taskLists]);
+
+        setDayTasks(tasks);
+    }, [allTasks, blockDate]);
 
     return (
         <GridItem borderLeft={'1px solid #0000007f'}>

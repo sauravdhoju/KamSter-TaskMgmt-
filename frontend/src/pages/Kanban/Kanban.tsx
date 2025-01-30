@@ -12,11 +12,7 @@ type Column = {
 };
 
 const Kanban = () => {
-    const [columns, setColumns] = useState<Column[]>([
-        { id: 'todo', name: 'To Do', tasks: [] },
-        { id: 'doing', name: 'Doing', tasks: [] },
-        { id: 'done', name: 'Done', tasks: [] },
-    ]);
+    const [columns, setColumns] = useState<Column[]>([]);
 
     const [taskInputs, setTaskInputs] = useState<Record<string, string>>({});
     const [editingColumn, setEditingColumn] = useState<string | null>(null); // Track column being renamed
@@ -30,12 +26,12 @@ const Kanban = () => {
         columnId: string | null;
         taskIndex: number | null;
     }>({ columnId: null, taskIndex: null });
-    const [editTaskInput, setEditTaskInput] = useState<string>(''); 
+    const [editTaskInput, setEditTaskInput] = useState<string>('');
 
     const handleDragStart = (task: string) => {
         setDraggedTask(task);
     };
-    
+
     const handleDrop = (columnId: string) => {
         if (draggedTask) {
             setColumns((prevColumns) =>
@@ -47,40 +43,42 @@ const Kanban = () => {
                             // Remove task from the current position
                             const updatedTasks = [...column.tasks];
                             updatedTasks.splice(taskIndex, 1);
-    
+
                             // Add the task to the new position
                             // appending the task to the end of the column
                             updatedTasks.push(draggedTask);
-    
+
                             return {
                                 ...column,
                                 tasks: updatedTasks,
                             };
                         }
                     }
-    
+
                     // Handle moving the task to a different column
                     if (column.tasks.includes(draggedTask)) {
                         return {
                             ...column,
-                            tasks: column.tasks.filter((task) => task !== draggedTask),
+                            tasks: column.tasks.filter(
+                                (task) => task !== draggedTask
+                            ),
                         };
                     }
-    
+
                     if (column.id === columnId) {
                         return {
                             ...column,
                             tasks: [...column.tasks, draggedTask],
                         };
                     }
-    
+
                     return column;
                 })
             );
             setDraggedTask(null);
         }
     };
-    
+
     // Add a new task to the specified column
     const addTask = (columnId: string) => {
         const taskName = taskInputs[columnId]?.trim();
@@ -139,9 +137,13 @@ const Kanban = () => {
             prevColumns.filter((column) => column.id !== columnId)
         );
     };
-    
+
     // editing a task
-    const startEditingTask = (columnId: string, taskIndex: number, currentTask: string) => {
+    const startEditingTask = (
+        columnId: string,
+        taskIndex: number,
+        currentTask: string
+    ) => {
         setEditingTask({ columnId, taskIndex });
         setEditTaskInput(currentTask);
     };
@@ -154,7 +156,9 @@ const Kanban = () => {
                     ? {
                           ...column,
                           tasks: column.tasks.map((task, index) =>
-                              index === taskIndex ? editTaskInput.trim() || task : task
+                              index === taskIndex
+                                  ? editTaskInput.trim() || task
+                                  : task
                           ),
                       }
                     : column
@@ -169,14 +173,11 @@ const Kanban = () => {
         setEditingTask({ columnId: null, taskIndex: null });
         setEditTaskInput('');
     };
-     
+
     return (
         <PageContainer>
-            <Flex 
-                justifyContent="center" 
-                alignItems="center" 
-            >
-                <Heading as="h2" size="md" mb={4}>
+            <Flex justifyContent='center' alignItems='center'>
+                <Heading as='h2' size='md' mb={4}>
                     Kanban Board for Project "{projectId}"
                 </Heading>
             </Flex>
@@ -203,26 +204,32 @@ const Kanban = () => {
                                     autoFocus
                                 />
                             ) : (
-                                <Flex alignItems="center" justifyContent="space-between">
-                                <Heading
-                                    size='sm'
-                                    className='column-header-text'
-                                    onDoubleClick={() =>
-                                        startRenaming(column.id, column.name)
-                                    } // Enable renaming on double-click
+                                <Flex
+                                    alignItems='center'
+                                    justifyContent='space-between'
                                 >
-                                    {column.name}
-                                </Heading>
-                                {/* for delete */}
-                                <Box
-                                as="button"
-                                className="delete-board"
-                                onClick={() => deleteBoard(column.id)}
-                            >
-                                <Icon name="bx-trash" />
-                            </Box>
-                        </Flex>
-                        )}
+                                    <Heading
+                                        size='sm'
+                                        className='column-header-text'
+                                        onDoubleClick={() =>
+                                            startRenaming(
+                                                column.id,
+                                                column.name
+                                            )
+                                        } // Enable renaming on double-click
+                                    >
+                                        {column.name}
+                                    </Heading>
+                                    {/* for delete */}
+                                    <Box
+                                        as='button'
+                                        className='delete-board'
+                                        onClick={() => deleteBoard(column.id)}
+                                    >
+                                        <Icon name='bx-trash' />
+                                    </Box>
+                                </Flex>
+                            )}
                         </Box>
                         <Box className='task-input'>
                             <Box as='button' onClick={() => addTask(column.id)}>
@@ -253,44 +260,78 @@ const Kanban = () => {
                         </Box>
 
                         {/* Cards Container */}
-                        <Box className='cards-container'
-                         minHeight={5}
-                          bg="F5F5F5"
-                          borderRadius="md"
-                          border={column.tasks.length === 0 ? "1px dashed #F5F5F5F5" : "none"} // Dashed border for empty columns
-                             onDragOver={(e) => e.preventDefault()} // Allow dropping
-                             onDrop={() => handleDrop(column.id)} // Handle dropping
+                        <Box
+                            className='cards-container'
+                            minHeight={5}
+                            bg='F5F5F5'
+                            borderRadius='md'
+                            border={
+                                column.tasks.length === 0
+                                    ? '1px dashed #F5F5F5F5'
+                                    : 'none'
+                            } // Dashed border for empty columns
+                            onDragOver={(e) => e.preventDefault()} // Allow dropping
+                            onDrop={() => handleDrop(column.id)} // Handle dropping
                         >
-                            <Box className="tasks">
-                            {column.tasks.length > 0 ? (
-                            column.tasks.map((task, index) => (
-                            <Box
-                                key={index}
-                                className="task"
-                                draggable
-                                onDragStart={() => handleDragStart(task)} // Dragging starts
-                            >
-                               {editingTask.columnId === column.id && editingTask.taskIndex === index ? (
-                                    <Input
-                                        value={editTaskInput}
-                                        onChange={(e) => setEditTaskInput(e.target.value)}
-                                        onBlur={() => renameTask(column.id, index)} // Rename on blur
-                                        onKeyDown={(e) => {
-                                            if (e.key === 'Enter') renameTask(column.id, index); // Rename on Enter key
-                                            if (e.key === 'Escape') cancelEditingTask(); // Cancel on Escape key
-                                        }}
-                                        autoFocus
-                                    />
-                                ) : (
-                                    <span onDoubleClick={() => startEditingTask(column.id, index, task)}>
-                                        {task}
-                                    </span>
-                                )}
-                                </Box>
-                                ))
-                            ) : null}
+                            <Box className='tasks'>
+                                {column.tasks.length > 0
+                                    ? column.tasks.map((task, index) => (
+                                          <Box
+                                              key={index}
+                                              className='task'
+                                              draggable
+                                              onDragStart={() =>
+                                                  handleDragStart(task)
+                                              } // Dragging starts
+                                          >
+                                              {editingTask.columnId ===
+                                                  column.id &&
+                                              editingTask.taskIndex ===
+                                                  index ? (
+                                                  <Input
+                                                      value={editTaskInput}
+                                                      onChange={(e) =>
+                                                          setEditTaskInput(
+                                                              e.target.value
+                                                          )
+                                                      }
+                                                      onBlur={() =>
+                                                          renameTask(
+                                                              column.id,
+                                                              index
+                                                          )
+                                                      } // Rename on blur
+                                                      onKeyDown={(e) => {
+                                                          if (e.key === 'Enter')
+                                                              renameTask(
+                                                                  column.id,
+                                                                  index
+                                                              ); // Rename on Enter key
+                                                          if (
+                                                              e.key === 'Escape'
+                                                          )
+                                                              cancelEditingTask(); // Cancel on Escape key
+                                                      }}
+                                                      autoFocus
+                                                  />
+                                              ) : (
+                                                  <span
+                                                      onDoubleClick={() =>
+                                                          startEditingTask(
+                                                              column.id,
+                                                              index,
+                                                              task
+                                                          )
+                                                      }
+                                                  >
+                                                      {task}
+                                                  </span>
+                                              )}
+                                          </Box>
+                                      ))
+                                    : null}
+                            </Box>
                         </Box>
-                    </Box>
                     </Grid>
                 ))}
 
@@ -308,8 +349,9 @@ const Kanban = () => {
                     >
                         <Icon
                             name='bx-plus-circle'
-                            className='add-board-icon' 
-                        /> Add another board
+                            className='add-board-icon'
+                        />{' '}
+                        Add another board
                     </Box>
                 </Box>
             </Flex>
