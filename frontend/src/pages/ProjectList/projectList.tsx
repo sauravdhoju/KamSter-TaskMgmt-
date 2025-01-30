@@ -66,23 +66,27 @@ const ProjectList = () => {
         }
     };
 
-    const editProject = async() => {
-        try{
-        if (editingProject && editingProject.name.trim()) {
-            const response = await client.patch('/project/update', editimProject);
-            const editingProject = response.data; 
-            setProjects((prevProjects) =>
-                prevProjects.map((project) =>
-                    project.id === editingProject.id ? editingProject : project
-                )
-            );
-            setEditingProject(null);
-            onEditClose();
+    const editProject = async () => {
+        try {
+            if (editingProject && editingProject.name.trim()) {
+                const response = await client.patch(
+                    '/project/update',
+                    editingProject
+                );
+                const editingProject = response.data;
+                setProjects((prevProjects) =>
+                    prevProjects.map((project) =>
+                        project.id === editingProject.id
+                            ? editingProject
+                            : project
+                    )
+                );
+                setEditingProject(null);
+                onEditClose();
+            }
+        } catch (error) {
+            console.error(error);
         }
-    }
-    catch (error) {
-        console.error(error);
-    }
     };
 
     const deleteProject = (id: string) => {
