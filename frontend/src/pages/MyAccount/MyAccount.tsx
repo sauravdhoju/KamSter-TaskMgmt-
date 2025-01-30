@@ -88,7 +88,7 @@ const MyAccount = () => {
         return null; // Show nothing if not logged in
     }
 
-    const handleInputChange = (e) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setUserData((prevData) => ({ ...prevData, [name]: value }));
     };

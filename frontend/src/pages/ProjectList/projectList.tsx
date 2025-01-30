@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Box,
@@ -18,17 +18,22 @@ import {
     Flex,
 } from '@chakra-ui/react';
 
+import { useBackendAPIContext } from '../../contexts/BackendAPIContext/BackendAPIContext';
 import PageContainer from '../../components/PageContainer/PageContainer';
 import Icon from '../../components/Icon/Icon';
 import './projectList.scss';
 
 type Project = {
-    id: string;
+    _id: string;
     name: string;
     description?: string; // optional
+    created_at: Date;
+    udpated_at: Date;
+    admin_id: string;
 };
 
 const ProjectList = () => {
+    const { client } = useBackendAPIContext();
     const [projects, setProjects] = useState<Project[]>([]);
     const [newProjectName, setNewProjectName] = useState('');
     const [newProjectDescription, setNewProjectDescription] = useState('');
@@ -41,29 +46,46 @@ const ProjectList = () => {
     } = useDisclosure();
     const navigate = useNavigate();
 
-    const addProject = () => {
-        if (newProjectName.trim()) {
+    const addProject = async () => {
+        try {
             const newProject = {
                 id: (projects.length + 1).toString(),
                 name: newProjectName,
                 description: newProjectDescription,
             };
-            setProjects([...projects, newProject]);
-            setNewProjectName('');
-            setNewProjectDescription('');
-            onClose();
+            const response = await client.post('/project/create', newProject);
+            const data = await response.data;
+            if (data) {
+                fetchProjects();
+                setNewProjectName('');
+                setNewProjectDescription('');
+                onClose();
+            }
+        } catch (error) {
+            console.error(error);
         }
     };
 
-    const editProject = () => {
-        if (editingProject && editingProject.name.trim()) {
-            setProjects((prevProjects) =>
-                prevProjects.map((project) =>
-                    project.id === editingProject.id ? editingProject : project
-                )
-            );
-            setEditingProject(null);
-            onEditClose();
+    const editProject = async () => {
+        try {
+            if (editingProject && editingProject.name.trim()) {
+                const response = await client.patch(
+                    '/project/update',
+                    editingProject
+                );
+                const editingProject = response.data;
+                setProjects((prevProjects) =>
+                    prevProjects.map((project) =>
+                        project.id === editingProject.id
+                            ? editingProject
+                            : project
+                    )
+                );
+                setEditingProject(null);
+                onEditClose();
+            }
+        } catch (error) {
+            console.error(error);
         }
     };
 
@@ -76,6 +98,21 @@ const ProjectList = () => {
     const handleDoubleClick = (projectName: string) => {
         navigate(`/kanban/${projectName}`);
     };
+
+    const fetchProjects = async () => {
+        try {
+            const response = await client.get('/project/get');
+            const data = await response.data;
+            if (data) setProjects(data.projects);
+            else throw new Error('Projects not found!');
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        fetchProjects();
+    }, []);
 
     return (
         <PageContainer>
