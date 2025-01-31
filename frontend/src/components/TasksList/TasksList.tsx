@@ -98,6 +98,178 @@ const TasksList = () => {
         setTaskDescription('');
     };
 
+    const handleNewListSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (!newListName.trim()) return;
+    
+        try {
+            const response = await client.post('/task-lists/create', {
+                task_list_name: newListName.trim(),
+            });
+    
+            // Ensure response contains the expected structure
+            if (!response.data?.createdTaskList?._id) {
+                throw new Error('Invalid response format: Missing createdTaskList.');
+            }
+    
+            // Create new list object
+            const newList = {
+                id: response.data.createdTaskList._id, // Correctly map _id to id
+                name: newListName.trim(),
+                tasks: [],
+                type: 'ordinary' as const,
+            };
+    
+            console.log('New Task List:', newList); // Debugging
+    
+            // Refresh task lists instead of modifying state manually
+            fetchTaskLists();
+    
+            // Reset form fields and UI state
+            setNewListName('');
+            setNewListVisible(false);
+    
+            // Set selected index to the last added list
+            setSelectedTabIndex((prev) => prev );
+            console.error('New list created successfully!');
+    
+            // showNotification('New list created successfully!');
+        } catch (error) {
+            console.error('Error creating task list:', error);
+            // showNotification('Failed to create new list. Please try again.');
+        }
+        fetchTaskLists();
+    };
+
+    const handleUpdateTaskImportant = async (taskId: string) => {
+        try {
+            const updatedTaskList = taskLists[selectedTabIndex];
+            const taskToUpdate = updatedTaskList?.tasks.find((task) => task._id === taskId);
+    
+            if (!taskToUpdate) {
+                console.log('Task not found')
+                // showNotification('Error: Task not found!');
+                return;
+            }
+    
+            // Prepare request payload
+            const requestBody = {
+                task_name: taskToUpdate.task_name,
+                is_important: !taskToUpdate.is_favorite,
+                is_completed: taskToUpdate.is_completed,
+            };
+    
+            const response = await client.patch(`/task/update/${taskId}`, requestBody);
+    
+            if (response.status === 200) {
+                const updatedTask = response.data.taskToUpdate;
+                const isNowFavorite = updatedTask.is_important;
+    
+                fetchTaskLists();
+                // setTaskLists((prev) =>
+                //     prev.map((list, index) => {
+                //         if (index === 0 && isNowFavorite) {
+                //             // Add task to the "Favorites" tab (assumed to be index 0)
+                //             return {
+                //                 ...list,
+                //                 tasks: [...list.tasks, { ...taskToUpdate, favorite: true }],
+                //             };
+                //         } else if (index === selectedTabIndex) {
+                //             // Remove task from the current list if it's favorited
+                //             return {
+                //                 ...list,
+                //                 tasks: list.tasks.filter((task) => task.id !== taskId),
+                //             };
+                //         }
+                //         return list;
+                //     })
+                // );
+    
+                // showNotification(isNowFavorite ? 'Task added to Favorites!' : 'Task removed from Favorites!');
+            } else {
+                console.log('failed to update')
+                // showNotification('Failed to update task. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error updating task:', error);
+            // showNotification('Failed to update task. Please try again.');
+        }
+    };
+    
+    
+
+    const handleNewTaskSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (!newTask.trim()) return;
+    
+        // Get the selected task list
+        const selectedTaskList = taskLists[selectedTabIndex];
+        if (!selectedTaskList) {
+            // showNotification('Error: Selected task list not found!');
+            console.error('Error: Selected task list not found!');
+            return;
+        }
+    
+        const task_list_id = selectedTaskList._id;
+        console.log('Selected Task List:', task_list_id);
+        const task_name = newTask;
+    
+        // Handle due time
+        let due_time = null;
+        if (taskTime) {
+            const [hours, minutes] = taskTime.split(':').map(Number);
+            due_time = new Date();
+            due_time.setHours(hours, minutes, 0, 0);
+        }
+    
+        console.log('Selected Date:', taskDate, 'Selected Time:', taskTime);
+    
+        // Handle due date
+        let due_date = null;
+        if (taskDate) {
+            due_date = new Date(taskDate);
+            if (due_time) {
+                due_date.setHours(due_time.getHours(), due_time.getMinutes());
+            }
+        }
+    
+        const description = taskDescription;
+    
+        // Construct API request body
+        const requestBody = {
+            task_list_id,
+            task_name,
+            due_date,
+            description,
+        };
+        console.log('Request Payload:', requestBody);
+    
+        try {
+            const response = await client.post('/task/add', requestBody);
+            console.log('Backend Response:', response);
+    
+            if (response.status === 200 && response.data?.addedTask) {
+                // Refresh task lists instead of modifying state manually
+                fetchTaskLists();
+    
+                // Clear form fields
+                setNewTask('');
+                setTaskDate('');
+                setTaskTime('');
+                setTaskDescription('');
+                console.error('Task added successfully!');
+    
+                // showNotification('Task added successfully!');
+            } else {
+                throw new Error('Failed to retrieve task details from response.');
+            }
+        } catch (error) {
+            console.error('Error adding task:', error);
+            // showNotification('Failed to add task. Please try again.');
+        }
+    };
+    
+
     const deleteTask = async (taskId: string) => {
         try {
             const res = await client.delete(`/task/delete/${taskId}`);
@@ -162,7 +334,7 @@ const TasksList = () => {
                             autoFocus
                         />
                     </FormControl>
-                    <Button type='submit'>
+                    <Button type='submit' onClick={handleNewListSubmit}>
                         <Icon name='bx-check' />
                     </Button>
                 </form>
@@ -174,7 +346,7 @@ const TasksList = () => {
                     <Text>
                         {selectedTabIndex === 0
                             ? 'Important Tasks'
-                            : taskLists[selectedTabIndex - 1].task_list_name}
+                            : taskLists[selectedTabIndex -1].task_list_name}
                     </Text>
 
                     <Flex className='list-actions' gap='10px'>
@@ -219,7 +391,7 @@ const TasksList = () => {
                         borderRadius='md'
                         mt='4'
                     >
-                        <form>
+                        <form onClick={handleNewTaskSubmit}>
                             <Flex direction='column' gap='10px'>
                                 <FormControl isRequired>
                                     <Input
@@ -329,7 +501,9 @@ const TasksList = () => {
                                         />
                                     </Box>
 
-                                    <Box ml='auto' cursor={'pointer'}>
+                                    <Box     ml='auto' 
+                                            cursor={'pointer'} 
+                                            onClick = {() => handleUpdateTaskImportant(task._id)}>
                                         <Icon
                                             name={
                                                 task.is_favorite
