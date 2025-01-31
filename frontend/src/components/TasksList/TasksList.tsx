@@ -55,7 +55,7 @@ const TasksList = () => {
     const completedCount = (
         selectedTabIndex === 0
             ? importantTasks
-            : taskLists[selectedTabIndex - 1].tasks
+            : taskLists[selectedTabIndex -1  ].tasks
     ).filter((task) => task.is_completed).length;
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -269,6 +269,40 @@ const TasksList = () => {
         }
     };
     
+    const handleRemoveTaskFromFavorites = async (taskId: string) => {
+        try {
+            const updatedTaskList = taskLists[selectedTabIndex];
+            const taskToUpdate = updatedTaskList?.tasks.find((task) => task.id === taskId);
+    
+            if (!taskToUpdate) {
+                console.log('Error: Task not found!');
+                // showNotification('Error: Task not found!');
+                return;
+            }
+    
+            // Prepare request payload
+            const requestBody = {
+                task_name: taskToUpdate._id,
+                is_important: false,  // Set as false to remove from favorites
+                is_completed: taskToUpdate.is_completed,
+            };
+    
+            const response = await client.patch(`/task/update/${taskId}`, requestBody);
+    
+            if (response.status === 200) {
+                const updatedTask = response.data.taskToUpdate;
+                const isNowFavorite = updatedTask.is_important;
+                fetchTaskLists();
+                // showNotification(isNowFavorite ? 'Task added to Favorites!' : 'Task removed from Favorites!');
+            } else {
+                console.log('failed to update task')
+                // showNotification('Failed to update task. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error updating task:', error);
+            // showNotification('Failed to update task. Please try again.');
+        }
+    };
 
     const deleteTask = async (taskId: string) => {
         try {
@@ -346,7 +380,9 @@ const TasksList = () => {
                     <Text>
                         {selectedTabIndex === 0
                             ? 'Important Tasks'
-                            : taskLists[selectedTabIndex -1].task_list_name}
+                            : taskLists[selectedTabIndex -1
+
+                            ].task_list_name}
                     </Text>
 
                     <Flex className='list-actions' gap='10px'>
@@ -450,7 +486,7 @@ const TasksList = () => {
                 <Box as='ul'>
                     {(selectedTabIndex === 0
                         ? importantTasks
-                        : taskLists[selectedTabIndex - 1].tasks
+                        : taskLists[selectedTabIndex].tasks
                     )
                         .filter((task) => !task.is_completed)
                         .map((task) => (
